@@ -8,14 +8,15 @@
         <version>2.7.17</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>top.lldwb</groupId>
+    <groupId>top.lldwb.file.saving.tool</groupId>
     <artifactId>file_saving_tool_backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>{top.lldwb.file.saving.tool.version}</version>
     <packaging>pom</packaging>
     <name>file_saving_tool_backend</name>
     <description>file_saving_tool_backend</description>
     <properties>
         <java.version>1.8</java.version>
+        <top.lldwb.file.saving.tool.version>1</top.lldwb.file.saving.tool.version>
     </properties>
     <modules>
         <module>server</module>
