@@ -9,6 +9,7 @@ import top.lldwb.file.saving.tool.server.exception.AuthException;
 import top.lldwb.file.saving.tool.server.service.LoginService;
 
 /**
+ * 密码登录逻辑
  * @author lldwb
  * @email 3247187440@qq.com
  * @date 2023/11/27
