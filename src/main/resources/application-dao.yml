@@ -1,0 +1,67 @@
+spring:
+  # 连接
+  datasource:
+    # 驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # url
+    url: jdbc:mysql://lin.lldwb.top:3306/lldwb
+    # 用户
+    username: root
+    # 密码
+    password: 123456
+    # 连接池
+    hikari:
+      # 最小空闲连接
+      minimum-idle: 5
+      # 最大连接数
+      maximum-pool-size: 20
+      # 最大空闲时长
+      idle-timeout: 900000
+      # 连接的超时时间
+      connection-timeout: 3000
+      # 检查连接的有效性
+      connection-test-query: select 1
+  # redis
+  redis:
+    # 使用第0个数据库
+    database: 0
+    # 地址
+    host: www.lldwb.top
+    # 端口
+    port: 7890
+    # 密码
+    password: "@lldwb_redis"
+    # 连接超时时间
+    timeout: 1000
+  # 搜索引擎
+  elasticsearch:
+    # 指定连接的主机地址和端口
+    uris: http://127.0.0.1:9200
+    # 连接超时时间
+    connection-timeout: 2s
+  # 消息队列
+  rabbitmq:
+    # 连接的主机地址
+    addresses: 127.0.0.1
+    # 连接端口
+    port: 5672
+    # 账号密码
+    username: guest
+    password: guest
+    # 虚拟主机地址
+    virtual-host: /
+    # 连接超时的时间
+    connection-timeout: 5000
+    # 启用ConfirmCallback（确认消息投递到交换机）
+    publisher-confirm-type: correlated
+# mybatis配置
+mybatis:
+  # 实体
+  type-aliases-package: top.lldwb.file.saving.tool.client.entity
+  # 配置文件
+  mapper-locations: classpath:mapper/*.xml
+pagehelper:
+  helper-dialect: mysql
+  support-methods-arguments: true
+  reasonable: true
+

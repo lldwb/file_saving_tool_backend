@@ -1,29 +1,6 @@
+# 主配置文件，用于包含其他yml配置模块
 spring:
-  # 连接
-  datasource:
-    # 驱动
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    # url
-    url: jdbc:mysql://lin.lldwb.top:3306/lldwb
-    # 用户
-    username: root
-    # 密码
-    password: 123456
-  # redis
-  redis:
-    # 使用第0个数据库
-    database: 0
-    # 地址
-    host: www.lldwb.top
-    # 端口
-    port: 7890
-    # 密码
-    password: "@lldwb_redis"
-    # 连接超时时间
-    timeout: 1000
-  # 搜索引擎
-  elasticsearch:
-    # 指定连接的主机地址和端口
-    uris: http://127.0.0.1:9200
-    # 连接超时时间
-    connection-timeout: 2s
+  profiles:
+    include:
+      - web
+      - dao

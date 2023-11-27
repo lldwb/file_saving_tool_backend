@@ -1,0 +1,8 @@
+spring:
+  web:
+    servlet:
+      context-path: /api
+      encoding:
+        enabled: true
+        charset: UTF-8
+        force: true
