@@ -1,0 +1,10 @@
+# mybatis配置
+mybatis:
+  # 实体
+  type-aliases-package: top.lldwb.file.saving.tool.client.entity
+  # 配置文件
+  mapper-locations: classpath:mapper/*.xml
+pagehelper:
+  helper-dialect: mysql
+  support-methods-arguments: true
+  reasonable: true

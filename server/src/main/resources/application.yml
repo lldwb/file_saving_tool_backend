@@ -2,5 +2,6 @@
 spring:
   profiles:
     include:
-      - web
-      - dao
+      - mail
+      - jdbc
+      - redis

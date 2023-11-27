@@ -1,0 +1,20 @@
+spring:
+  # 邮箱
+  mail:
+    # 服务器主机
+    host: www
+    # 邮箱服务器的端口号
+#    port: 465
+    port: 25
+    # 发件人的邮箱
+    username: file_saving_tool@lldwb.top
+    # 密码
+    password: hxH^0oZ8U8b70EYs
+    # 默认MimeMessage编码
+    default-encoding: UTF-8
+    # 其他JavaMail会话属性
+#    properties:
+#      #配饰 SSL 加密工厂
+#      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      #是否在启动时测试邮件服务器是否可用
+    test-connection: true

@@ -1,0 +1,16 @@
+spring:
+  # 消息队列
+  rabbitmq:
+    # 连接的主机地址
+    addresses: www
+    # 连接端口
+    port: 5672
+    # 账号密码
+    username: test
+    password: @Ll123456
+    # 虚拟主机地址
+    virtual-host: /
+    # 连接超时的时间
+    connection-timeout: 5000
+    # 启用ConfirmCallback（确认消息投递到交换机）
+    publisher-confirm-type: correlated
