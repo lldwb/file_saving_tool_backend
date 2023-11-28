@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitEmailAuthCode;
 import top.lldwb.file.saving.tool.server.dto.AuthCode;
 import top.lldwb.file.saving.tool.server.dto.Message;
@@ -36,7 +37,7 @@ public class EmailAuthCode implements AuthCodeService {
         message.setSubject("邮箱"+authCode.getSubject());
         message.setContent("验证码：" + authCode.getAuthCode());
 
-        template.convertAndSend(RabbitEmailAuthCode.QUEUE_NAME, RabbitEmailAuthCode.ROUTING_KEY, message);
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitEmailAuthCode.ROUTING_KEY, message);
 
         redisTemplate.opsForValue().set("verification_code:" + authCode.getReceivingUser(), authCode.getAuthCode(), Duration.ofSeconds(300));
     }

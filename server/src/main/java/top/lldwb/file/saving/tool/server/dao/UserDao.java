@@ -1,8 +1,9 @@
 package top.lldwb.file.saving.tool.server.dao;
 
-import top.lldwb.file.saving.tool.client.entity.User;
+import top.lldwb.file.saving.tool.server.entity.User;
 
 /**
+ * 用户数据层
  * @author lldwb
  * @email 3247187440@qq.com
  * @date 2023/11/27
@@ -12,4 +13,6 @@ import top.lldwb.file.saving.tool.client.entity.User;
 public interface UserDao {
     User getUserByName(String userName);
     User getUserByMail(String mail);
+    void addUser(User user);
+    void updateUser(User user);
 }

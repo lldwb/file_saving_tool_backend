@@ -1,10 +1,15 @@
 # mybatis配置
 mybatis:
-  # 实体
-  type-aliases-package: top.lldwb.file.saving.tool.client.entity
-  # 配置文件
-  mapper-locations: classpath:mapper/*.xml
+  # 实体别名
+  type-aliases-package: top.lldwb.file.saving.tool.server.entity
+  # mapper 映射配置文件的路径
+  mapper-locations: classpath:mappers/*.xml
+  # 输出 sql语句
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+# 分页插件配置
 pagehelper:
-  helper-dialect: mysql
+  # 数据库方言
+  helper-dialect:  mysql
   support-methods-arguments: true
   reasonable: true

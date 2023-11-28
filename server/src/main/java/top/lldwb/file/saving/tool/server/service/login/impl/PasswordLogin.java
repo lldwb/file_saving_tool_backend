@@ -2,7 +2,7 @@ package top.lldwb.file.saving.tool.server.service.login.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.client.entity.User;
+import top.lldwb.file.saving.tool.server.entity.User;
 import top.lldwb.file.saving.tool.server.service.login.LoginService;
 
 /**

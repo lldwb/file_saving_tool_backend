@@ -3,9 +3,7 @@ package top.lldwb.file.saving.tool.server.service.login.impl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.lldwb.file.saving.tool.client.entity.User;
-
-import static org.junit.jupiter.api.Assertions.*;
+import top.lldwb.file.saving.tool.server.entity.User;
 
 /**
  * @author lldwb
@@ -22,6 +20,6 @@ class MailAuthCodeLoginTest {
     void login() {
         User user = new User();
         user.setUserEmail("3247187440@qq.com");
-        mailAuthCodeLogin.login(user,"440637");
+        mailAuthCodeLogin.login(user,"734032");
     }
 }

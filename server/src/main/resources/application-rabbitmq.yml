@@ -7,7 +7,7 @@ spring:
     port: 5672
     # 账号密码
     username: test
-    password: @Ll123456
+    password: "@Ll123456"
     # 虚拟主机地址
     virtual-host: /
     # 连接超时的时间

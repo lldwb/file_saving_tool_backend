@@ -1,6 +1,6 @@
 package top.lldwb.file.saving.tool.server.service.login;
 
-import top.lldwb.file.saving.tool.client.entity.User;
+import top.lldwb.file.saving.tool.server.entity.User;
 /**
  * 登录接口
  * @author lldwb

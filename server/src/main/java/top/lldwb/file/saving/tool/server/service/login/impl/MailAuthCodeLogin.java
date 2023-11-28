@@ -3,7 +3,8 @@ package top.lldwb.file.saving.tool.server.service.login.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.client.entity.User;
+import top.lldwb.file.saving.tool.server.dao.UserDao;
+import top.lldwb.file.saving.tool.server.entity.User;
 import top.lldwb.file.saving.tool.server.exception.AuthException;
 import top.lldwb.file.saving.tool.server.service.login.LoginService;
 
@@ -20,6 +21,7 @@ import top.lldwb.file.saving.tool.server.service.login.LoginService;
 @RequiredArgsConstructor
 public class MailAuthCodeLogin implements LoginService {
     private final RedisTemplate<String, Object> redisTemplate;
+    private final UserDao userDao;
 
     @Override
     public User login(User user, String... args) {
@@ -27,7 +29,9 @@ public class MailAuthCodeLogin implements LoginService {
         if (authCode == null || "".equals(authCode)) {
             throw new AuthException("邮箱或者验证码错误", 10002);
         }
-        redisTemplate.opsForValue().set("verification_code:" + user.getUserEmail(),"",0);
+        redisTemplate.delete("verification_code:" + user.getUserEmail());
+
+
         return null;
     }
 }

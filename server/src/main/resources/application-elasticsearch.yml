@@ -2,6 +2,9 @@ spring:
   # 搜索引擎
   elasticsearch:
     # 指定连接的主机地址和端口
-    uris: http://127.0.0.1:9200
+    uris: http://www:10004
+    # 账号密码
+    username: elastic
+    password: erverelasticsearch1024
     # 连接超时时间
     connection-timeout: 2s

@@ -4,11 +4,11 @@ spring:
     # 驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
     # url
-    url: jdbc:mysql://www:3306/lldwb
+    url: jdbc:mysql://www:3306/file_saving_tool
     # 用户
-    username: 1
+    username: file_saving_tool
     # 密码
-    password: 123456
+    password: Be8mhcSZZ8J3nAi3
     # 连接池
     hikari:
       # 最小空闲连接

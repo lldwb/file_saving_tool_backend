@@ -3,5 +3,8 @@ spring:
   profiles:
     include:
       - mail
-      - jdbc
       - redis
+      - rabbitmq
+      - jdbc
+      - mybatis
+#      - elasticsearch
