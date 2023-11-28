@@ -15,16 +15,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    // 用户ID
+    /**
+     * 用户ID
+     */
     private Integer userId;
-    // 用户名
+    /**
+     * 用户名
+     */
     private String userName;
-    // 用户密码
+    /**
+     * 用户密码
+     */
     private String userPassword;
-    // 用户邮箱
+    /**
+     * 用户邮箱
+     */
     private String userEmail;
-    // 用户权限
+    /**
+     * 用户权限
+     */
     private Integer userPermission;
-    // 用户状态
+    /**
+     * 用户状态
+     */
     private Integer userState;
 }

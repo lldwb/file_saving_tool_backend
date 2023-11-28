@@ -12,5 +12,5 @@ spring:
     virtual-host: /
     # 连接超时的时间
     connection-timeout: 5000
-    # 启用ConfirmCallback（确认消息投递到交换机）
-    publisher-confirm-type: correlated
+##     启用ConfirmCallback（确认消息投递到交换机）
+#    publisher-confirm-type: correlated

@@ -19,19 +19,24 @@ import top.lldwb.file.saving.tool.server.service.login.LoginService;
  */
 @Service
 @RequiredArgsConstructor
-public class MailAuthCodeLogin implements LoginService {
+public class EmailAuthCodeLogin implements LoginService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final UserDao userDao;
 
     @Override
     public User login(User user, String... args) {
         String authCode = (String) redisTemplate.opsForValue().get("verification_code:" + user.getUserEmail());
-        if (authCode == null || "".equals(authCode)) {
+        if (authCode == null || "".equals(authCode) || authCode.equals(args[0])) {
             throw new AuthException("邮箱或者验证码错误", 10002);
         }
+        User userLogin = userDao.getUserByMail(user.getUserEmail());
+        if (userLogin == null) {
+            user.setUserName(user.getUserEmail());
+            userDao.addUser(user);
+            userLogin = user;
+        }
+
         redisTemplate.delete("verification_code:" + user.getUserEmail());
-
-
-        return null;
+        return user;
     }
 }

@@ -23,12 +23,12 @@
         where user_email = #{userEmail}
     </select>
 
-    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="uid">
-        insert into test(user_name, user_password, user_email, user_permission, user_state)
-        values (#{userName}, #{userPassword},#{userEmail},#{userPermission},#{userState});
+    <insert id="addUser" parameterType="top.lldwb.file.saving.tool.server.entity.User" useGeneratedKeys="true" keyProperty="userId">
+        insert into user(user_name, user_password, user_email)
+        values (#{userName}, #{userPassword},#{userEmail})
     </insert>
-    <update id="updateUser" parameterType="user">
-        update test
+    <update id="updateUser" parameterType="top.lldwb.file.saving.tool.server.entity.User">
+        update user
         set user_name       = #{userName},
             user_password   = #{userPassword},
             user_email      = #{userEmail},

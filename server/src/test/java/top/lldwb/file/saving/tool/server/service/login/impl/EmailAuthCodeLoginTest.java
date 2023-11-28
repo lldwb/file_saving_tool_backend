@@ -13,13 +13,13 @@ import top.lldwb.file.saving.tool.server.entity.User;
  * @PROJECT_NAME file_saving_tool_backend
  */
 @SpringBootTest
-class MailAuthCodeLoginTest {
+class EmailAuthCodeLoginTest {
     @Autowired
-    private MailAuthCodeLogin mailAuthCodeLogin;
+    private EmailAuthCodeLogin emailAuthCodeLogin;
     @Test
     void login() {
         User user = new User();
         user.setUserEmail("3247187440@qq.com");
-        mailAuthCodeLogin.login(user,"734032");
+        emailAuthCodeLogin.login(user,"827357");
     }
 }
