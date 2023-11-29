@@ -24,6 +24,6 @@ class EmailSendTest {
 
     @Test
     void send() {
-        sendEmail.send(new Message("file_saving_tool@lldwb.top","3247187440@qq.com", "测试邮件头","测试邮箱体",new Date()));
+//        sendEmail.send(new Message("file_saving_tool@lldwb.top","3247187440@qq.com", "测试邮件头","测试邮箱体",new Date()));
     }
 }

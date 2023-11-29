@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.server.dto.AuthCode;
 import top.lldwb.file.saving.tool.server.dto.Message;
 import top.lldwb.file.saving.tool.server.service.send.SendService;
 
@@ -21,16 +22,16 @@ public class EmailSend implements SendService {
     private final JavaMailSender javaMailSender;
 
     @Override
-    public void send(Message message) {
+    public void send(AuthCode authCode) {
         SimpleMailMessage smm = new SimpleMailMessage();
         // 发件人的邮箱
-        smm.setFrom(message.getFromUser());
+        smm.setFrom(authCode.getFromUser());
         // 要发给的邮箱(收件人)
-        smm.setTo(message.getReceivingUser());
+        smm.setTo(authCode.getReceivingUser());
         // 主题
-        smm.setSubject(message.getSubject());
+        smm.setSubject(authCode.getSubject());
         // 邮件内容
-        smm.setText(message.getContent());
+        smm.setText(authCode.getAuthCode());
         // 发送邮件
         javaMailSender.send(smm);
     }

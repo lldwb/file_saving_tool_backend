@@ -19,24 +19,4 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Message {
-    /**
-     * 发送者
-     */
-    private String fromUser;
-    /**
-     * 接收者
-     */
-    private String receivingUser;
-    /**
-     * 标题
-     */
-    private String subject;
-    /**
-     * 内容
-     */
-    private String content;
-    /**
-     * 发送时间
-     */
-    private Date sendTime;
 }

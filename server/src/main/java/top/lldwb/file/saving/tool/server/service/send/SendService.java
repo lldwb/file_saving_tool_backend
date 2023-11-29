@@ -1,5 +1,6 @@
 package top.lldwb.file.saving.tool.server.service.send;
 
+import top.lldwb.file.saving.tool.server.dto.AuthCode;
 import top.lldwb.file.saving.tool.server.dto.Message;
 
 /**
@@ -17,5 +18,5 @@ public interface SendService {
      * @param receiving 接收
      * @param messages 消息
      */
-    void send(Message message);
+    void send(AuthCode authCode);
 }
