@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 用户实体类
+ *
  * @author lldwb
  * @email 3247187440@qq.com
  * @date 2023/11/27

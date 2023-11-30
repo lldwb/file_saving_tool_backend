@@ -3,10 +3,12 @@ package top.lldwb.file.saving.tool.server.service.login.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.dao.UserDao;
 import top.lldwb.file.saving.tool.server.entity.User;
 import top.lldwb.file.saving.tool.server.exception.AuthException;
 import top.lldwb.file.saving.tool.server.service.login.LoginService;
+import top.lldwb.file.saving.tool.server.service.user.UserService;
 
 /**
  * 邮箱验证码登录
@@ -22,21 +24,22 @@ import top.lldwb.file.saving.tool.server.service.login.LoginService;
 public class EmailAuthCodeLogin implements LoginService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final UserDao userDao;
+    private final UserService userService;
 
     @Override
     public User login(User user, String... args) {
-        String authCode = (String) redisTemplate.opsForValue().get("verification_code:" + user.getUserEmail());
+        String authCode = (String) redisTemplate.opsForValue().get(RedisConfig.REDIS_INDEX + "verification_code:" + user.getUserEmail());
         if (authCode == null || "".equals(authCode) || authCode.equals(args[0])) {
             throw new AuthException("邮箱或者验证码错误", 10002);
         }
         User userLogin = userDao.getUserByMail(user.getUserEmail());
         if (userLogin == null) {
             user.setUserName(user.getUserEmail());
-            userDao.addUser(user);
-            userLogin = user;
+            userService.addUser(user);
+            userLogin = userDao.getUserByMail(user.getUserEmail());
         }
 
-        redisTemplate.delete("verification_code:" + user.getUserEmail());
-        return user;
+        redisTemplate.delete(RedisConfig.REDIS_INDEX + "verification_code:" + user.getUserEmail());
+        return userLogin;
     }
 }

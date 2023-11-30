@@ -5,6 +5,6 @@ spring:
     uris: http://www:10004
     # 账号密码
     username: elastic
-    password: erverelasticsearch1024
+    password: serverelasticsearch1024
     # 连接超时时间
     connection-timeout: 2s

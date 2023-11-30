@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RabbitConfig {
+    public final String INDEX ="";
     /**
      * 交换机
      */

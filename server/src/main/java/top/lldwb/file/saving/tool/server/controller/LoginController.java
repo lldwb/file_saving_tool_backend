@@ -1,11 +1,10 @@
 package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.lldwb.file.saving.tool.server.controller.vo.ResultVO;
+import top.lldwb.file.saving.tool.server.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.dto.AuthCode;
 import top.lldwb.file.saving.tool.server.entity.User;
 import top.lldwb.file.saving.tool.server.exception.AuthException;
@@ -29,6 +28,11 @@ public class LoginController extends BaseController {
     private final LoginService passwordLogin;
     private final AuthCodeService emailAuthCode;
 
+    /**
+     * 发送邮箱验证码
+     * @param user 用户对象
+     * @return 成功响应
+     */
     @PostMapping("/sendEmailAuthCode")
     public ResultVO sendEmailAuthCode(User user) {
         if (user == null || user.getUserEmail() == null || "".equals(user.getUserEmail())) {
@@ -41,6 +45,12 @@ public class LoginController extends BaseController {
         return success();
     }
 
+    /**
+     * 邮箱验证码登录
+     * @param user 用户对象
+     * @param authCode 验证码
+     * @return 成功响应(用户数据)
+     */
     @PostMapping("/emailAuthCode")
     public ResultVO emailAuthCode(User user, String authCode) {
         if (user == null || user.getUserEmail() == null || "".equals(user.getUserEmail()) || authCode == null || "".equals(authCode)) {
@@ -49,6 +59,11 @@ public class LoginController extends BaseController {
         return success(emailAuthCodeLogin.login(user, authCode));
     }
 
+    /**
+     * 密码登录
+     * @param user 用户对象
+     * @return 成功响应(用户数据)
+     */
     @PostMapping("/password")
     public ResultVO password(User user) {
         if (user == null) {

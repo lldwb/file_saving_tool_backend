@@ -12,6 +12,11 @@
         <result property="userState" column="user_state"/>
     </resultMap>
 
+    <select id="getUserByUserId" resultMap="user">
+        select user_id, user_name, user_password, user_email, user_permission, user_state
+        from user
+        where user_id = #{userId}
+    </select>
     <select id="getUserByName" resultMap="user">
         select user_id, user_name, user_password, user_email, user_permission, user_state
         from user
@@ -22,10 +27,15 @@
         from user
         where user_email = #{userEmail}
     </select>
+    <select id="getUsers" resultMap="user">
+        select user_id, user_name, user_password, user_email, user_permission, user_state
+        from user
+    </select>
 
-    <insert id="addUser" parameterType="top.lldwb.file.saving.tool.server.entity.User" useGeneratedKeys="true" keyProperty="userId">
+    <insert id="addUser" parameterType="top.lldwb.file.saving.tool.server.entity.User" useGeneratedKeys="true"
+            keyProperty="userId">
         insert into user(user_name, user_password, user_email)
-        values (#{userName}, #{userPassword},#{userEmail})
+        values (#{userName}, #{userPassword}, #{userEmail})
     </insert>
     <update id="updateUser" parameterType="top.lldwb.file.saving.tool.server.entity.User">
         update user

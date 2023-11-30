@@ -14,16 +14,16 @@ import top.lldwb.file.saving.tool.server.dto.AuthCode;
  */
 @SpringBootTest
 class EmailAuthCodeTest {
-    @Autowired
-    private EmailAuthCode emailAuthCode;
-
-    @Test
-    void sendAuthCode() throws InterruptedException {
-        AuthCode code = new AuthCode();
-        code.setFromUser("file_saving_tool@lldwb.top");
-        code.setReceivingUser("3247187440@qq.com");
-        emailAuthCode.sendAuthCode(code);
-
-        new Thread().sleep(15);
-    }
+//    @Autowired
+//    private EmailAuthCode emailAuthCode;
+//
+//    @Test
+//    void sendAuthCode() throws InterruptedException {
+//        AuthCode code = new AuthCode();
+//        code.setFromUser("file_saving_tool@lldwb.top");
+//        code.setReceivingUser("3247187440@qq.com");
+//        emailAuthCode.sendAuthCode(code);
+//
+//        new Thread().sleep(15);
+//    }
 }

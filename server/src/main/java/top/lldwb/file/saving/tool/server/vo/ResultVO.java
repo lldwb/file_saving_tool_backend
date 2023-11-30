@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.controller.vo;
+package top.lldwb.file.saving.tool.server.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

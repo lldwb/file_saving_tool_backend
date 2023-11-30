@@ -28,12 +28,12 @@ class ConsumerAuthCodeTest {
         authCode.setFromUser("file_saving_tool@lldwb.top");
         authCode.setReceivingUser("3247187440@qq.com");
 
-        Message message = new Message();
-        message.setReceivingUser(authCode.getReceivingUser());
-        message.setFromUser(authCode.getFromUser());
-        message.setSubject("邮箱"+authCode.getSubject());
-        message.setContent("验证码：" + authCode.getAuthCode());
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitEmailAuthCode.ROUTING_KEY, message);
+//        Message message = new Message();
+//        message.setReceivingUser(authCode.getReceivingUser());
+//        message.setFromUser(authCode.getFromUser());
+//        message.setSubject("邮箱"+authCode.getSubject());
+//        message.setContent("验证码：" + authCode.getAuthCode());
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitEmailAuthCode.ROUTING_KEY, authCode);
 
         new Thread().sleep(15);
     }

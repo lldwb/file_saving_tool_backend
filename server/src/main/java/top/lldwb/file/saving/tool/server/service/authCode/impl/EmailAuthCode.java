@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitEmailAuthCode;
+import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.dto.AuthCode;
 import top.lldwb.file.saving.tool.server.dto.Message;
 import top.lldwb.file.saving.tool.server.service.authCode.AuthCodeService;
@@ -31,11 +32,11 @@ public class EmailAuthCode implements AuthCodeService {
 
     @Override
     public void sendAuthCode(AuthCode authCode) {
-        authCode.setSubject("邮箱"+authCode.getSubject());
+        authCode.setSubject("邮箱" + authCode.getSubject());
         authCode.setAuthCode("邮箱验证码：" + authCode.getAuthCode());
 
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitEmailAuthCode.ROUTING_KEY, authCode);
 
-        redisTemplate.opsForValue().set("verification_code:" + authCode.getReceivingUser(), authCode.getAuthCode(), Duration.ofSeconds(300));
+        redisTemplate.opsForValue().set(RedisConfig.REDIS_INDEX + "verification_code:" + authCode.getReceivingUser(), authCode.getAuthCode(), Duration.ofSeconds(300));
     }
 }

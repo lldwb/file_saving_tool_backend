@@ -16,7 +16,5 @@ import java.util.Date;
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Message {
 }
