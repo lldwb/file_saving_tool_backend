@@ -54,7 +54,7 @@ public class LoginController extends BaseController {
     @PostMapping("/emailAuthCode")
     public ResultVO emailAuthCode(User user, String authCode) {
         if (user == null || user.getUserEmail() == null || "".equals(user.getUserEmail()) || authCode == null || "".equals(authCode)) {
-            throw new AuthException("用户名或验证码不能为空", 10001);
+            throw new AuthException("邮箱或验证码不能为空", 10001);
         }
         return success(emailAuthCodeLogin.login(user, authCode));
     }

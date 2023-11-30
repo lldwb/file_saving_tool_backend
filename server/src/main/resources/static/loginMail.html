@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>邮箱登录</title>
+		<!-- vue -->
+		<!-- <script src="js/vue.js"></script> -->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router@3/dist/vue-router.js"></script>
+		<!-- jquery -->
+		<script src="js/jquery.min.js"></script>
+		<!-- element-ui -->
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="js/element-ui@2.15.13.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" class="row-bg" justify="center">
+				<el-col :span="6" :offset="3">
+					<h1>邮箱登录</h1>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="6" :offset="8">
+					<!-- el-form：表单 -->
+					<!-- ref="ruleForm"：添加引用名 ruleForm ，这样可以通过 this.$refs.ruleForm 获取这个组件的对象 -->
+					<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px"
+						class="demo-ruleForm">
+						<!-- el-form-item：表单域，表单域中可以放置各种类型的表单控件 -->
+						<!-- label="用户名"：标签文本为 用户名 -->
+						<!--  prop="mail"：用于表单提交时，表示 mail 对应 它里面的数据 -->
+						<el-form-item label="邮箱" prop="mail">
+							<!-- maxlength="15"：限制长度为15 -->
+							<!-- show-word-limit：展示字数统计 -->
+							<el-input v-model="ruleForm.mail"></el-input>
+						</el-form-item>
+						<el-form-item label="验证码" prop="code">
+							<el-input maxlength="6" show-word-limit v-model="ruleForm.code" style="width: 55%;">
+							</el-input>
+							<el-button type="primary" @click="sendEmailVerificationCode">获取验证码</el-button>
+						</el-form-item>
+						<el-form-item>
+							<el-button type="primary" @click="receiveEmailVerificationCode('ruleForm')"
+								style="width: 100%;">邮箱登录</el-button>
+						</el-form-item>
+					</el-form>
+				</el-col>
+			</el-row>
+			<el-row type="flex" class="row-bg">
+				<el-col :span="3" :offset="10">
+					<el-link :underline="false" href="login.html" type="primary">密码登录</el-link>
+				</el-col>
+				<el-col :span="6">
+					<el-link :underline="false" href="registration.html" type="primary">注册</el-link>
+				</el-col>
+			</el-row>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		const vue = new Vue({
+			el: "#app",
+			data() {
+				var checkMail = (rule, value, callback) => {
+					// 使用正则表达式进行邮箱格式验证
+					const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+					if (regex.test(value)) {
+						callback();
+					} else {
+						callback(new Error('邮箱不正确'));
+					}
+				};
+				var checkCode = (rule, value, callback) => {
+					if (value === '') {
+						callback(new Error('请输入验证码'));
+					} else {
+						callback();
+					}
+				};
+				return {
+					// 表单绑定的值
+					ruleForm: {
+						mail: '',
+						code: '',
+					},
+					// 	表单验证规则
+					rules: {
+						// 对应的值
+						mail: [{
+							// 对应的验证方法
+							validator: checkMail,
+							// 触发条件 "blur"，意思是在用户离开该表单项时进行验证
+							trigger: 'blur'
+						}],
+						code: [{
+							validator: checkCode,
+							trigger: 'blur'
+						}]
+					}
+				};
+			},
+			methods: {
+				login() {
+					location.href = 'login.html'
+				},
+				loginMail() {
+					location.href = 'loginMail.html'
+				},
+				registration() {
+					location.href = 'registration.html'
+				},
+				// 申请验证码
+				sendEmailVerificationCode() {
+					// 验证通过，执行相应操作
+					$.ajax({
+						url: "http://localhost:8080/api/login/sendEmailAuthCode",
+						data: {
+							userEmail: this.ruleForm.mail
+						},
+						type: "POST",
+						success() {
+							vue.$message({
+								message: '发送成功',
+								type: 'success'
+							});
+						},
+						error() {
+							vue.$message.error("邮箱或验证码不能为空");
+						}
+					});
+				},
+				// 判断验证码
+				receiveEmailVerificationCode(formmail) {
+					// 通过 this.$refs.ruleForm.validate 获取这个组件的对象并调用 validate 方法
+					// validate 方法会自动触发每个表单项的校验规则进行验证，
+					// 返回一个布尔值，表示是否验证通过。在回调函数中根据验证结果进行相应的处理。
+					this.$refs[formmail].validate((valid) => {
+						if (valid) {
+							// 去后端发起邮箱登录请求
+							$.ajax({
+								url: "http://localhost:8080/api/login/sendEmailAuthCode",
+								dataType: "JSON",
+								data: {
+									userEmail: this.ruleForm.mail,
+									authCode: this.ruleForm.code
+								},
+								type: "POST",
+								success(result) {
+									console.log(result);
+									location.href = 'index.html';
+								},
+								error() {
+									vue.$message.error("邮箱或者验证码有误");
+								}
+							});
+						} else {
+							console.log('输入错误');
+							return false;
+						}
+					});
+				}
+			}
+		})
+	</script>
+</html>
