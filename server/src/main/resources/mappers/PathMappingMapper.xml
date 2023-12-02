@@ -3,40 +3,52 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace指定接口的完整类名 -->
 <mapper namespace="top.lldwb.file.saving.tool.server.dao.PathMappingDao">
-    <resultMap id="pathMapping" type="top.lldwb.file.saving.tool.server.entity.PathMapping">
+    <resultMap id="pathMapping" type="top.lldwb.file.saving.tool.server.pojo.entity.PathMapping">
         <id property="pathMappingId" column="path_mapping_id"/>
         <result property="pathMappingLocalPath" column="path_mapping_local_path"/>
         <result property="pathMappingRemotePath" column="path_mapping_remote_path"/>
         <result property="pathMappingType" column="path_mapping_type"/>
+        <result property="clientId" column="client_id"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
-    <!-- 给UserDao接口中的所有方法编写相应的SQL语句 -->
-    <!-- insert表示传入语句，对应的删除和修改是delete和update标签 -->
-    <!-- id对应接口的方法名，parameterType指定参数的类型，如果是实体可以引用mybatis.xml中定义的别名 -->
-    <!-- insert标签中只能写sql语句，注释也不能写 -->
-    <!-- SQL语句中的参数使用#{实体中的属性名}来获取实体对象中的属性的值(包括复杂的值比如Map<String,User> lists,使用方法#{key}.tel) -->
-    <insert id="sava" parameterType="User" useGeneratedKeys="true" keyProperty="uid">
-        insert into test(u_name, u_tel)
-        values (#{userName}, #{tel});
-    </insert>
+    <select id="getPathMappingByPathMappingId" resultMap="pathMapping">
+        select path_mapping_id,
+               path_mapping_local_path,
+               path_mapping_remote_path,
+               path_mapping_type,
+               client_id,
+               user_id
+        from path_mapping
+        where user_id = #{pathMappingId}
+    </select>
 
-    <!-- 如果参数是map，那么ognl表达式的值为map的key -->
+    <select id="getUsers" resultMap="pathMapping">
+        select path_mapping_id,
+               path_mapping_local_path,
+               path_mapping_remote_path,
+               path_mapping_type,
+               client_id,
+               user_id
+        from path_mapping
+        where path_mapping_type > -1
+    </select>
+
     <insert id="savaMap" parameterType="Map">
-        insert into test(u_name, u_tel)
-        values (#{name}, #{tel});
+        insert into test(path_mapping_local_path, path_mapping_remote_path, path_mapping_type, client_id, user_id)
+        values (#{pathMappingLocalPath}, #{pathMappingRemotePath}, #{pathMappingType}, #{clientId}, #{userId});
     </insert>
 
-    <!-- 注意：当方法参数只有一个并且是基本数据类型时候，那么ognl的值可以是任意填写 -->
-    <delete id="delete" parameterType="int">
-        delete
-        from test
-        where u_id = #{id}
-    </delete>
-
-    <update id="update" parameterType="user">
-        update test
-        set u_name = #{userName},
-            u_tel  = #{tel}
-        where u_id = #{uid}
+    <update id="updatePathMapping" parameterType="PathMapping">
+        update path_mapping
+        set path_mapping_local_path  = #{pathMappingLocalPath},
+            path_mapping_remote_path = #{pathMappingRemotePath}
+        where path_mapping_id = #{pathMappingId}
     </update>
+
+    <delete id="deletePathMapping" parameterType="int">
+        update path_mapping
+        set path_mapping_type = -1
+        where user_id = #{pathMappingId}
+    </delete>
 </mapper>

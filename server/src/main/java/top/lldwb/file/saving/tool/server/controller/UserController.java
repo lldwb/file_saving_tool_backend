@@ -2,9 +2,9 @@ package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import top.lldwb.file.saving.tool.server.entity.User;
+import top.lldwb.file.saving.tool.server.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.service.user.UserService;
-import top.lldwb.file.saving.tool.server.vo.ResultVO;
+import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 
 /**
  * 用户接口

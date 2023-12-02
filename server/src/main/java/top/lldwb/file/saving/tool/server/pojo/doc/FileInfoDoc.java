@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.doc;
+package top.lldwb.file.saving.tool.server.pojo.doc;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,23 +18,35 @@ import top.lldwb.file.saving.tool.server.config.RedisConfig;
  * @time 14:58
  * @PROJECT_NAME file_saving_tool_backend
  */
-@Document(indexName = RedisConfig.ES_INDEX + "user", createIndex = false)
+@Document(indexName = RedisConfig.ES_INDEX + "fileInfo", createIndex = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDoc {
-
+public class FileInfoDoc {
+    /**
+     * ID
+     */
     @Id
     @Field(index = false, type = FieldType.Integer)
+    private Integer fileInfoId;
+    /**
+     * 名称
+     */
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private String fileInfoName;
+    /**
+     * 路径
+     */
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private String fileInfoPath;
+    /**
+     * 类型
+     */
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private Integer fileInfoType;
+    /**
+     * 用户id
+     */
+    @Field(type = FieldType.Integer)
     private Integer userId;
-    /**
-     * 用户名
-     */
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
-    private String userName;
-    /**
-     * 用户邮箱
-     */
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
-    private String userEmail;
 }

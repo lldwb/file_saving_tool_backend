@@ -1,6 +1,6 @@
 package top.lldwb.file.saving.tool.server.controller;
 
-import top.lldwb.file.saving.tool.server.vo.ResultVO;
+import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 
 /**
  * 它是所有的用户定义Servlet的父类 - 把一些公共操作的代码，抽象提取出来，在父类中定义，子类可以直接使用

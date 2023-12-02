@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace指定接口的完整类名 -->
+<mapper namespace="top.lldwb.file.saving.tool.server.dao.FileInfoDao">
+    <resultMap id="fileInfoId" type="top.lldwb.file.saving.tool.server.pojo.entity.FileInfo">
+        <id column="file_info_id" property="fileInfoId"/>
+        <result column="file_info_name" property="fileInfoName"/>
+        <result column="file_info_path" property="fileInfoPath"/>
+        <result column="file_info_type" property="fileInfoType"/>
+        <result column="file_info_md5" property="fileInfoMd5"/>
+        <result column="file_info_size" property="fileInfoSize"/>
+        <result column="user_id" property="userId"/>
+        <result column="create_time" property="fileInfoCreateTime"/>
+        <result column="update_time" property="fileInfoUpdateTime"/>
+    </resultMap>
+
+    <select id="getFileInfoByFileInfoId" resultMap="fileInfoId">
+        select file_info_id,
+               file_info_name,
+               file_info_path,
+               file_info_type,
+               file_info_md5,
+               file_info_size,
+               user_id,
+               create_time,
+               update_time
+        from file_info
+        where file_info_id = #{fileInfoId}
+    </select>
+    
+    <select id="getFileInfos" resultMap="fileInfoId">
+        select file_info_id,
+               file_info_name,
+               file_info_path,
+               file_info_type,
+               file_info_md5,
+               file_info_size,
+               user_id,
+               create_time,
+               update_time
+        from file_info
+    </select>
+    
+    <insert id="addFileInfo" parameterType="top.lldwb.file.saving.tool.server.pojo.entity.FileInfo" useGeneratedKeys="true"
+            keyProperty="fileInfoId">
+        insert into file_info(file_info_name,file_info_path,file_info_type,file_info_md5,file_info_size,user_id)
+        values (#{fileInfoName},#{fileInfoPath},#{fileInfoType},#{fileInfoMd5},#{fileInfoSize},#{userId})
+    </insert>
+    
+    <update id="updateFileInfo"  parameterType="top.lldwb.file.saving.tool.server.pojo.entity.FileInfo">
+        update file_info
+        <set>
+            <if test="fileInfoName != null and fileInfoName != ''">
+                file_info_name = #{fileInfoName},
+            </if>
+            <if test="fileInfoPath != null and fileInfoPath != ''">
+                file_info_path = #{fileInfoPath},
+            </if>
+            <if test="fileInfoType != null and fileInfoType != ''">
+                file_info_type = #{fileInfoType},
+            </if>
+            <if test="fileInfoMd5 != null and fileInfoMd5 != ''">
+                file_info_md5 = #{fileInfoMd5},
+            </if>
+            <if test="fileInfoSize != null and fileInfoSize != ''">
+                file_info_size = #{fileInfoSize}
+            </if>
+        </set>
+        where file_info_id = #{fileInfoId}
+    </update>
+
+</mapper>

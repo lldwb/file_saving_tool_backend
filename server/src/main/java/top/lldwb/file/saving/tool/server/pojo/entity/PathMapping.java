@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.entity;
+package top.lldwb.file.saving.tool.server.pojo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,12 +34,11 @@ public class PathMapping {
      */
     private Integer pathMappingType;
     /**
-     * 客户端对象
+     * 客户端id
      */
-    Client client;
+    private Integer clientId;
     /**
-     * 用户对象
+     * 用户对象id
      */
-    private User user;
-
+    private Integer userId;
 }

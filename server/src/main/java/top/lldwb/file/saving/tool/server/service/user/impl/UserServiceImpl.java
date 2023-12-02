@@ -1,24 +1,22 @@
 package top.lldwb.file.saving.tool.server.service.user.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.map.MapUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.elasticsearch.core.document.Document;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.server.config.RabbitConfig;
+import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.dao.UserDao;
-import top.lldwb.file.saving.tool.server.doc.UserDoc;
-import top.lldwb.file.saving.tool.server.entity.User;
+import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
+import top.lldwb.file.saving.tool.server.pojo.dto.UpdateMessage;
+import top.lldwb.file.saving.tool.server.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.user.UserService;
-import top.lldwb.file.saving.tool.server.vo.ResultVO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 用户实现类
@@ -35,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final EsService esService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RabbitTemplate template;
 
     /**
      * 将实体类转换成文档对象
@@ -53,6 +52,10 @@ public class UserServiceImpl implements UserService {
         document.put("userName", user.getUserName());
         document.put("userEmail", user.getUserEmail());
         return document;
+    }
+
+    private UserDoc getUserDoc(User user) {
+        return new UserDoc(user.getUserId(), user.getUserName(), user.getUserEmail());
     }
 
     @Override
@@ -84,8 +87,10 @@ public class UserServiceImpl implements UserService {
         userDao.addUser(user);
         // 根据返回的用户ID获取用户的完整信息
         user = userDao.getUserByUserId(user.getUserId());
-        // 创建文档
-        esService.createDoc(new UserDoc(user.getUserId(), user.getUserName(), user.getUserEmail()));
+
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.ROUTING_KEY, new UpdateMessage(String.valueOf(user.getUserId()),getUserDoc(user)));
+//        // 创建文档
+//        esService.createDoc(new UserDoc(user.getUserId(), user.getUserName(), user.getUserEmail()));
     }
 
     @Override
@@ -94,8 +99,9 @@ public class UserServiceImpl implements UserService {
         userDao.updateUser(user);
         // 将实体类转换成文档对象
         Document document = getDocument(user);
-        // 更新文档
-        esService.updateDoc(document);
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.ROUTING_KEY, new UpdateMessage(String.valueOf(user.getUserId()),getUserDoc(user)));
+//        // 更新文档
+//        esService.updateDoc(document);
         // redis过期
         redisTemplate.delete(RedisConfig.REDIS_INDEX + "user:" + user.getUserId());
     }

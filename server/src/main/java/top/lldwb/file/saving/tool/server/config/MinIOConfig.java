@@ -13,7 +13,7 @@ import top.lldwb.file.saving.tool.server.factory.MinioFactoryBean;
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Configuration
-public class MinIoConfig {
+public class MinIOConfig {
    // 定义url
     private String url = "http://rnus:9000";
     // 定义用户名

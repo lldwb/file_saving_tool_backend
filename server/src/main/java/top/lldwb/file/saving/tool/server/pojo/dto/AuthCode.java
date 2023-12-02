@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.dto;
+package top.lldwb.file.saving.tool.server.pojo.dto;
 
 import cn.hutool.core.util.RandomUtil;
 import lombok.AllArgsConstructor;

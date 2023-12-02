@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.doc;
+package top.lldwb.file.saving.tool.server.pojo.doc;
 
 /**
  * 路径映射文档对象

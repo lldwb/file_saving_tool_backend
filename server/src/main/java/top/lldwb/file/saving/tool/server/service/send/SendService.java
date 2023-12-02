@@ -1,7 +1,6 @@
 package top.lldwb.file.saving.tool.server.service.send;
 
-import top.lldwb.file.saving.tool.server.dto.AuthCode;
-import top.lldwb.file.saving.tool.server.dto.Message;
+import top.lldwb.file.saving.tool.server.pojo.dto.AuthCode;
 
 /**
  * 负责发送消息的接口

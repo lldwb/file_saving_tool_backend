@@ -3,13 +3,11 @@ package top.lldwb.file.saving.tool.server.service.es.impl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.lldwb.file.saving.tool.server.doc.UserDoc;
+import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class EsServiceImplTest {

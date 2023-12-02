@@ -1,8 +1,6 @@
 package top.lldwb.file.saving.tool.server.service.user;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import top.lldwb.file.saving.tool.server.entity.User;
-import top.lldwb.file.saving.tool.server.vo.ResultVO;
+import top.lldwb.file.saving.tool.server.pojo.entity.User;
 
 import java.util.List;
 

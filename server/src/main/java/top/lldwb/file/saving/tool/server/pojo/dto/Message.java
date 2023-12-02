@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.dto;
+package top.lldwb.file.saving.tool.server.pojo.dto;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;

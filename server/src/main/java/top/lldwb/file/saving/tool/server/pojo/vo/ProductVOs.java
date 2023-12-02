@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.vo;
+package top.lldwb.file.saving.tool.server.pojo.vo;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
