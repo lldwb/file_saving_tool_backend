@@ -65,17 +65,19 @@ public class MinIOServiceImpl implements MinIOService {
             // 获取文件输入流
             InputStream inputStream = multipartFile.getInputStream();
             // 上传文件到Minio
-            minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(multipartFile.getOriginalFilename()).stream(inputStream, multipartFile.getSize(), -1).contentType(multipartFile.getContentType()).build());
+            // "/" + userId + "/" 为添加用户标识符
+            minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object("/" + userId + "/" + multipartFile.getOriginalFilename()).stream(inputStream, multipartFile.getSize(), -1).contentType(multipartFile.getContentType()).build());
 
-            FileInfo fileInfo = new FileInfo();
+           FileInfo fileInfo = new FileInfo();
             fileInfo.setFileInfoName(StringUtils.getFilename(multipartFile.getOriginalFilename()));
-            fileInfo.setFileInfoPath(multipartFile.getOriginalFilename());
+            fileInfo.setFileInfoPath("/" + userId + "/" + multipartFile.getOriginalFilename());
             fileInfo.setFileInfoType(2);
             fileInfo.setFileInfoMd5(DigestUtil.md5Hex(multipartFile.getBytes()));
             fileInfo.setFileInfoSize(multipartFile.getSize());
             fileInfo.setUserId(userId);
             fileInfoDao.addFileInfo(fileInfo);
 
+            // 发送消息到消息队列
             template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
 
 
@@ -103,14 +105,17 @@ public class MinIOServiceImpl implements MinIOService {
     @Override
     public void deleteFile(String path, Integer fileInfoId) {
         try {
-            minioClient.removeObject(RemoveObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
+           minioClient.removeObject(RemoveObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
 
+
+            // 删除文件信息
 
             FileInfo fileInfo = new FileInfo();
             fileInfo.setFileInfoId(fileInfoId);
             fileInfo.setFileInfoType(0);
             fileInfoDao.updateFileInfo(fileInfo);
 
+            // 发送消息到消息队列
             template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
 
         } catch (ErrorResponseException e) {
@@ -178,6 +183,11 @@ public class MinIOServiceImpl implements MinIOService {
 
     @Override
     public List<FileInfoDoc> getFiles(FileInfo fileInfo, Integer pageNum, Integer pageSize) {
-        return esService.listNamesByNames(FileInfoDoc.class,pageNum,pageSize,fileInfo.getFileInfoName(),"fileInfoName");
+        return esService.listNamesByNames(FileInfoDoc.class, pageNum, pageSize, fileInfo.getFileInfoName(), "fileInfoName");
+    }
+
+    @Override
+    public FileInfo getFileInfoByFileInfoId(Integer fileInfoId) {
+        return fileInfoDao.getFileInfoByFileInfoId(fileInfoId);
     }
 }

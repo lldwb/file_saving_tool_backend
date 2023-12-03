@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface FileInfoDao {
     /**
-     * 根据用户ID获取用户
+     * 根据ID获取文件
      *
      * @param fileInfoId
      * @return
      */
-    User getFileInfoByFileInfoId(Integer fileInfoId);
+    FileInfo getFileInfoByFileInfoId(Integer fileInfoId);
 
     /**
      * 获取所有用户

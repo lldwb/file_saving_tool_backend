@@ -31,7 +31,7 @@ public interface MinIOService {
      *
      * @param path
      */
-    void deleteFile(String path,Integer fileInfoId);
+    void deleteFile(String path, Integer fileInfoId);
 
     /**
      * 下载文件
@@ -48,4 +48,12 @@ public interface MinIOService {
      * @return
      */
     List<FileInfoDoc> getFiles(FileInfo fileInfo, Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据ID获取文件
+     *
+     * @param fileInfoId
+     * @return
+     */
+    FileInfo getFileInfoByFileInfoId(Integer fileInfoId);
 }

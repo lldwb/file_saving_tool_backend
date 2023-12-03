@@ -1,5 +1,6 @@
 package top.lldwb.file.saving.tool.server.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,11 +53,13 @@ public class LoginController extends BaseController {
      * @return 成功响应(用户数据)
      */
     @PostMapping("/emailAuthCode")
-    public ResultVO emailAuthCode(User user, String authCode) {
+    public ResultVO emailAuthCode(User user, String authCode, HttpSession session) {
         if (user == null || user.getUserEmail() == null || "".equals(user.getUserEmail()) || authCode == null || "".equals(authCode)) {
             throw new AuthException("邮箱或验证码不能为空", 10001);
         }
-        return success(emailAuthCodeLogin.login(user, authCode));
+        user = emailAuthCodeLogin.login(user, authCode);
+        session.setAttribute("user",user);
+        return success(user);
     }
 
     /**
@@ -65,10 +68,12 @@ public class LoginController extends BaseController {
      * @return 成功响应(用户数据)
      */
     @PostMapping("/password")
-    public ResultVO password(User user) {
+    public ResultVO password(User user, HttpSession session) {
         if (user == null) {
             throw new AuthException("用户名或密码不能为空", 10001);
         }
-        return success(passwordLogin.login(user));
+        user = passwordLogin.login(user);
+        session.setAttribute("user",user);
+        return success(user);
     }
 }
