@@ -39,6 +39,18 @@ public class OperationLog {
      * 文件类型(1文件夹，2文件)
      */
     private Integer operationLogFileType;
+
+    /**
+     * 文件md5特征码
+     *
+     * @return
+     */
+    private String operationLogMd5;
+    /**
+     * 字节大小
+     */
+    private Long operationLogSize;
+
     /**
      * 用户对象
      */

@@ -22,6 +22,7 @@ import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
+import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
 import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.server.pojo.entity.Magic;
 import top.lldwb.file.saving.tool.server.pojo.entity.OperationLog;
@@ -63,6 +64,18 @@ public class MinIOServiceImpl implements MinIOService {
         return fileInfoDoc;
     }
 
+    private OperationLogDoc getOperationLogDoc(OperationLog operationLog) {
+        OperationLogDoc operationLogDoc = new OperationLogDoc();
+        operationLogDoc.setOperationLogId(operationLog.getOperationLogId());
+        operationLogDoc.setOperationLogName(operationLog.getOperationLogName());
+        operationLogDoc.setOperationLogPath(operationLog.getOperationLogPath());
+        operationLogDoc.setOperationLogType(operationLog.getOperationLogType());
+        operationLogDoc.setOperationLogFileType(operationLog.getOperationLogFileType());
+        operationLogDoc.setUserId(operationLog.getUserId());
+        operationLogDoc.setFileInfoId(operationLog.getFileInfoId());
+        return operationLogDoc;
+    }
+
     /**
      * FileInfo转化成OperationLog
      *
@@ -77,6 +90,8 @@ public class MinIOServiceImpl implements MinIOService {
         operationLog.setOperationLogMinioPath(fileInfo.getFileInfoMinIOPath());
         operationLog.setOperationLogType(type);
         operationLog.setOperationLogFileType(fileInfo.getFileInfoType());
+        operationLog.setOperationLogMd5(fileInfo.getFileInfoMd5());
+        operationLog.setOperationLogSize(fileInfo.getFileInfoSize());
         operationLog.setUserId(fileInfo.getUserId());
         operationLog.setFileInfoId(fileInfo.getFileInfoId());
         return operationLog;
@@ -128,6 +143,8 @@ public class MinIOServiceImpl implements MinIOService {
                 operationLog = getOperationLog(fileInfo, 1);
             }
             operationLogDao.addOperationLog(operationLog);
+            // 发送文件信息到消息队列
+            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getOperationLogDoc(operationLog));
 
             // 发送文件信息到消息队列
             template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
@@ -163,13 +180,16 @@ public class MinIOServiceImpl implements MinIOService {
         FileInfo fileInfo = fileInfoDao.getFileInfoByFileInfoId(fileInfoId);
 
         // 操作对象，设置为删除
-        OperationLog operationLog = getOperationLog(fileInfo,3);
+        OperationLog operationLog = getOperationLog(fileInfo, 3);
         operationLogDao.addOperationLog(operationLog);
+        // 发送文件信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getOperationLogDoc(operationLog));
 
         // 设置删除
         fileInfo.setFileInfoType(fileInfo.getFileInfoType() * -1);
         fileInfo.setFileInfoMinIOPath("");
         fileInfo.setFileInfoMd5("");
+        fileInfo.setFileInfoSize(0L);
         fileInfoDao.updateFileInfo(fileInfo);
 
         // 发送消息到消息队列
@@ -179,8 +199,25 @@ public class MinIOServiceImpl implements MinIOService {
 
     @Override
     public FileInfo recoverFile(Integer operationLogId) {
+        // 获取操作对象
+        OperationLog operationLog = operationLogDao.getOperationLogByOperationLogId(operationLogId);
+        // 根据操作对象获取文件对象
+        FileInfo fileInfo = fileInfoDao.getFileInfoByFileInfoId(operationLog.getFileInfoId());
+        // 存档恢复操作
+        operationLogDao.addOperationLog(getOperationLog(fileInfo, operationLog.getOperationLogType() * -1));
+        // 发送文件信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getOperationLogDoc(getOperationLog(fileInfo, operationLog.getOperationLogType() * -1)));
+        // 恢复
+        fileInfo.setFileInfoType(operationLog.getOperationLogFileType());
+        fileInfo.setFileInfoMinIOPath(operationLog.getOperationLogMinioPath());
+        fileInfo.setFileInfoMd5(operationLog.getOperationLogMd5());
+        fileInfo.setFileInfoSize(operationLog.getOperationLogSize());
 
-        return null;
+        fileInfoDao.updateFileInfo(fileInfo);
+
+        // 发送消息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
+        return fileInfo;
     }
 
     @Override

@@ -12,4 +12,5 @@ import top.lldwb.file.saving.tool.server.pojo.entity.OperationLog;
 public interface OperationLogDao {
     OperationLog getOperationLogByOperationLogId(Integer operationLogId);
     void addOperationLog(OperationLog operationLog);
+
 }
