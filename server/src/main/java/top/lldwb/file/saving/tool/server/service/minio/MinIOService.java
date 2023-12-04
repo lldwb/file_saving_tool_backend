@@ -31,7 +31,14 @@ public interface MinIOService {
      *
      * @param path
      */
-    void deleteFile(String path, Integer fileInfoId);
+    void deleteFile(Integer fileInfoId);
+
+    /**
+     * 恢复文件
+     * @param operationLogId 操作id
+     * @return
+     */
+    FileInfo recoverFile(Integer operationLogId);
 
     /**
      * 下载文件

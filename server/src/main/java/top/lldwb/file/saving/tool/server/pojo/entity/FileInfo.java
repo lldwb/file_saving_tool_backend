@@ -28,6 +28,10 @@ public class FileInfo {
      */
     private String fileInfoPath;
     /**
+     * MinIO路径
+     */
+    private String fileInfoMinIOPath;
+    /**
      * 类型
      */
     private Integer fileInfoType;
@@ -46,9 +50,9 @@ public class FileInfo {
     /**
      * 创建时间
      */
-    private Integer fileInfoCreateTime;
+    private Integer createTime;
     /**
      * 更新时间
      */
-    private Integer fileInfoUpdateTime;
+    private Integer updateTime;
 }

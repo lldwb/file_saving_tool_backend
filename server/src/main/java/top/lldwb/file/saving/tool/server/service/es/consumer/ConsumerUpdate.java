@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.consumer;
+package top.lldwb.file.saving.tool.server.service.es.consumer;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

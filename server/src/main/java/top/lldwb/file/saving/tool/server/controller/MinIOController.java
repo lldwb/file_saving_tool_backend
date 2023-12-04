@@ -54,9 +54,9 @@ public class MinIOController extends BaseController {
         return success();
     }
 
-    @DeleteMapping("/deleteFile/{path}")
-    public ResultVO deleteFile(@PathVariable("path") String path, Integer fileInfoId) {
-        service.deleteFile(path, fileInfoId);
+    @DeleteMapping("/deleteFile")
+    public ResultVO deleteFile(Integer fileInfoId) {
+        service.deleteFile(fileInfoId);
         return success();
     }
 

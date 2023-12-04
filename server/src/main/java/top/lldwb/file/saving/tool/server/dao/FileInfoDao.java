@@ -14,6 +14,8 @@ public interface FileInfoDao {
      */
     FileInfo getFileInfoByFileInfoId(Integer fileInfoId);
 
+    FileInfo getFileInfoByPathANDUserId(FileInfo fileInfo);
+
     /**
      * 获取所有用户
      *

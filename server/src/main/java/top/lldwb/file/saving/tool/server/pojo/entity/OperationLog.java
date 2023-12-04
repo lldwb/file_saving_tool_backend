@@ -20,21 +20,39 @@ public class OperationLog {
      */
     private Integer operationLogId;
     /**
-     * 原路径
+     * 名称
+     */
+    private String operationLogName;
+    /**
+     * 路径
      */
     private String operationLogPath;
     /**
-     * 备份路径
+     * minio路径
      */
-    private String operationLogBackupPath;
+    private String operationLogMinioPath;
     /**
-     * 操作类型
+     * 操作类型(1添加，2删除，3修改)
      */
     private Integer operationLogType;
-
-
+    /**
+     * 文件类型(1文件夹，2文件)
+     */
+    private Integer operationLogFileType;
     /**
      * 用户对象
      */
-    private User user;
+    private Integer userId;
+    /**
+     * 文件id(外键)
+     */
+    private Integer fileInfoId;
+    /**
+     * 创建时间
+     */
+    private Integer createTime;
+    /**
+     * 更新时间
+     */
+    private Integer updateTime;
 }

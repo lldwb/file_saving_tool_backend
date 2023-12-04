@@ -1,5 +1,6 @@
 package top.lldwb.file.saving.tool.server.service.minio.impl;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import io.minio.*;
 import io.minio.errors.*;
@@ -19,9 +20,11 @@ import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitEmailAuthCode;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
+import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.server.pojo.entity.Magic;
+import top.lldwb.file.saving.tool.server.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
@@ -46,6 +49,7 @@ import java.util.List;
 public class MinIOServiceImpl implements MinIOService {
     private final MinioClient minioClient;
     private final FileInfoDao fileInfoDao;
+    private final OperationLogDao operationLogDao;
     private final RabbitTemplate template;
     private final EsService esService;
 
@@ -59,25 +63,73 @@ public class MinIOServiceImpl implements MinIOService {
         return fileInfoDoc;
     }
 
+    /**
+     * FileInfo转化成OperationLog
+     *
+     * @param fileInfo 文件对象
+     * @param type     操作类型
+     * @return
+     */
+    private OperationLog getOperationLog(FileInfo fileInfo, Integer type) {
+        OperationLog operationLog = new OperationLog();
+        operationLog.setOperationLogName(fileInfo.getFileInfoName());
+        operationLog.setOperationLogPath(fileInfo.getFileInfoPath());
+        operationLog.setOperationLogMinioPath(fileInfo.getFileInfoMinIOPath());
+        operationLog.setOperationLogType(type);
+        operationLog.setOperationLogFileType(fileInfo.getFileInfoType());
+        operationLog.setUserId(fileInfo.getUserId());
+        operationLog.setFileInfoId(fileInfo.getFileInfoId());
+        return operationLog;
+    }
+
     @Override
     public void addFile(MultipartFile multipartFile, Integer userId) {
         try {
             // 获取文件输入流
             InputStream inputStream = multipartFile.getInputStream();
-            // 上传文件到Minio
-            // "/" + userId + "/" 为添加用户标识符
-            minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object("/" + userId + "/" + multipartFile.getOriginalFilename()).stream(inputStream, multipartFile.getSize(), -1).contentType(multipartFile.getContentType()).build());
 
-           FileInfo fileInfo = new FileInfo();
-            fileInfo.setFileInfoName(StringUtils.getFilename(multipartFile.getOriginalFilename()));
-            fileInfo.setFileInfoPath("/" + userId + "/" + multipartFile.getOriginalFilename());
-            fileInfo.setFileInfoType(2);
+            String UUID = IdUtil.simpleUUID();
+
+            // 上传文件到Minio
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(MinIOConfig.BUCKET)
+                            .object(UUID)
+                            .stream(inputStream, multipartFile.getSize(), -1)
+                            .contentType(multipartFile.getContentType())
+                            .build()
+            );
+            // 文件信息对象
+            FileInfo fileInfo = new FileInfo();
+            // 用于查找文件是否覆盖的信息
+            fileInfo.setFileInfoPath(multipartFile.getOriginalFilename());
+            fileInfo.setUserId(userId);
+            // 随机生成的
+            fileInfo.setFileInfoMinIOPath(UUID);
             fileInfo.setFileInfoMd5(DigestUtil.md5Hex(multipartFile.getBytes()));
             fileInfo.setFileInfoSize(multipartFile.getSize());
-            fileInfo.setUserId(userId);
-            fileInfoDao.addFileInfo(fileInfo);
+            // 不是随机生成的
+            fileInfo.setFileInfoType(2);
+            fileInfo.setFileInfoName(StringUtils.getFilename(multipartFile.getOriginalFilename()));
 
-            // 发送消息到消息队列
+            // 操作对象
+            OperationLog operationLog;
+
+            // 判断是否是文件覆盖
+            FileInfo fileInfoSql = fileInfoDao.getFileInfoByPathANDUserId(fileInfo);
+            if (fileInfoSql != null && 2 == fileInfoSql.getFileInfoType()) {
+                fileInfo.setFileInfoId(fileInfoSql.getFileInfoId());
+                fileInfoDao.updateFileInfo(fileInfo);
+                // 操作类型为修改
+                operationLog = getOperationLog(fileInfo, 2);
+            } else {
+                fileInfoDao.addFileInfo(fileInfo);
+                // 操作类型为添加
+                operationLog = getOperationLog(fileInfo, 1);
+            }
+            operationLogDao.addOperationLog(operationLog);
+
+            // 发送文件信息到消息队列
             template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
 
 
@@ -103,41 +155,32 @@ public class MinIOServiceImpl implements MinIOService {
     }
 
     @Override
-    public void deleteFile(String path, Integer fileInfoId) {
-        try {
-           minioClient.removeObject(RemoveObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
+    public void deleteFile(Integer fileInfoId) {
+//            minioClient.removeObject(RemoveObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
 
 
-            // 删除文件信息
+        // 删除文件信息
+        FileInfo fileInfo = fileInfoDao.getFileInfoByFileInfoId(fileInfoId);
 
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setFileInfoId(fileInfoId);
-            fileInfo.setFileInfoType(0);
-            fileInfoDao.updateFileInfo(fileInfo);
+        // 操作对象，设置为删除
+        OperationLog operationLog = getOperationLog(fileInfo,3);
+        operationLogDao.addOperationLog(operationLog);
 
-            // 发送消息到消息队列
-            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
+        // 设置删除
+        fileInfo.setFileInfoType(fileInfo.getFileInfoType() * -1);
+        fileInfo.setFileInfoMinIOPath("");
+        fileInfo.setFileInfoMd5("");
+        fileInfoDao.updateFileInfo(fileInfo);
 
-        } catch (ErrorResponseException e) {
-            throw new RuntimeException(e);
-        } catch (InsufficientDataException e) {
-            throw new RuntimeException(e);
-        } catch (InternalException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidResponseException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (ServerException e) {
-            throw new RuntimeException(e);
-        } catch (XmlParserException e) {
-            throw new RuntimeException(e);
-        }
+        // 发送消息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
 
+    }
+
+    @Override
+    public FileInfo recoverFile(Integer operationLogId) {
+
+        return null;
     }
 
     @Override
