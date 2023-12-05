@@ -1,0 +1,5 @@
+# 主配置文件，用于包含其他yml配置模块
+spring:
+  profiles:
+    include:
+      - web

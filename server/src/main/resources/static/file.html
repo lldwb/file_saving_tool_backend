@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>文件管理</title>
+		<!-- vue -->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router@3/dist/vue-router.js"></script>
+		<!-- jquery -->
+		<script src="js/jquery.min.js"></script>
+		<!-- element-ui -->
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="js/element-ui@2.15.13.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<div>
+				<el-upload class="upload-demo" drag action="minio/addFile" multiple name="multipartFile">
+					<i class="el-icon-upload"></i>
+					<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+				</el-upload>
+				<el-input v-model="name" placeholder="请输入内容"></el-input>
+				<el-button @click="select()">查询</el-button>
+			</div>
+			<template>
+				<el-table :data="magicList" style="width: 100%">
+					<el-table-column prop="name" label="name" width="180">
+					</el-table-column>
+					<el-table-column prop="path" label="路径" width="180">
+					</el-table-column>
+					<el-table-column prop="size" label="size" width="180">
+					</el-table-column>
+					<el-table-column label="操作">
+						<template slot-scope="scope">
+							<el-button @click="deleteCityInfo(scope.row.cityId)">查看</el-button>
+							<el-button type="text" @click="download(scope.row.path)">下载</el-button>
+							<el-button @click="deleteCityInfo(scope.row.cityId)">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<div>
+					<el-pagination background :current-page.sync=page layout="prev, pager, next" :total="count"
+						@current-change="handleCurrentChange">
+					</el-pagination>
+				</div>
+			</template>
+		</div>
+	</body>
+	<script type="text/javascript">
+		// 查询事件
+		const selectCity = vueRouter => {
+			$.ajax({
+				url: "fileList",
+				dataType: "JSON",
+				data: {
+					path: vueRouter.name
+				},
+				success(result) {
+					vueRouter.magicList = result.data
+				}
+			})
+		}
+		const vue = new Vue({
+			el: "#vue",
+			data: {
+				name: "",
+				magicList: [],
+				dialogFormVisible: false
+			},
+			methods: {
+				// 翻页
+				// handleCurrentChange() {
+				// 	selectCity(this);
+				// },
+				// 查询
+				select() {
+					selectCity(this);
+				},
+				// 下载
+				download(path) {
+					window.location.href = "download/" + path;
+					// $.ajax({
+					// 	url: "download",
+					// 	data: {
+					// 		path: path
+					// 	}
+					// })
+				}
+				// // 删除
+				// deleteCityInfo(cityId) {
+				// 	$.ajax({
+				// 		url: "deleteCityInfo",
+				// 		data: {
+				// 			cityId: cityId
+				// 		},
+				// 		success() {
+				// 			selectCity(vue)
+				// 		}
+				// 	})
+				// },
+				// // 修改
+				// updateCityInfo(cityInfo) {
+				// 	this.dialogFormVisible = true;
+				// 	this.updateCityInfoData = cityInfo;
+				// 	console.log(cityInfo);
+				// }
+			},
+			// vue加载事件
+			mounted() {
+				selectCity(this)
+			}
+		})
+	</script>
+</html>

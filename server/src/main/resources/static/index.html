@@ -1,0 +1,386 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>存档管理</title>
+		<!-- vue -->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router@3/dist/vue-router.js"></script>
+		<!-- jquery -->
+		<script src="js/jquery.min.js"></script>
+		<!-- element-ui -->
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="js/element-ui@2.15.13.js"></script>
+	</head>
+	<body>
+		<div id="qrc">
+			<el-tabs tab-position="left" height="100%">
+				<el-tab-pane>
+					<span slot="label"><i class="el-icon-folder"></i> 存档界面</span>
+
+					<el-button type="primary" @click="getFolderName" :disabled="buttonBoolean.getFolderName"
+						icon="el-icon-refresh">刷新
+					</el-button>
+					<el-button type="success" @click="archiveFolderCopy" :disabled="buttonBoolean.archive"
+						icon="el-icon-document-add">
+						存档
+					</el-button>
+					<el-button type="danger" @click="deleteAllFileFolder" :disabled="buttonBoolean.delete"
+						icon="el-icon-document-delete">
+						删除所有
+					</el-button>
+					<el-button type="warning" :disabled="buttonBoolean.defaultPath"
+						@click="buttonBoolean.defaultPath=true" icon="el-icon-setting">设置
+					</el-button>
+					<el-dialog title="请选择你的目标路径和保存路径" :visible.sync="buttonBoolean.defaultPath" width="30%"
+						:before-close="handleClose">
+						<div class="demo-input-suffix">
+							需要存档的目标路径
+							<el-input v-model="copy.targetPath" placeholder="目标路径"></el-input>
+						</div>
+						<div class="demo-input-suffix">
+							存档保存路径
+							<el-input v-model="copy.saverPath" placeholder="存档保存路径"></el-input>
+						</div>
+						<span slot="footer" class="dialog-footer">
+							<el-button @click="buttonBoolean.defaultPath = false">取 消</el-button>
+							<el-button type="primary" @click="defaultPath">确 定</el-button>
+						</span>
+					</el-dialog>
+					<el-button type="success" @click="backupFolder" :disabled="buttonBoolean.backupFolder"
+						icon="el-icon-document-add" v-if="user.verification">云备份
+					</el-button>
+					<el-button type="success" @click="restoreFolder" :disabled="buttonBoolean.restoreFolder"
+						icon="el-icon-document-add" v-if="user.verification">云恢复
+					</el-button>
+
+					<template>
+						<el-table :data="list" style="width: 100%" height="90%" stripe>
+							<el-table-column prop="name" :label="tableName" width="250" sortable>
+							</el-table-column>
+							<el-table-column label="操作">
+								<template slot-scope="scope">
+									<el-button size="mini" type="success" @click="unArchiveFolderCopy(scope.row.name)"
+										:disabled="buttonBoolean.unArchive" icon="el-icon-document-copy">读档
+									</el-button>
+									<el-button size="mini" type="danger" @click="deleteFileFolder(scope.row.name)"
+										:disabled="buttonBoolean.delete" icon="el-icon-document-remove">删除
+									</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+					</template>
+				</el-tab-pane>
+				<el-tab-pane>
+					<span slot="label"><i class="el-icon-user"></i> 用户中心</span>
+					<div v-if="!user.verification">
+						<el-button type="primary" @click="login">密码登录</el-button>
+						<el-button type="primary" @click="loginMail">邮箱登录</el-button>
+						<el-button type="primary" @click="registration">注册</el-button>
+					</div>
+					<div v-if="user.verification">
+						<el-row>
+							<el-col :span="5">	<img src="image/img.png" style="width: 250px;height: 300px"></el-col>
+							<el-col :span="19" style="font-size: 24px;margin-top: 10px">
+								<div><i class="el-icon-user"></i>id:{{user.id}}</div><hr/>
+								<div><i class="el-icon-user"></i>用户名:{{user.name}}</div><hr/>
+								<div><i class="el-icon-message"></i>邮箱:{{user.mail}}</div><hr/>
+								<div>
+									<div v-if="user.state==0"><i class="el-icon-message"></i>未邮箱认证</div>
+									<div v-if="user.state==1"><i class="el-icon-message"></i>通过认证</div>
+									<div v-if="user.state==2"><i class="el-icon-message"></i>注销</div>
+								</div><hr/>
+								<div><i class="el-icon-key"></i>远程访问秘钥:{{user.key}}</div><hr/>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :offset="5" :span="16">
+								<el-button type="primary" style="width: 100%;height: 60px;" @click="outLogin">退出登录</el-button>
+							</el-col>
+						</el-row>
+					</div>
+				</el-tab-pane>
+			</el-tabs>
+		</div>
+	</body>
+	<script type="text/javascript">
+		const getList = vueRouter => {
+			vueRouter.getFolderNameBoolean = true;
+			$.ajax({
+				url: "getFolderNameList",
+				dataType: "JSON",
+				data: {
+					path: vueRouter.copy.saverPath,
+				},
+				success(result) {
+					// console.log(result);
+					vueRouter.list = result;
+					vueRouter.tableName = "存档列表(已有" + vueRouter.list.length + "个存档)";
+					vueRouter.getFolderNameBoolean = false;
+					vueRouter.$message({
+						message: '已刷新',
+						duration: 1000,
+						type: 'success'
+					});
+				}
+			})
+		};
+		const vue = new Vue({
+			el: "#qrc",
+			data: {
+				// 存档列表
+				list: null,
+				// 存档列表表格名字设置
+				tableName: "",
+				// 存档设置
+				copy: {
+					// 需要存档的目标路径
+					targetPath: "",
+					// 存档保存路径
+					saverPath: ""
+				},
+
+				// 用户数据
+				user: {
+					// id
+					id: null,
+					// 用户名
+					name: null,
+					// 邮箱
+					mail: null,
+					// 用户状态(0未邮箱认证,1通过认证,2注销)
+					state: null,
+					// 远程访问秘钥
+					key: null,
+					// 是否有用户数据
+					verification: false
+				},
+				// 按钮权限
+				buttonBoolean: {
+					// 存档
+					archive: false,
+					// 读档
+					unArchive: false,
+					// 刷新
+					getFolderName: false,
+					// 删除相关按钮
+					delete: false,
+					// 设置
+					defaultPath: false,
+					// 云备份
+					backupFolder: false,
+					// 云恢复
+					restoreFolder: false,
+				},
+			},
+			methods: {
+				login() {
+					location.href = 'login.html'
+				},
+				loginMail() {
+					location.href = 'loginMail.html'
+				},
+				registration() {
+					location.href = 'registration.html'
+				},
+				outLogin(){
+					sessionStorage.clear();
+					location.href='index.html'
+				},
+				// 获取存档列表
+				getFolderName() {
+					getListVue();
+				},
+				// 存档
+				archiveFolderCopy() {
+					this.buttonBoolean.archive = true;
+					$.ajax({
+						url: "archiveFolderCopy",
+						data: {
+							writePath: this.copy.targetPath,
+							readPath: this.copy.saverPath
+						},
+						success() {
+							getListVue();
+							vue.buttonBoolean.archive = false;
+							vue.$message({
+								message: '存档成功',
+								type: 'success'
+							});
+						}
+					});
+				},
+				// 读档
+				unArchiveFolderCopy(name) {
+					this.buttonBoolean.unArchive = true;
+					$.ajax({
+						url: "unArchiveFolderCopy",
+						data: {
+							writePath: this.copy.saverPath + '\\' + name,
+							readPath: this.copy.targetPath
+						},
+						success() {
+							vue.buttonBoolean.unArchive = false;
+							vue.$message({
+								message: '读档成功',
+								type: 'success'
+							});
+						}
+					})
+				},
+				// 删除
+				deleteFileFolder(name) {
+					this.$confirm('此操作将永久删除该存档, 是否继续?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						vue.buttonBoolean.delete = true;
+						$.ajax({
+							url: "deleteFileFolder",
+							data: {
+								path: vue.copy.saverPath + '\\' + name,
+							},
+							success() {
+								vue.buttonBoolean.delete = false;
+								vue.$message({
+									message: '删除存档成功',
+									type: 'success'
+								});
+								getListVue();
+								vue.value = '';
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
+				},
+				// 删除所有
+				deleteAllFileFolder() {
+					this.$confirm('此操作将永久删除所有存档, 是否继续?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						vue.buttonBoolean.delete = true;
+						$.ajax({
+							url: "deleteFileFolder",
+							data: {
+								path: vue.copy.saverPath,
+								boolean: true
+							},
+							success() {
+								vue.buttonBoolean.delete = false;
+								vue.$message({
+									message: '删除成功',
+									type: 'success'
+								});
+								getListVue();
+								vue.value = '';
+							}
+						})
+					}).catch(() => {
+						this.$message({
+							type: 'info',
+							message: '已取消删除'
+						});
+					});
+				},
+				// 设置
+				defaultPath() {
+					$.ajax({
+						url: "setDefaultPath",
+						data: {
+							readPath: this.copy.targetPath,
+							writePath: this.copy.saverPath
+						},
+						success() {
+							vue.buttonBoolean.defaultPath = false;
+							vue.$message({
+								message: '设置成功',
+								type: 'success'
+							});
+						}
+					})
+				},
+				// 云备份
+				backupFolder() {
+					this.buttonBoolean.backupFolder = true;
+					$.ajax({
+						url: "backupFolder",
+						data: {
+							key: this.user.key,
+							path: this.copy.saverPath
+						},
+						dataType: "JSON",
+						success(result) {
+							getListVue();
+							vue.buttonBoolean.backupFolder = false;
+							vue.$message({
+								message: '云备份成功',
+								type: 'success'
+							});
+						}
+					})
+				},
+				// 云恢复
+				restoreFolder() {
+					this.buttonBoolean.restoreFolder = true;
+					$.ajax({
+						url: "restoreFolder",
+						data: {
+							key: this.user.key,
+							path: this.copy.saverPath
+						},
+						dataType: "JSON",
+						success() {
+							getListVue();
+							vue.buttonBoolean.restoreFolder = false;
+							vue.$message({
+								message: '云恢复成功',
+								type: 'success'
+							});
+						}
+					})
+				}
+			},
+			mounted() {
+				$.ajax({
+					url: "getDefaultPath",
+					dataType: "JSON",
+					success(result) {
+						// 源地址
+						vue.copy.targetPath = result.readPath;
+						// 存档路径
+						vue.copy.saverPath = result.writePath;
+
+						getList(vue);
+					}
+				});
+
+				if (sessionStorage.getItem('id') != null) {
+					// id
+					this.user.id = sessionStorage.getItem('id');
+					// 用户名
+					this.user.name = sessionStorage.getItem('name');
+					// 邮箱
+					this.user.mail = sessionStorage.getItem('mail');
+					// 用户状态(0未邮箱认证,1通过认证,2注销)
+					this.user.state = sessionStorage.getItem('state');
+					// 远程访问秘钥
+					this.user.key = sessionStorage.getItem('key');
+					// 有用户数据
+					this.user.verification = true;
+					console.log(user)
+				}
+			}
+		});
+		const getListVue = () => {
+			getList(vue);
+		};
+	</script>
+</html>

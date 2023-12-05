@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace指定接口的完整类名 -->
+<mapper namespace="top.lldwb.file.saving.tool.server.dao.PathMappingDao">
+    <resultMap id="pathMapping" type="top.lldwb.file.saving.tool.server.pojo.entity.PathMapping">
+        <id property="pathMappingId" column="path_mapping_id"/>
+        <result property="pathMappingLocalPath" column="path_mapping_local_path"/>
+        <result property="pathMappingRemotePath" column="path_mapping_remote_path"/>
+        <result property="pathMappingType" column="path_mapping_type"/>
+        <result property="clientId" column="client_id"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <select id="getPathMappingByPathMappingId" resultMap="pathMapping">
+        select path_mapping_id,
+               path_mapping_local_path,
+               path_mapping_remote_path,
+               path_mapping_type,
+               client_id,
+               user_id
+        from path_mapping
+        where user_id = #{pathMappingId}
+    </select>
+
+    <select id="getUsers" resultMap="pathMapping">
+        select path_mapping_id,
+               path_mapping_local_path,
+               path_mapping_remote_path,
+               path_mapping_type,
+               client_id,
+               user_id
+        from path_mapping
+        where path_mapping_type > -1
+    </select>
+
+    <insert id="savaMap" parameterType="Map">
+        insert into test(path_mapping_local_path, path_mapping_remote_path, path_mapping_type, client_id, user_id)
+        values (#{pathMappingLocalPath}, #{pathMappingRemotePath}, #{pathMappingType}, #{clientId}, #{userId});
+    </insert>
+
+    <update id="updatePathMapping" parameterType="PathMapping">
+        update path_mapping
+        set path_mapping_local_path  = #{pathMappingLocalPath},
+            path_mapping_remote_path = #{pathMappingRemotePath}
+        where path_mapping_id = #{pathMappingId}
+    </update>
+
+    <delete id="deletePathMapping" parameterType="int">
+        update path_mapping
+        set path_mapping_type = -1
+        where user_id = #{pathMappingId}
+    </delete>
+</mapper>
