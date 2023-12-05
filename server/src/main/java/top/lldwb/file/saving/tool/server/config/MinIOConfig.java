@@ -1,5 +1,6 @@
 package top.lldwb.file.saving.tool.server.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.lldwb.file.saving.tool.server.factory.MinioFactoryBean;
