@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.pojo.dto;
+package top.lldwb.file.saving.tool.pojo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateMessage<T> extends Message {
+public class UpdateMessage<T> extends Message<T> {
     private String id;
+    /**
+     * 数据
+     */
     private T Data;
 }

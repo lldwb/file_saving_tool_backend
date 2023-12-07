@@ -4,24 +4,15 @@ import io.minio.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import top.lldwb.file.saving.tool.server.config.MinIOConfig;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.server.pojo.entity.Magic;
-import top.lldwb.file.saving.tool.server.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,10 +36,9 @@ public class MinIOController extends BaseController {
      *
      * @param multipartFile
      * @return
-     * @throws Exception
      */
     @PostMapping("/addFile")
-    public ResultVO addFile(MultipartFile multipartFile, HttpSession session) throws Exception {
+    public ResultVO addFile(MultipartFile multipartFile, HttpSession session) {
         User user = (User) session.getAttribute("user");
         service.addFile(multipartFile, user.getUserId());
         return success();
@@ -61,7 +51,7 @@ public class MinIOController extends BaseController {
     }
 
     @GetMapping("/downloadFile/{path}")
-    public ResultVO<ResponseEntity<InputStreamResource>> downloadFile(@PathVariable("path") String path) throws Exception {
+    public ResultVO<ResponseEntity<InputStreamResource>> downloadFile(@PathVariable("path") String path) {
         return success(service.downloadFile(path));
     }
 

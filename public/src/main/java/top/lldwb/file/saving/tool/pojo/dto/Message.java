@@ -1,10 +1,6 @@
-package top.lldwb.file.saving.tool.server.pojo.dto;
+package top.lldwb.file.saving.tool.pojo.dto;
 
 import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 /**
  * 消息实体
@@ -16,5 +12,9 @@ import java.util.Date;
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Data
-public class Message {
+public class Message<T> {
+    /**
+     * 数据
+     */
+    private T Data;
 }

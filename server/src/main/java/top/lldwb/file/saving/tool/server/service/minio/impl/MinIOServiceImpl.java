@@ -4,7 +4,6 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import io.minio.*;
 import io.minio.errors.*;
-import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.core.io.InputStreamResource;
@@ -17,16 +16,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.server.config.MinIOConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
-import top.lldwb.file.saving.tool.server.config.RabbitEmailAuthCode;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
 import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.server.pojo.entity.Magic;
 import top.lldwb.file.saving.tool.server.pojo.entity.OperationLog;
-import top.lldwb.file.saving.tool.server.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
@@ -35,7 +31,6 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

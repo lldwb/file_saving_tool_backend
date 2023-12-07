@@ -54,9 +54,15 @@
 
         <dependency>
             <groupId>top.lldwb.file.saving.tool</groupId>
-            <artifactId>client</artifactId>
+            <artifactId>public</artifactId>
             <version>{top.lldwb.file.saving.tool.version}</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>top.lldwb.file.saving.tool</groupId>-->
+<!--            <artifactId>pojo</artifactId>-->
+<!--            <version>{top.lldwb.file.saving.tool.version}</version>-->
+<!--        </dependency>-->
 
 <!--        &lt;!&ndash;thymeleaf 邮件模板&ndash;&gt;-->
 <!--        <dependency>-->
@@ -95,5 +101,26 @@
             <version>8.5.7</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

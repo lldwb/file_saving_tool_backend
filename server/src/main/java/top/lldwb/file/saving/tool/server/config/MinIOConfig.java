@@ -1,6 +1,5 @@
 package top.lldwb.file.saving.tool.server.config;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.lldwb.file.saving.tool.server.factory.MinioFactoryBean;
@@ -22,7 +21,7 @@ public class MinIOConfig {
     // 定义密码
     private String pass = "@LL123456";
     // 定义桶名
-    public static final String BUCKET = "file_saving_tool";
+    public static final String BUCKET = "file.saving.tool";
 
     @Bean
     public MinioFactoryBean minioFactoryBean() {

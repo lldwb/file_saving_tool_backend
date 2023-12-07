@@ -1,10 +1,7 @@
 package top.lldwb.file.saving.tool.server.service.es;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.document.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.server.pojo.entity.PathMapping;
 
 import java.util.List;
 
@@ -29,7 +28,6 @@ public interface MinIOService {
     /**
      * 删除文件
      *
-     * @param path
      */
     void deleteFile(Integer fileInfoId);
 
@@ -50,8 +48,9 @@ public interface MinIOService {
 
     /**
      * 获取文件列表
-     *
-     * @param pathMapping
+     * @param fileInfo
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     List<FileInfoDoc> getFiles(FileInfo fileInfo, Integer pageNum, Integer pageSize);

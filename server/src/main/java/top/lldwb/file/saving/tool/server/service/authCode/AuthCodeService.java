@@ -1,6 +1,7 @@
 package top.lldwb.file.saving.tool.server.service.authCode;
 
-import top.lldwb.file.saving.tool.server.pojo.dto.AuthCode;
+
+import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
 
 /**
  * 验证码

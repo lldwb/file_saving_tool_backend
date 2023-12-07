@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.pojo.dto;
+package top.lldwb.file.saving.tool.pojo.dto;
 
 import cn.hutool.core.util.RandomUtil;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthCode extends Message{
+public class AuthCode{
     /**
      * 发送者
      */

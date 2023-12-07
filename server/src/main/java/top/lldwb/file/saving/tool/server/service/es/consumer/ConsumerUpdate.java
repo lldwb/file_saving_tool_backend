@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
-import top.lldwb.file.saving.tool.server.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 
 import java.beans.IntrospectionException;

@@ -34,12 +34,12 @@
         where path_mapping_type > -1
     </select>
 
-    <insert id="savaMap" parameterType="Map">
+    <insert id="addPathMapping" parameterType="Map">
         insert into test(path_mapping_local_path, path_mapping_remote_path, path_mapping_type, client_id, user_id)
         values (#{pathMappingLocalPath}, #{pathMappingRemotePath}, #{pathMappingType}, #{clientId}, #{userId});
     </insert>
 
-    <update id="updatePathMapping" parameterType="PathMapping">
+    <update id="updatePathMapping">
         update path_mapping
         set path_mapping_local_path  = #{pathMappingLocalPath},
             path_mapping_remote_path = #{pathMappingRemotePath}
