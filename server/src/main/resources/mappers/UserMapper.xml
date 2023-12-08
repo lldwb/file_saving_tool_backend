@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace指定接口的完整类名 -->
 <mapper namespace="top.lldwb.file.saving.tool.server.dao.UserDao">
-    <resultMap id="user" type="top.lldwb.file.saving.tool.server.pojo.entity.User">
+    <resultMap id="user" type="top.lldwb.file.saving.tool.pojo.entity.User">
         <id property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
         <result property="userPassword" column="user_password"/>
@@ -32,12 +32,12 @@
         from user
     </select>
 
-    <insert id="addUser" parameterType="top.lldwb.file.saving.tool.server.pojo.entity.User" useGeneratedKeys="true"
+    <insert id="addUser" parameterType="top.lldwb.file.saving.tool.pojo.entity.User" useGeneratedKeys="true"
             keyProperty="userId">
         insert into user(user_name, user_password, user_email)
         values (#{userName}, #{userPassword}, #{userEmail})
     </insert>
-    <update id="updateUser" parameterType="top.lldwb.file.saving.tool.server.pojo.entity.User">
+    <update id="updateUser" parameterType="top.lldwb.file.saving.tool.pojo.entity.User">
         update user
         set user_name       = #{userName},
             user_password   = #{userPassword},

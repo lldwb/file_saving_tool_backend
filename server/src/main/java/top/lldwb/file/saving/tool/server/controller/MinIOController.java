@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
-import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.server.pojo.entity.User;
+import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
@@ -28,7 +28,6 @@ import java.util.List;
 @RequestMapping("/minio")
 @RequiredArgsConstructor
 public class MinIOController extends BaseController {
-    private final MinioClient minioClient;
     private final MinIOService service;
 
     /**

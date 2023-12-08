@@ -1,6 +1,6 @@
 package top.lldwb.file.saving.tool.server.dao;
 
-import top.lldwb.file.saving.tool.server.pojo.entity.OperationLog;
+import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 
 /**
  * @author lldwb

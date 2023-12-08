@@ -20,10 +20,8 @@ public class NettyConfig {
      * @return
      */
     @Bean
-    public ServerNettyService serverNettyService(){
-        ServerNettyService serverNettyService = new ServerNettyService();
+    public ServerNettyService serverNettyService(ServerNettyService serverNettyService){
         serverNettyService.setPort(32433);
-        serverNettyService.setClazz(SocketMessage.class);
         serverNettyService.run();
         return serverNettyService;
     }

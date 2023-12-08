@@ -4,7 +4,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
-import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 
 import java.util.List;
 

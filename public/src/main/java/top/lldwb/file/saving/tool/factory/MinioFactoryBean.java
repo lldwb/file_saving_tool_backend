@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.factory;
+package top.lldwb.file.saving.tool.factory;
 
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;

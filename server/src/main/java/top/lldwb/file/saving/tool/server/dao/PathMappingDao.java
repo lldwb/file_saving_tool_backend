@@ -1,6 +1,6 @@
 package top.lldwb.file.saving.tool.server.dao;
 
-import top.lldwb.file.saving.tool.server.pojo.entity.PathMapping;
+import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 
 import java.util.List;
 

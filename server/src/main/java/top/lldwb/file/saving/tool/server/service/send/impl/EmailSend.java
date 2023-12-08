@@ -5,6 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
+import top.lldwb.file.saving.tool.pojo.dto.Message;
 import top.lldwb.file.saving.tool.server.service.send.SendService;
 
 /**
@@ -21,7 +22,8 @@ public class EmailSend implements SendService {
     private final JavaMailSender javaMailSender;
 
     @Override
-    public void send(AuthCode authCode) {
+    public void send(Message message) {
+        AuthCode authCode = (AuthCode)message;
         SimpleMailMessage smm = new SimpleMailMessage();
         // 发件人的邮箱
         smm.setFrom(authCode.getFromUser());

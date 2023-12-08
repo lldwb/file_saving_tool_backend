@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.pojo.entity;
+package top.lldwb.file.saving.tool.pojo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

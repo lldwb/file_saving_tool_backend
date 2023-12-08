@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace指定接口的完整类名 -->
 <mapper namespace="top.lldwb.file.saving.tool.server.dao.FileInfoDao">
-    <resultMap id="fileInfo" type="top.lldwb.file.saving.tool.server.pojo.entity.FileInfo">
+    <resultMap id="fileInfo" type="top.lldwb.file.saving.tool.pojo.entity.FileInfo">
         <id column="file_info_id" property="fileInfoId"/>
         <result column="file_info_name" property="fileInfoName"/>
         <result column="file_info_path" property="fileInfoPath"/>
@@ -49,8 +49,26 @@
           and user_id = #{userId}
           and file_info_type > 0
     </select>
+
+    <select id="getFileInfoByPathANDUserIds" resultMap="fileInfo">
+
+        select file_info_id,
+               file_info_name,
+               file_info_path,
+               file_info_minio_path,
+               file_info_type,
+               file_info_md5,
+               file_info_size,
+               user_id,
+               create_time,
+               update_time
+        from file_info
+        where file_info_path like #{fileInfoPath}
+          and user_id = #{userId}
+          and file_info_type > 0
+    </select>
     
-    <select id="getFileInfos" resultMap="fileInfo" parameterType="top.lldwb.file.saving.tool.server.pojo.entity.FileInfo">
+    <select id="getFileInfos" resultMap="fileInfo">
         select file_info_id,
                file_info_name,
                file_info_path,
@@ -64,13 +82,13 @@
         from file_info
     </select>
 
-    <insert id="addFileInfo" parameterType="top.lldwb.file.saving.tool.server.pojo.entity.FileInfo" useGeneratedKeys="true"
+    <insert id="addFileInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo" useGeneratedKeys="true"
             keyProperty="fileInfoId">
         insert into file_info(file_info_name,file_info_path,file_info_minio_path,file_info_type,file_info_md5,file_info_size,user_id)
         values (#{fileInfoName},#{fileInfoPath},#{fileInfoMinIOPath},#{fileInfoType},#{fileInfoMd5},#{fileInfoSize},#{userId})
     </insert>
     
-    <update id="updateFileInfo"  parameterType="top.lldwb.file.saving.tool.server.pojo.entity.FileInfo">
+    <update id="updateFileInfo"  parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo">
         update file_info
         <set>
             <if test="fileInfoName != null and fileInfoName != ''">

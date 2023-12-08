@@ -2,11 +2,20 @@ package top.lldwb.file.saving.tool.client.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.service.control.ControlService;
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 
-/**
- * 客户端处理器
- */
+
+@Service
+@RequiredArgsConstructor
 public class ClientHandler extends ChannelInboundHandlerAdapter {
+    /**
+     * 负责找到操作的Bean
+     */
+    private final ApplicationContext connection;
 
     /**
      * 接收消息事件
@@ -15,9 +24,15 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
      * @param msg 接收的消息
      */
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        System.out.println("接收消息事件");
-        System.out.println("服务端的消息：" + msg);
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws ClassNotFoundException {
+        SocketMessage socketMessage = (SocketMessage) msg;
+
+//        Class<?> clazz = Class.forName(socketMessage.getFileType());
+//        System.out.println(socketMessage.getControlType());
+
+        ControlService controlService = connection.getBean(socketMessage.getControlType(),ControlService.class);
+        controlService.control(socketMessage.getData());
+
         ctx.close();
     }
 

@@ -11,7 +11,7 @@ import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.dao.UserDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
-import top.lldwb.file.saving.tool.server.pojo.entity.User;
+import top.lldwb.file.saving.tool.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.user.UserService;
 

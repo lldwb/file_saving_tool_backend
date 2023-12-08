@@ -8,10 +8,11 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.netty.ObjectDecoder;
-import top.lldwb.file.saving.tool.netty.ObjectEncoder;
+import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
+import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
 
 /**
  * @author lldwb
@@ -22,9 +23,12 @@ import top.lldwb.file.saving.tool.netty.ObjectEncoder;
  */
 @Service
 @Setter
+@RequiredArgsConstructor
 public class ServerNettyService {
+    private final ServerHandler serverHandler;
+    private final ObjectEncoder objectEncoder;
+    private final ObjectDecoder objectDecoder;
     private Integer port;
-    private Class<?> clazz;
 
     public void run() {
         // 创建两个EventLoopGroup，一个用于接受客户端连接，另一个用于处理网络操作
@@ -39,7 +43,7 @@ public class ServerNettyService {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             // 为每一个客户端连接创建一个ServerHandler实例
-                            ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(clazz), new ServerHandler());
+                            ch.pipeline().addLast(objectEncoder, objectDecoder, serverHandler);
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)

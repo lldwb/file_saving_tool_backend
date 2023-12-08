@@ -1,8 +1,13 @@
-package top.lldwb.file.saving.tool.server.config;
+package top.lldwb.file.saving.tool.config;
 
+import io.minio.MinioClient;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.lldwb.file.saving.tool.server.factory.MinioFactoryBean;
+import top.lldwb.file.saving.tool.factory.MinioFactoryBean;
 
 /**
  * MainIo配置类
@@ -13,6 +18,8 @@ import top.lldwb.file.saving.tool.server.factory.MinioFactoryBean;
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Configuration
+//才会初始化当前的配置类
+//@ConditionalOnClass(MinioClient.class)
 public class MinIOConfig {
    // 定义url
     private String url = "http://rnus:9000";

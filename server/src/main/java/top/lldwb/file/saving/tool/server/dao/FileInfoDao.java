@@ -1,6 +1,6 @@
 package top.lldwb.file.saving.tool.server.dao;
 
-import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 
 import java.util.List;
 
@@ -13,7 +13,21 @@ public interface FileInfoDao {
      */
     FileInfo getFileInfoByFileInfoId(Integer fileInfoId);
 
+    /**
+     * 根据路径和用户ID获取FileInfo
+     *
+     * @param fileInfo
+     * @return
+     */
     FileInfo getFileInfoByPathANDUserId(FileInfo fileInfo);
+
+    /**
+     * 根据路径(路径/**)和用户ID获取FileInfo集合
+     * @param fileInfoPath
+     * @param userId
+     * @return
+     */
+    List<FileInfo> getFileInfoByPathANDUserIds(String fileInfoPath, Integer userId);
 
     /**
      * 获取所有用户

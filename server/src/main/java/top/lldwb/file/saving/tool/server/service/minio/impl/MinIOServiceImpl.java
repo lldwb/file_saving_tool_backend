@@ -14,15 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import top.lldwb.file.saving.tool.server.config.MinIOConfig;
+import top.lldwb.file.saving.tool.config.MinIOConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
-import top.lldwb.file.saving.tool.server.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.server.pojo.entity.OperationLog;
+import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
-import top.lldwb.file.saving.tool.server.pojo.entity.User;
+import top.lldwb.file.saving.tool.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.exception.AuthException;
 import top.lldwb.file.saving.tool.server.service.authCode.AuthCodeService;
 import top.lldwb.file.saving.tool.server.service.login.LoginService;

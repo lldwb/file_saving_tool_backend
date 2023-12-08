@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace指定接口的完整类名 -->
 <mapper namespace="top.lldwb.file.saving.tool.server.dao.OperationLogDao">
-    <resultMap id="operationLog" type="top.lldwb.file.saving.tool.server.pojo.entity.OperationLog">
+    <resultMap id="operationLog" type="top.lldwb.file.saving.tool.pojo.entity.OperationLog">
         <id column="operation_log_id" property="operationLogId"/>
         <result column="operation_log_name" property="operationLogName"/>
         <result column="operation_log_path" property="operationLogPath"/>
@@ -35,7 +35,7 @@
         where operation_log_id = #{operationLogId}
     </select>
 
-    <insert id="addOperationLog" parameterType="top.lldwb.file.saving.tool.server.pojo.entity.OperationLog">
+    <insert id="addOperationLog" parameterType="top.lldwb.file.saving.tool.pojo.entity.OperationLog">
         insert into operation_log(operation_log_name, operation_log_path, operation_log_minio_path, operation_log_type,
                                   operation_log_file_type, operation_log_md5, operation_log_size, user_id, file_info_id)
         values (#{operationLogName}, #{operationLogPath}, #{operationLogMinioPath}, #{operationLogType},

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthCode{
+public class AuthCode extends Message{
     /**
      * 发送者
      */

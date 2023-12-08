@@ -1,36 +1,37 @@
-package top.lldwb.file.saving.tool.server.pojo.entity;
+package top.lldwb.file.saving.tool.pojo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 分享日志实体类
+ * 客户端实体类
+ *
  * @author lldwb
  * @email 3247187440@qq.com
  * @date 2023/11/30
- * @time 11:36
+ * @time 11:30
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShareLog {
+public class Client {
     /**
      * ID
      */
-    private Integer shareLogId;
+    private Integer clientId;
     /**
-     * 路径
+     * 秘钥
      */
-    private String shareLogPath;
+    private String clientUUID;
     /**
-     * 权限
+     * 状态
      */
-    private String shareLogAuthority;
-
+    private Integer clientState;
     /**
      * 用户对象
      */
     private User user;
+
 }

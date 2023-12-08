@@ -2,6 +2,7 @@ package top.lldwb.file.saving.tool.server.service.send;
 
 
 import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
+import top.lldwb.file.saving.tool.pojo.dto.Message;
 
 /**
  * 负责发送消息的接口
@@ -16,5 +17,5 @@ public interface SendService {
     /**
      * 发送消息的抽象方法
      */
-    void send(AuthCode authCode);
+    void send(Message message);
 }

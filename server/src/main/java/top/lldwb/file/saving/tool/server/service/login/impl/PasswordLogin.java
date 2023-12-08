@@ -4,7 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.server.dao.UserDao;
-import top.lldwb.file.saving.tool.server.pojo.entity.User;
+import top.lldwb.file.saving.tool.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.exception.AuthException;
 import top.lldwb.file.saving.tool.server.service.login.LoginService;
 
