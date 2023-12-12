@@ -1,20 +1,17 @@
-package top.lldwb.file.saving.tool.server;
+package top.lldwb.file.saving.tool;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import top.lldwb.file.saving.tool.PublicApplication;
 import top.lldwb.file.saving.tool.config.AppConfig;
 import top.lldwb.file.saving.tool.config.MinIOConfig;
 
 @SpringBootApplication
-@MapperScan("top.lldwb.file.saving.tool.server.dao")
-@Import(PublicApplication.class)
-public class ServerApplication {
+@Import({MinIOConfig.class, AppConfig.class})
+public class PublicApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ServerApplication.class, args);
+        SpringApplication.run(PublicApplication.class, args);
     }
 }

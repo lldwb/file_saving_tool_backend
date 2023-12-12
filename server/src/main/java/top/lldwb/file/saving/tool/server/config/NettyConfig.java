@@ -2,6 +2,7 @@ package top.lldwb.file.saving.tool.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.server.service.netty.ServerNettyService;
 
@@ -13,6 +14,7 @@ import top.lldwb.file.saving.tool.server.service.netty.ServerNettyService;
  * @time 15:54
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Lazy
 @Configuration
 public class NettyConfig {
     /**

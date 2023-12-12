@@ -7,40 +7,35 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 /**
- * 路径映射表
- *
+ * 文件夹信息
  * @author lldwb
  * @email 3247187440@qq.com
- * @date 2023/11/30
- * @time 11:36
+ * @date 2023/12/12
+ * @time 8:54
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PathMapping {
+public class DirectoryInfo {
     /**
-     * ID
-     */
-    private Integer pathMappingId;
-    /**
-     * 本地路径
-     */
-    private String pathMappingLocalPath;
-    /**
-     * 文件夹id(外键)
+     * 文件夹id
      */
     private Integer directoryInfoId;
     /**
-     * 类型(1上传2下载3同步，删除为对应的负数)
+     * 文件夹名称
      */
-    private Integer pathMappingType;
+    private String directoryInfoName;
     /**
-     * 客户端id(外键)
+     * 父文件夹id
      */
-    private Integer clientId;
+    private Integer directoryInfoFatherId;
     /**
-     * 用户对象id(外键)
+     * 状态
+     */
+    private Integer directoryInfoState;
+    /**
+     * 用户id
      */
     private Integer userId;
     /**

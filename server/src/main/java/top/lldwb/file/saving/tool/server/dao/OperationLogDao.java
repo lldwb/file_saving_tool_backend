@@ -10,7 +10,19 @@ import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
  * @PROJECT_NAME file_saving_tool_backend
  */
 public interface OperationLogDao {
+    /**
+     * 根据id返回
+     *
+     * @param operationLogId
+     * @return
+     */
     OperationLog getOperationLogByOperationLogId(Integer operationLogId);
+
+    /**
+     * 添加
+     *
+     * @param operationLog
+     */
     void addOperationLog(OperationLog operationLog);
 
 }

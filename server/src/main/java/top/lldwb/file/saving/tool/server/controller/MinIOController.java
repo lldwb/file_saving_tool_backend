@@ -1,6 +1,5 @@
 package top.lldwb.file.saving.tool.server.controller;
 
-import io.minio.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -36,10 +35,10 @@ public class MinIOController extends BaseController {
      * @param multipartFile
      * @return
      */
-    @PostMapping("/addFile")
-    public ResultVO addFile(MultipartFile multipartFile, HttpSession session) {
+    @PutMapping("/addFile")
+    public ResultVO addFile(MultipartFile multipartFile,Integer directoryInfoId, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        service.addFile(multipartFile, user.getUserId());
+        service.addFile(multipartFile,directoryInfoId, user.getUserId());
         return success();
     }
 
@@ -54,6 +53,13 @@ public class MinIOController extends BaseController {
         return success(service.downloadFile(path));
     }
 
+    /**
+     * 获取文件列表
+     * @param fileInfo
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/getFiles")
     public ResultVO<List<FileInfoDoc>> getFiles(FileInfo fileInfo, Integer pageNum, Integer pageSize) {
         // 返回文件列表

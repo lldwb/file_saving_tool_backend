@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 /**
  * @author lldwb
  * @email 3247187440@qq.com
@@ -24,25 +26,21 @@ public class FileInfo {
      */
     private String fileInfoName;
     /**
-     * 路径
+     * minio路径(SHA-256)
      */
     private String fileInfoPath;
     /**
-     * MinIO路径
+     * 状态(1为存在，-1删除)
      */
-    private String fileInfoMinIOPath;
-    /**
-     * 类型
-     */
-    private Integer fileInfoType;
-    /**
-     * 文件特征码
-     */
-    private String fileInfoMd5;
+    private Integer fileInfoState;
     /**
      * 文件大小
      */
     private Long fileInfoSize;
+    /**
+     * 文件夹id
+     */
+    private Integer directoryInfoId;
     /**
      * 用户id
      */
@@ -50,9 +48,9 @@ public class FileInfo {
     /**
      * 创建时间
      */
-    private Integer createTime;
+    private Timestamp createTime;
     /**
      * 更新时间
      */
-    private Integer updateTime;
+    private Timestamp updateTime;
 }

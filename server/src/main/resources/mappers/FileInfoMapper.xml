@@ -7,10 +7,9 @@
         <id column="file_info_id" property="fileInfoId"/>
         <result column="file_info_name" property="fileInfoName"/>
         <result column="file_info_path" property="fileInfoPath"/>
-        <result column="file_info_minio_path" property="fileInfoMinIOPath"/>
-        <result column="file_info_type" property="fileInfoType"/>
-        <result column="file_info_md5" property="fileInfoMd5"/>
+        <result column="file_info_state" property="fileInfoState"/>
         <result column="file_info_size" property="fileInfoSize"/>
+        <result column="directory_info_id" property="directoryInfoId"/>
         <result column="user_id" property="userId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -20,10 +19,9 @@
         select file_info_id,
                file_info_name,
                file_info_path,
-               file_info_minio_path,
-               file_info_type,
-               file_info_md5,
+               file_info_state,
                file_info_size,
+               directory_info_id,
                user_id,
                create_time,
                update_time
@@ -37,17 +35,15 @@
         select file_info_id,
                file_info_name,
                file_info_path,
-               file_info_minio_path,
-               file_info_type,
-               file_info_md5,
+               file_info_state,
                file_info_size,
+               directory_info_id,
                user_id,
                create_time,
                update_time
         from file_info
         where file_info_path = #{fileInfoPath}
           and user_id = #{userId}
-          and file_info_type > 0
     </select>
 
     <select id="getFileInfoByPathANDUserIds" resultMap="fileInfo">
@@ -55,27 +51,24 @@
         select file_info_id,
                file_info_name,
                file_info_path,
-               file_info_minio_path,
-               file_info_type,
-               file_info_md5,
+               file_info_state,
                file_info_size,
+               directory_info_id,
                user_id,
                create_time,
                update_time
         from file_info
         where file_info_path like #{fileInfoPath}
           and user_id = #{userId}
-          and file_info_type > 0
     </select>
     
     <select id="getFileInfos" resultMap="fileInfo">
         select file_info_id,
                file_info_name,
                file_info_path,
-               file_info_minio_path,
-               file_info_type,
-               file_info_md5,
+               file_info_state,
                file_info_size,
+               directory_info_id,
                user_id,
                create_time,
                update_time
@@ -84,8 +77,8 @@
 
     <insert id="addFileInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo" useGeneratedKeys="true"
             keyProperty="fileInfoId">
-        insert into file_info(file_info_name,file_info_path,file_info_minio_path,file_info_type,file_info_md5,file_info_size,user_id)
-        values (#{fileInfoName},#{fileInfoPath},#{fileInfoMinIOPath},#{fileInfoType},#{fileInfoMd5},#{fileInfoSize},#{userId})
+        insert into file_info(file_info_name,file_info_pat,file_info_md5,file_info_size,user_id)
+        values (#{fileInfoName},#{fileInfoPath},#{fileInfoMd5},#{fileInfoSize},#{userId})
     </insert>
     
     <update id="updateFileInfo"  parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo">
@@ -97,17 +90,14 @@
             <if test="fileInfoPath != null and fileInfoPath != ''">
                 file_info_path = #{fileInfoPath},
             </if>
-            <if test="fileInfoMinIOPath != null and fileInfoMinIOPath != ''">
-                file_info_minio_path = #{fileInfoMinIOPath},
-            </if>
-            <if test="fileInfoType != null and fileInfoType != ''">
-                file_info_type = #{fileInfoType},
-            </if>
-            <if test="fileInfoMd5 != null and fileInfoMd5 != ''">
-                file_info_md5 = #{fileInfoMd5},
+            <if test="fileInfoState != null and fileInfoState != ''">
+                file_info_state = #{fileInfoState},
             </if>
             <if test="fileInfoSize != null and fileInfoSize != ''">
                 file_info_size = #{fileInfoSize}
+            </if>
+            <if test="directoryInfoId != null and directoryInfoId != ''">
+                directory_info_id = #{directoryInfoId},
             </if>
         </set>
         where file_info_id = #{fileInfoId}

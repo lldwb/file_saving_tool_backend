@@ -24,7 +24,7 @@ import top.lldwb.file.saving.tool.server.service.send.SendService;
 @Scope(value = "prototype",proxyMode = ScopedProxyMode.TARGET_CLASS)
 @RequiredArgsConstructor
 public class NettySend implements SendService {
-    private final ServerHandler serverHandler;
+//    private final ServerHandler serverHandler;
     /**
      * 需要发送消息的客户端
      */
@@ -35,7 +35,8 @@ public class NettySend implements SendService {
         SocketMessage socketMessage = (SocketMessage)message;
         // 发送消息并且立刻刷新(设置消息并且立刻发送)
         // 添加关闭监听器
-        serverHandler.getChannelHandlerContext(UUID).writeAndFlush(socketMessage);
+//        serverHandler.getChannelHandlerContext(UUID).writeAndFlush(socketMessage);
+
 //      serverHandler.getChannelHandlerContext(UUID).writeAndFlush(socketMessage).addListener(ChannelFutureListener.CLOSE);
     }
 }

@@ -2,6 +2,35 @@
 SpringBoot、Mybatis、MySQL
 Redis、Elasticsearch、RabbitMQ
 Vue
+# 连接配置
+## mysql
+driver-class-name: com.mysql.cj.jdbc.Driver
+url: jdbc:mysql://www:3306/file_saving_tool
+username: file_saving_tool
+password: Be8mhcSZZ8J3nAi3
+## redis
+host: www
+password: "@lldwb_redis"
+port: 7890
+## minio
+host: http://www:9000
+username: lldwb
+password: "98b058becd731"
+## rabbitmq
+host: iprus
+port: 5672
+username: admin
+password: "ca171bc0"
+## elasticsearch
+uris: http://iprus:9200
+username: elastic
+password: ZKNfWXtbOAGyF3yv_caT
+## mail
+host: www
+port: 25
+username: file_saving_tool@lldwb.top
+password: hxH^0oZ8U8b70EYs
+
 # 项目描述
 该文件保存工具的开发不仅仅满足了人们对文件保存的相关需求，还提供了文件搜索、文件分享、文件下载等功能。
 在此基础上还提供了远程管理多个客户端(微被控端)的功能，控制远程客户端实现自动上传下载和同步操作。
@@ -9,7 +38,6 @@ Vue
 # 项目职责
 1）负责技术栈的选取与整体架构设计、包括需求分析、API 文档设计、数据库设计。
 2）设计并开发了文件搜索、文件分享、文件下载和远程控制客户端等核心功能模块。
-
 3）实现订单流程，包括用户下单、卖家确认订单和发货，引入 RabbitMQ 作为消息队列，使订单流程异步化
 处理，降低了系统响应时间，提高系统的并发能力。
 4）利用 Redis 作为缓存中间件，存储商品库存信息，有效地避免了超卖和库存不足问题。
@@ -20,49 +48,36 @@ Vue
  
 # 功能设计
 o：前后端都完成
+h：后端完成，前端未完成，测试通过
 t：后端完成，前端未完成，待测试
 x：待完成
 
-## 登录注册
+minIO路径从UUID标记修改为SHA-256，保证减少存储空间的使用
+把所有MD5修改为SHA-256
+
+## 登录注册 o
 ### 发送验证码 o
-接收前端请求 -> 生成验证码对象 -> 发送验证码(使用mq异步) -> 保存验证码对象到redis中 -> 返回前端
 ### 验证验证码 o
-接收前端请求 -> 从redis中获取验证码对象进行判断 -> 判断是否注册，如果没有则自动注册 -> 返回前端
 
-## 基本网盘操作
+## 基本网盘操作 x
 ### 文件列表 t
-接收前端请求 -> 从es中获取文件信息对象 -> 返回前端
 ### 搜索文件 t
-接收前端请求 -> 从es中获取 -> 返回前端
 ### 上传文件 t
-接收前端请求 -> 上传到文件服务器 -> 同步到数据库和es中(使用mq异步) -> 返回前端
-### 删除文件 t
-接收前端请求 -> 从文件服务器中删除文件 -> 同步到数据库和es中(使用mq异步) -> 返回前端
-### 手动分享
-接收前端请求 ->
-### 提示更新
-接收前端请求 ->
+### 删除文件 h
+### 手动分享 x
+### 提示更新 x
 
-## 操作客户端
+## 操作客户端 x
 ### 添加客户端
-接收前端请求 ->
 ### 删除客户端
-接收前端请求 ->
 
-## 客户端实现功能
+## 客户端实现功能 x
 ### 生成uuid并根据uuid进行通讯 x
-启动项目 -> 
 ### 自动上传
-接收前端请求 ->
 ### 自动下载
-接收前端请求 ->
 ### 自动同步
-接收前端请求 ->
 
-## 扩展功能
+## 扩展功能 x
 ### 登录属地功能
-接收前端请求 ->
 ### 风险检测功能
-接收前端请求 ->
 ### 异常邮箱反馈功能
-接收前端请求 -> 

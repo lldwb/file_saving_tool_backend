@@ -112,5 +112,5 @@ public interface EsService {
      * @param <T>      Doc对象
      * @return Doc对象集合
      */
-    <T> List<T> listNamesByNames(Class<T> docType, Integer pageNum, Integer pageSize, Map<String, String> Params);
+    <T> List<T> listNamesByNames(Class<T> docType, Integer pageNum, Integer pageSize, Map<String, Object> Params);
 }

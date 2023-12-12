@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import top.lldwb.file.saving.tool.factory.MinioFactoryBean;
 
@@ -22,11 +23,11 @@ import top.lldwb.file.saving.tool.factory.MinioFactoryBean;
 //@ConditionalOnClass(MinioClient.class)
 public class MinIOConfig {
    // 定义url
-    private String url = "http://rnus:9000";
+    private String url = "http://www:9000";
     // 定义用户名
     private String name = "lldwb";
     // 定义密码
-    private String pass = "@LL123456";
+    private String pass = "98b058becd731";
     // 定义桶名
     public static final String BUCKET = "file.saving.tool";
 

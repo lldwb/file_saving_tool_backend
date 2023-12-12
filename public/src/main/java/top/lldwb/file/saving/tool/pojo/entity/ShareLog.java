@@ -21,14 +21,18 @@ public class ShareLog {
      */
     private Integer shareLogId;
     /**
-     * 路径
-     */
-    private String shareLogPath;
-    /**
      * 权限
      */
     private String shareLogAuthority;
-
+    /**
+     * 文件id(外键)
+     * 如果为0则操作文件夹
+     */
+    private Integer fileInfoId;
+    /**
+     * 文件夹id(外键)
+     */
+    private Integer directoryInfoId;
     /**
      * 用户对象
      */

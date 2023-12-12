@@ -7,6 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.control.ControlService;
@@ -18,6 +19,7 @@ import java.util.Map;
 /**
  * 服务端处理器
  */
+
 @Service
 @RequiredArgsConstructor
 public class ServerHandler extends ChannelInboundHandlerAdapter {

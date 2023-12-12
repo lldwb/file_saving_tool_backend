@@ -1,6 +1,7 @@
 package top.lldwb.file.saving.tool.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
@@ -15,7 +16,6 @@ import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Configuration
-@Import({MinIOConfig.class})
 public class AppConfig {
     @Bean
     public ObjectDecoder objectDecoder(){

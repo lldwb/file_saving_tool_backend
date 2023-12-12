@@ -23,7 +23,13 @@ public interface MinIOService {
      *
      * @param multipartFile
      */
-    void addFile(MultipartFile multipartFile, Integer userId);
+    void addFile(MultipartFile multipartFile,Integer directoryInfoId, Integer userId);
+    /**
+     * 添加文件(用于内部)
+     *
+     * @param fileInfo
+     */
+    void addFile(FileInfo fileInfo);
 
     /**
      * 删除文件
@@ -41,10 +47,24 @@ public interface MinIOService {
     /**
      * 下载文件
      *
-     * @param path
+     * @param path minio路径
      * @return
      */
     ResponseEntity<InputStreamResource> downloadFile(String path);
+
+    /**
+     * 获取文件路径
+     * @param fileInfoId
+     * @return
+     */
+    String getFilePath(Integer fileInfoId);
+
+    /**
+     * 获取文件夹路径
+     * @param directoryInfoId
+     * @return
+     */
+    String getDirectoryInfoPath(Integer directoryInfoId);
 
     /**
      * 获取文件列表

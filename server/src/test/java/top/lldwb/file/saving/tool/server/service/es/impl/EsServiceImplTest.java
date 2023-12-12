@@ -29,9 +29,9 @@ class EsServiceImplTest {
 
         Map<String,String> map1 = new HashMap<>();
         map1.put("userName","lldwb");
-        esService.listNamesByNames(UserDoc.class,0,2,map1).forEach(userDoc -> System.out.println(userDoc));
-        Map<String,String> map2 = new HashMap<>();
-        map2.put("userEmail","qq");
-        esService.listNamesByNames(UserDoc.class,0,2,map2).forEach(userDoc -> System.out.println(userDoc));
+//        esService.listNamesByNames(UserDoc.class,0,2,map1).forEach(userDoc -> System.out.println(userDoc));
+//        Map<String,String> map2 = new HashMap<>();
+//        map2.put("userEmail","qq");
+//        esService.listNamesByNames(UserDoc.class,0,2,map2).forEach(userDoc -> System.out.println(userDoc));
     }
 }

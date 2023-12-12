@@ -33,28 +33,39 @@ public class OperationLogDoc {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String operationLogName;
     /**
-     * 路径
+     * minio路径
      */
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String operationLogPath;
     /**
-     * 操作类型(1添加，2删除，3修改)
+     * 操作类型(1添加，2修改，3删除，恢复为对应的负数)
      */
     @Field(type = FieldType.Integer)
     private Integer operationLogType;
     /**
-     * 文件类型(1文件夹，2文件)
+     * 字节大小
+     */
+    @Field(type = FieldType.Long)
+    private Long operationLogSize;
+    /**
+     * 文件id(外键)
+     * 如果为0则操作文件夹
      */
     @Field(type = FieldType.Integer)
-    private Integer operationLogFileType;
+    private Integer fileInfoId;
+    /**
+     * 文件夹id(外键)
+     */
+    @Field(type = FieldType.Integer)
+    private Integer directoryInfoId;
     /**
      * 用户id
      */
     @Field(type = FieldType.Integer)
     private Integer userId;
     /**
-     * 文件id
+     * 创建时间
      */
     @Field(type = FieldType.Integer)
-    private Integer fileInfoId;
+    private Integer createTime;
 }

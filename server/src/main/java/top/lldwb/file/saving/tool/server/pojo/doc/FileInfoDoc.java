@@ -35,18 +35,32 @@ public class FileInfoDoc {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String fileInfoName;
     /**
-     * 路径
+     * minio路径(SHA-256)
      */
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String fileInfoPath;
     /**
-     * 类型
+     * 状态(1为存在，-1删除)
      */
-    @Field(type = FieldType.Text, analyzer = "ik_max_word")
-    private Integer fileInfoType;
+    private Integer fileInfoState;
+    /**
+     * 文件大小
+     */
+    @Field(type = FieldType.Long)
+    private Long fileInfoSize;
+    /**
+     * 文件夹id
+     */
+    @Field(type = FieldType.Integer)
+    private Integer directoryInfoId;
     /**
      * 用户id
      */
     @Field(type = FieldType.Integer)
     private Integer userId;
+    /**
+     * 更新时间
+     */
+    @Field(type = FieldType.Integer)
+    private Integer updateTime;
 }

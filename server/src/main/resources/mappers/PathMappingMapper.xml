@@ -6,7 +6,6 @@
     <resultMap id="pathMapping" type="top.lldwb.file.saving.tool.pojo.entity.PathMapping">
         <id property="pathMappingId" column="path_mapping_id"/>
         <result property="pathMappingLocalPath" column="path_mapping_local_path"/>
-        <result property="pathMappingRemotePath" column="path_mapping_remote_path"/>
         <result property="pathMappingType" column="path_mapping_type"/>
         <result property="clientId" column="client_id"/>
         <result property="userId" column="user_id"/>

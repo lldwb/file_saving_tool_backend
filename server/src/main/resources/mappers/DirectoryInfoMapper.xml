@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace指定接口的完整类名 -->
+<mapper namespace="top.lldwb.file.saving.tool.server.dao.DirectoryInfoDao">
+    <resultMap id="directoryInfo" type="top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo">
+        <id property="directoryInfoId" column="directory_info_id"/>
+        <result property="directoryInfoName" column="directory_info_name"/>
+        <result property="directoryInfoFatherId" column="directory_info_father_id"/>
+        <result property="directoryInfoState" column="directory_info_state"/>
+        <result property="userId" column="user_id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getDirectoryInfoById" resultMap="directoryInfo">
+        select directory_info_id,directory_info_name,directory_info_father_id,directory_info_state,user_id,createTime,updateTime from directory_info where directory_info_id = {directoryInfoId}
+    </select>
+</mapper>

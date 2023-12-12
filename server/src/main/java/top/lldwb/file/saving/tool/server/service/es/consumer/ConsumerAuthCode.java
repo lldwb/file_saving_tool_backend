@@ -10,9 +10,9 @@ import top.lldwb.file.saving.tool.server.service.send.SendService;
 @Service
 @RequiredArgsConstructor
 public class ConsumerAuthCode {
-    private final SendService sendEmail;
+    private final SendService emailSend;
     @RabbitListener(queues = RabbitEmailAuthCode.QUEUE_NAME)
     public void sendEmailAuthCode(AuthCode authCode){
-        sendEmail.send(authCode);
+        emailSend.send(authCode);
     }
 }

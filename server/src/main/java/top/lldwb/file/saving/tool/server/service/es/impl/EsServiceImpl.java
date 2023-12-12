@@ -1,5 +1,6 @@
 package top.lldwb.file.saving.tool.server.service.es.impl;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -126,7 +127,7 @@ public class EsServiceImpl implements EsService {
     }
 
     @Override
-    public <T> List<T> listNamesByNames(Class<T> docType, Integer pageNum, Integer pageSize, Map<String, String> Params) {
+    public <T> List<T> listNamesByNames(Class<T> docType, Integer pageNum, Integer pageSize, Map<String, Object> Params) {
         // 创建一个NativeQueryBuilder对象
         NativeQueryBuilder queryBuilder = new NativeQueryBuilder();
         // 设置分页信息
@@ -151,7 +152,7 @@ public class EsServiceImpl implements EsService {
                                     mustList.add(Query.of(mustBuild -> {
                                                 // match查询构建器
                                                 mustBuild.match(
-                                                        m -> m.field(field).query(Params.get(field))
+                                                        m -> m.field(field).query((FieldValue) Params.get(field))
                                                 );
                                                 return mustBuild;
                                             })
