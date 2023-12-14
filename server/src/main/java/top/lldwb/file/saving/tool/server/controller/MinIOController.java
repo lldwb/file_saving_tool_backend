@@ -87,6 +87,11 @@ public class MinIOController extends BaseController {
         return success(service.getFiles(fileInfo, pageNum, pageSize));
     }
 
+    /**
+     * 返回文件路径
+     * @param fileInfoId
+     * @return
+     */
     @GetMapping("/getFileInfoByFileInfoId")
     public ResultVO<FileInfo> getFileInfoByFileInfoId(Integer fileInfoId) {
         return success(service.getFileInfoByFileInfoId(fileInfoId));
