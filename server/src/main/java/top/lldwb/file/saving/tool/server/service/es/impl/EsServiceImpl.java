@@ -127,42 +127,28 @@ public class EsServiceImpl implements EsService {
     }
 
     @Override
-    public <T> List<T> listNamesByNames(Class<T> docType, Integer pageNum, Integer pageSize, Map<String, Object> Params) {
+    public <T> List<T> listNamesByNames(Class<T> docType, Integer pageNum, Integer pageSize, Map<String, Object> map) {
         // 创建一个NativeQueryBuilder对象
         NativeQueryBuilder queryBuilder = new NativeQueryBuilder();
         // 设置分页信息
         queryBuilder.withPageable(PageRequest.of(pageNum, pageSize));
         // 添加 query
-        queryBuilder.withQuery(
-                // 创建一个构建器，用于返回ObjectBuilder的子类
-                builder -> {
-                    // 创建BoolQuery.Builder
-                    builder.bool(
-                            // 通过BoolQuery.Builder返回BoolQuery
-                            boolBuild -> {
-                                // 设置子查询
-                                List<Query> shouldList = new ArrayList<>();
-                                boolBuild.should(shouldList);
-                                // 设置must(检索的结果必须满足must子句)
-                                List<Query> mustList = new ArrayList<>();
-
-                                // 添加 query
-                                for (String field : Params.keySet()) {
-                                    // 遍历字段
-                                    mustList.add(Query.of(mustBuild -> {
-                                                // match查询构建器
-                                                mustBuild.match(
-                                                        m -> m.field(field).query((FieldValue) Params.get(field))
-                                                );
-                                                return mustBuild;
-                                            })
-                                    );
-                                }
-                                boolBuild.must(mustList);
-                                return boolBuild;
-                            });
-                    return builder;
-                });
+        queryBuilder.withQuery(q -> {
+            //构建布隆查询
+            return q.bool(bq -> {
+                List<Query> queries = new ArrayList<>();
+                //创建should查询集合，应用在多个字段上
+                for (String key : map.keySet()) {
+                    if (map.get(key)!=null&&"".equals(map.get(key))){
+                        Query query = Query.of(oq -> oq.term(t -> t.field(key).value(map.get(key).toString())));
+                        //构建多个termQuery查询，保存到list集合中
+                        queries.add(query);
+                    }
+                }
+                bq.should(queries);
+                return bq;
+            });
+        });
         SearchHits<T> hits = operations.search(queryBuilder.build(), docType);
         List<T> list = new ArrayList<>();
         hits.forEach(tSearchHit -> list.add(tSearchHit.getContent()));
