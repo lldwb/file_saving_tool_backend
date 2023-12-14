@@ -18,7 +18,7 @@ import top.lldwb.file.saving.tool.server.config.RedisConfig;
  * @time 14:58
  * @PROJECT_NAME file_saving_tool_backend
  */
-@Document(indexName = RedisConfig.ES_INDEX + "fileInfo", createIndex = false)
+@Document(indexName = RedisConfig.ES_INDEX + "file_info", createIndex = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

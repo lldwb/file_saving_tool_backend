@@ -68,7 +68,7 @@ public interface MinIOService {
 
     /**
      * 获取文件列表
-     * @param fileInfo
+     * @param fileInfo (推荐)使用文件夹id返回所在文件夹所有文件
      * @param pageNum
      * @param pageSize
      * @return

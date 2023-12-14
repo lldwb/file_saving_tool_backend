@@ -1,7 +1,11 @@
 package top.lldwb.file.saving.tool.server.service.es.consumer;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.convert.Convert;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
@@ -9,12 +13,16 @@ import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
+import top.lldwb.file.saving.tool.server.service.sync.EsSyncService;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author lldwb
@@ -23,55 +31,18 @@ import java.lang.reflect.Method;
  * @time 11:11
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ConsumerUpdate {
     private final EsService esService;
+    private final ElasticsearchOperations template;
+//    private final EsSyncService esSyncService;
 
     @RabbitListener(queues = RabbitUpdate.QUEUE_NAME)
-    public <T> void esUpdate(UpdateMessage updateMessage) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-        // 手动创建索引
-        esService.createIndex(UserDoc.class);
-        // 创建mapping
-        esService.createMapping(UserDoc.class);
-
-        // 将实体类转换成文档对象
-        Document document = getDocument(updateMessage.getData(), updateMessage.getId());
-        //检查文档是否存在
-        if (esService.docExists(document.getId(), document.getIndex())) {
-            // 更新文档
-            esService.updateDoc(document);
-        } else {
-            // 创建文档
-            esService.createDoc(updateMessage.getData());
-        }
-    }
-
-
-    /**
-     * 将实体类转换成文档对象
-     *
-     * @param t 实体类
-     * @return 文档对象
-     */
-    private <T> Document getDocument(T t, String id) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-        // 文档对象
-        Document document = Document.create();
-        // 索引名称
-        document.setIndex(RedisConfig.ES_INDEX + t.getClass().getSimpleName());
-        // 文档id
-        document.setId(id);
-        // 文档数据
-        for (Field field : t.getClass().getDeclaredFields()) {
-            String fieldName = field.getName();
-            // 创建属性描述器,用于调用get和set方法
-            PropertyDescriptor descriptor = new PropertyDescriptor(fieldName, t.getClass());
-            // 获取读方法
-            Method method = descriptor.getReadMethod();
-            // 获取值
-            Object value = method.invoke(t);
-            document.put(fieldName, value);
-        }
-        return document;
+    public void esUpdate(UpdateMessage updateMessage) throws IntrospectionException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+        log.info("开始消费"+updateMessage.toString());
+        template.save(Convert.convert(Class.forName(updateMessage.getClazz()),updateMessage.getData()));
+        log.info("消费成功"+updateMessage.toString());
     }
 }

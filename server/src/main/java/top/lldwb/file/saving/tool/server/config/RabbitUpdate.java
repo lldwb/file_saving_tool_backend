@@ -5,6 +5,7 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 负责更新的消息队列
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Bean;
  * @time 10:42
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Configuration
 public class RabbitUpdate {
 
     /**
@@ -29,7 +31,7 @@ public class RabbitUpdate {
      * 装配队列
      */
     @Bean
-    public Queue queue() {
+    public Queue queueUpdate() {
         return new Queue(QUEUE_NAME, false);
     }
 
@@ -37,7 +39,7 @@ public class RabbitUpdate {
      * 将队列绑定到交换机上并指定一个路由的 key
      */
     @Bean
-    public Binding binding(DirectExchange exchange) {
-        return BindingBuilder.bind(queue()).to(exchange).with(ROUTING_KEY);
+    public Binding bindinUpdateg(DirectExchange exchange) {
+        return BindingBuilder.bind(queueUpdate()).to(exchange).with(ROUTING_KEY);
     }
 }

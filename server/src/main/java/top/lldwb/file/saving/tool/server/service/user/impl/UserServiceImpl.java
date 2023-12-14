@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
         // 根据返回的用户ID获取用户的完整信息
         user = userDao.getUserByUserId(user.getUserId());
 
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.ROUTING_KEY, new UpdateMessage(String.valueOf(user.getUserId()),getUserDoc(user)));
+//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.ROUTING_KEY, UpdateMessage.getUpdateMessage(getUserDoc(user)));
 //        // 创建文档
 //        esService.createDoc(new UserDoc(user.getUserId(), user.getUserName(), user.getUserEmail()));
     }
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         userDao.updateUser(user);
         // 将实体类转换成文档对象
         Document document = getDocument(user);
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.ROUTING_KEY, new UpdateMessage(String.valueOf(user.getUserId()),getUserDoc(user)));
+//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.ROUTING_KEY, UpdateMessage.getUpdateMessage(getUserDoc(user)));
 //        // 更新文档
 //        esService.updateDoc(document);
         // redis过期

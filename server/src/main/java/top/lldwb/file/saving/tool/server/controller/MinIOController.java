@@ -48,6 +48,12 @@ public class MinIOController extends BaseController {
         return success();
     }
 
+    @PutMapping("/recoverFile")
+    public ResultVO recoverFile(Integer operationLogId){
+        service.recoverFile(operationLogId);
+        return success();
+    }
+
     @GetMapping("/downloadFile/{path}")
     public ResultVO<ResponseEntity<InputStreamResource>> downloadFile(@PathVariable("path") String path) {
         return success(service.downloadFile(path));

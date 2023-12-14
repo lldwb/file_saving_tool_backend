@@ -31,7 +31,7 @@ public class RabbitEmailAuthCode {
      * 装配队列
      */
     @Bean
-    public Queue queue() {
+    public Queue queueEmailAuthCode() {
         return new Queue(QUEUE_NAME, false);
     }
 
@@ -39,7 +39,7 @@ public class RabbitEmailAuthCode {
      * 将队列绑定到交换机上并指定一个路由的 key
      */
     @Bean
-    public Binding binding(DirectExchange exchange) {
-        return BindingBuilder.bind(queue()).to(exchange).with(ROUTING_KEY);
+    public Binding bindingEmailAuthCode(DirectExchange exchange) {
+        return BindingBuilder.bind(queueEmailAuthCode()).to(exchange).with(ROUTING_KEY);
     }
 }

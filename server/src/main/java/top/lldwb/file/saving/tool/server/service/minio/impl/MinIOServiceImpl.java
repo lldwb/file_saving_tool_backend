@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.config.MinIOConfig;
+import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
@@ -26,10 +27,13 @@ import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
+import top.lldwb.file.saving.tool.server.service.es.consumer.ConsumerUpdate;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
+import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -50,8 +54,10 @@ public class MinIOServiceImpl implements MinIOService {
     private final FileInfoDao fileInfoDao;
     private final DirectoryInfoDao directoryInfoDao;
     private final OperationLogDao operationLogDao;
-    private final RabbitTemplate template;
+        private final RabbitTemplate template;
     private final EsService esService;
+    //
+//    private final ConsumerUpdate consumerUpdate;
 
     /**
      * 文件对象转换成文件文档对象
@@ -109,6 +115,11 @@ public class MinIOServiceImpl implements MinIOService {
         fileInfo.setFileInfoPath(operationLog.getOperationLogPath());
         fileInfo.setFileInfoSize(operationLog.getOperationLogSize());
         fileInfo.setDirectoryInfoId(operationLog.getDirectoryInfoId());
+        if (operationLog.getOperationLogType() == 3) {
+            fileInfo.setFileInfoState(-1);
+        } else {
+            fileInfo.setFileInfoState(1);
+        }
         return fileInfo;
     }
 
@@ -123,13 +134,7 @@ public class MinIOServiceImpl implements MinIOService {
             // 检测是否已经存在，如果存在则不上传
             if (!(sha256Hex.equals(DigestUtil.sha256Hex(minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).build()))))) {
                 // 上传文件到Minio
-                minioClient.putObject(
-                        PutObjectArgs.builder()
-                                .bucket(MinIOConfig.BUCKET)
-                                .object(sha256Hex)
-                                .stream(inputStream, multipartFile.getSize(), -1)
-                                .contentType(multipartFile.getContentType())
-                                .build());
+                minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).stream(inputStream, multipartFile.getSize(), -1).contentType(multipartFile.getContentType()).build());
             }
 
             // 文件信息对象
@@ -161,10 +166,10 @@ public class MinIOServiceImpl implements MinIOService {
             operationLogDao.addOperationLog(operationLog);
 
             // 发送文件信息到消息队列
-            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getOperationLogDoc(operationLog));
+//            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getOperationLogDoc(operationLog));
 
             // 发送文件信息到消息队列
-            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
+//            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
 
 
         } catch (ServerException | InsufficientDataException | ErrorResponseException | IOException |
@@ -191,14 +196,14 @@ public class MinIOServiceImpl implements MinIOService {
         OperationLog operationLog = getOperationLog(fileInfo, 3);
         operationLogDao.addOperationLog(operationLog);
         // 发送文件信息到消息队列
-//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getOperationLogDoc(operationLog));
+//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
 
         // 设置删除
         fileInfo.setFileInfoState(-1);
         fileInfoDao.updateFileInfo(fileInfo);
 
         // 发送消息到消息队列
-//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
+//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME,UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
 
     }
 
@@ -209,16 +214,19 @@ public class MinIOServiceImpl implements MinIOService {
         // 根据操作对象获取文件对象
         FileInfo fileInfo = fileInfoDao.getFileInfoByFileInfoId(operationLog.getFileInfoId());
         // 存档恢复操作
-        operationLogDao.addOperationLog(getOperationLog(fileInfo, operationLog.getOperationLogType() * -1));
+        OperationLog operationLogRecover = getOperationLog(fileInfo, -operationLog.getOperationLogType());
+        operationLogDao.addOperationLog(operationLogRecover);
         // 发送文件信息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getOperationLogDoc(getOperationLog(fileInfo, operationLog.getOperationLogType() * -1)));
+//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(operationLogRecover));
+
         // 恢复
         fileInfo = getFileInfo(operationLog, fileInfo);
 
         fileInfoDao.updateFileInfo(fileInfo);
 
         // 发送消息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, getFileInfoDoc(fileInfo));
+//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(fileInfo.getFileInfoId()));
+
         return fileInfo;
     }
 

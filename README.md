@@ -21,6 +21,9 @@ host: iprus
 port: 5672
 username: admin
 password: "ca171bc0"
+exchange: test.exchange
+deliveryMode: direct
+key: canal-routing-key
 ## elasticsearch
 uris: http://iprus:9200
 username: elastic
@@ -62,7 +65,8 @@ minIO路径从UUID标记修改为SHA-256，保证减少存储空间的使用
 ## 基本网盘操作 x
 ### 文件列表 t
 ### 搜索文件 t
-### 上传文件 t
+### 上传文件 t(先完成测试)
+### 恢复文件 h
 ### 删除文件 h
 ### 手动分享 x
 ### 提示更新 x

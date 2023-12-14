@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import top.lldwb.file.saving.tool.server.config.RedisConfig;
 
 /**
  * 路径映射文档对象
@@ -16,6 +18,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
  * @time 20:32
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Document(indexName = RedisConfig.ES_INDEX + "path_mapping", createIndex = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
