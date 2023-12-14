@@ -4,6 +4,7 @@ import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.client.minio.MinIOService;
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 
 import java.io.IOException;
@@ -26,6 +27,10 @@ public class DownloadControl implements ControlService {
     private final MinIOService minIOService;
 
     @Override
+    public void control(SocketMessage data) {
+
+    }
+
     public void control(Map<String, Object> data) {
         for (String path:data.keySet()){
             try {

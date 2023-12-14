@@ -1,5 +1,7 @@
 package top.lldwb.file.saving.tool.service.control;
 
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
+
 import java.util.Map;
 
 /**
@@ -12,5 +14,5 @@ import java.util.Map;
  * @PROJECT_NAME file_saving_tool_backend
  */
 public interface ControlService {
-    void control(Map<String,Object> data);
+    void control(SocketMessage message);
 }

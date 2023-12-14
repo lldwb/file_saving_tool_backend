@@ -13,7 +13,7 @@ import java.util.Map;
  * @PROJECT_NAME file_saving_tool_backend
  */
 @Data
-public class SocketMessage extends Message<Map<String, Object>> {
+public class SocketMessage<T> extends Message<T> {
     /**
      * 操作类型
      */
@@ -23,8 +23,9 @@ public class SocketMessage extends Message<Map<String, Object>> {
      * 文件类型
      */
     private String fileType;
-
-    public void setObjectData(Object object) {
-        setData(BeanUtil.beanToMap(object));
-    }
+    /**
+     * 数据类型
+     */
+    private Class<T> clazz;
+    private String UUID;
 }

@@ -13,9 +13,9 @@ import top.lldwb.file.saving.tool.pojo.dto.Message;
  * @time 14:55
  * @PROJECT_NAME file_saving_tool_backend
  */
-public interface SendService {
+public interface SendService<T extends Message> {
     /**
      * 发送消息的抽象方法
      */
-    void send(Message message);
+    void send(T message);
 }

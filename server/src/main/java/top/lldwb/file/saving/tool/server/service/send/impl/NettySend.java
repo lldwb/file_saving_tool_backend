@@ -1,5 +1,6 @@
 package top.lldwb.file.saving.tool.server.service.send.impl;
 
+import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.annotation.Scope;
@@ -23,20 +24,16 @@ import top.lldwb.file.saving.tool.server.service.send.SendService;
 @Setter
 @Scope(value = "prototype",proxyMode = ScopedProxyMode.TARGET_CLASS)
 @RequiredArgsConstructor
-public class NettySend implements SendService {
-//    private final ServerHandler serverHandler;
-    /**
-     * 需要发送消息的客户端
-     */
-    private String UUID;
+public class NettySend implements SendService<SocketMessage> {
+    private final ServerHandler serverHandler;
 
     @Override
-    public void send(Message message) {
-        SocketMessage socketMessage = (SocketMessage)message;
+    public void send(SocketMessage message) {
+
         // 发送消息并且立刻刷新(设置消息并且立刻发送)
         // 添加关闭监听器
-//        serverHandler.getChannelHandlerContext(UUID).writeAndFlush(socketMessage);
+        serverHandler.getChannelHandlerContext(message.getUUID()).writeAndFlush(message);
 
-//      serverHandler.getChannelHandlerContext(UUID).writeAndFlush(socketMessage).addListener(ChannelFutureListener.CLOSE);
+      serverHandler.getChannelHandlerContext(message.getUUID()).writeAndFlush(message).addListener(ChannelFutureListener.CLOSE);
     }
 }

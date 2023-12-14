@@ -3,11 +3,13 @@ package top.lldwb.file.saving.tool.server;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import top.lldwb.file.saving.tool.PublicApplication;
 import top.lldwb.file.saving.tool.config.AppConfig;
 import top.lldwb.file.saving.tool.config.MinIOConfig;
+import top.lldwb.file.saving.tool.server.service.netty.ServerNettyService;
 
 @SpringBootApplication
 @MapperScan("top.lldwb.file.saving.tool.server.dao")
@@ -15,6 +17,9 @@ import top.lldwb.file.saving.tool.config.MinIOConfig;
 public class ServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ServerApplication.class, args);
+        ApplicationContext connection = SpringApplication.run(ServerApplication.class, args);
+        ServerNettyService serverNettyService = connection.getBean(ServerNettyService.class);
+        serverNettyService.setPort(32433);
+        serverNettyService.run();
     }
 }

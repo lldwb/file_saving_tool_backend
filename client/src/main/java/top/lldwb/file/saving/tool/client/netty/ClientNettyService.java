@@ -10,6 +10,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
 import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
 
@@ -20,6 +22,7 @@ import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
  * @time 9:09
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Service
 @Setter
 @RequiredArgsConstructor
 public class ClientNettyService {
@@ -29,7 +32,7 @@ public class ClientNettyService {
     private String host;
     private Integer port;
 
-    public void run() throws InterruptedException {
+    public void run() {
         // 创建EventLoopGroup，用于处理网络操作
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -55,6 +58,8 @@ public class ClientNettyService {
 
             // 关闭连接
             future.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             // 优雅关闭EventLoopGroup
             workerGroup.shutdownGracefully();

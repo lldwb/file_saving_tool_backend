@@ -10,6 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
 import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
@@ -21,6 +22,7 @@ import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
  * @time 15:56
  * @PROJECT_NAME file_saving_tool_backend
  */
+
 @Service
 @Setter
 @RequiredArgsConstructor

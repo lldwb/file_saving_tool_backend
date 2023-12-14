@@ -3,6 +3,7 @@ package top.lldwb.file.saving.tool.server.service.netty.receive;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
@@ -30,35 +31,35 @@ public class FileControl implements ControlService {
     private final FileInfoDao fileInfoDao;
 
     @Override
-    public void control(Map<String, Object> data) {
-        // 获取UUID
-//        data.get("UUID");
-        // 获取文件所在客户端路径
-        data.get("path");
-        // 获取操作类型service的方法名
-        String controlType = (String) data.get("ControlType");
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setFileInfoPath((String) data.get("fileInfoPath"));
-        fileInfo.setUserId((Integer) data.get("userId"));
-
-        // 获取被操作的文件
-        fileInfo = fileInfoDao.getFileInfoByPathANDUserId(fileInfo);
-        OperationLog operationLog = getOperationLog(fileInfo);
-
-
-        if ("deleteFile".equals(controlType)) {
-            minIOService.deleteFile(fileInfo.getFileInfoId());
-        } else {
-
-        }
-
-        if ("updateFile".equals(controlType)) {
-            operationLogDao.addOperationLog(operationLog);
-            minIOService.deleteFile(fileInfo.getFileInfoId());
-        } else if ("addFile".equals(controlType)) {
-            operationLogDao.addOperationLog(operationLog);
-            minIOService.deleteFile(fileInfo.getFileInfoId());
-        }
+    public void control(SocketMessage message) {
+//        // 获取UUID
+////        data.get("UUID");
+//        // 获取文件所在客户端路径
+//        data.get("path");
+//        // 获取操作类型service的方法名
+//        String controlType = (String) data.get("ControlType");
+//        FileInfo fileInfo = new FileInfo();
+//        fileInfo.setFileInfoPath((String) data.get("fileInfoPath"));
+//        fileInfo.setUserId((Integer) data.get("userId"));
+//
+//        // 获取被操作的文件
+//        fileInfo = fileInfoDao.getFileInfoByPathANDUserId(fileInfo);
+//        OperationLog operationLog = getOperationLog(fileInfo);
+//
+//
+//        if ("deleteFile".equals(controlType)) {
+//            minIOService.deleteFile(fileInfo.getFileInfoId());
+//        } else {
+//
+//        }
+//
+//        if ("updateFile".equals(controlType)) {
+//            operationLogDao.addOperationLog(operationLog);
+//            minIOService.deleteFile(fileInfo.getFileInfoId());
+//        } else if ("addFile".equals(controlType)) {
+//            operationLogDao.addOperationLog(operationLog);
+//            minIOService.deleteFile(fileInfo.getFileInfoId());
+//        }
 
     }
 

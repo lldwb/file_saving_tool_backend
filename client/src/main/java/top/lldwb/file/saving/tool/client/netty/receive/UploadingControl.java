@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.watch.WatchMonitor;
 import cn.hutool.core.io.watch.Watcher;
 import cn.hutool.core.lang.Console;
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 
 import java.io.File;
@@ -22,6 +23,10 @@ import java.util.Map;
  */
 public class UploadingControl implements ControlService {
     @Override
+    public void control(SocketMessage data) {
+
+    }
+
     public void control(Map<String, Object> data) {
 
         File file = FileUtil.file((String) data.get("path"));

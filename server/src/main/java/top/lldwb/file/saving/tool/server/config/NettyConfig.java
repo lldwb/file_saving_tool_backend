@@ -14,17 +14,17 @@ import top.lldwb.file.saving.tool.server.service.netty.ServerNettyService;
  * @time 15:54
  * @PROJECT_NAME file_saving_tool_backend
  */
-@Lazy
+//@Lazy
 @Configuration
 public class NettyConfig {
     /**
      * 启动Netty服务端
      * @return
      */
-    @Bean
-    public ServerNettyService serverNettyService(ServerNettyService serverNettyService){
-        serverNettyService.setPort(32433);
-        serverNettyService.run();
-        return serverNettyService;
-    }
+//    @Bean
+//    public ServerNettyService serverNettyService(ServerNettyService serverNettyService){
+//        serverNettyService.setPort(32433);
+//        serverNettyService.run();
+//        return serverNettyService;
+//    }
 }

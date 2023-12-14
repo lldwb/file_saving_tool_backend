@@ -52,7 +52,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        String UUID = IdUtil.simpleUUID();
+//        String UUID = IdUtil.simpleUUID();
+        String UUID = "123";
         // 添加客户端到容器中
         ctxs.put(UUID,ctx);
 
@@ -83,7 +84,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         System.out.println(socketMessage.getControlType());
 
         ControlService controlService = connection.getBean(socketMessage.getControlType(),ControlService.class);
-        controlService.control(socketMessage.getData());
+//        controlService.control(socketMessage.getData());
 
         ctx.close();
     }
