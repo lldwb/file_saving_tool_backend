@@ -37,16 +37,13 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
      * @param msg 接收的消息
      */
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws ClassNotFoundException {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         SocketMessage socketMessage = Convert.convert(SocketMessage.class, msg);
-
-//        Class<?> clazz = Class.forName(socketMessage.getFileType());
-//        System.out.println(socketMessage.getControlType());
 
         ControlService controlService = connection.getBean(socketMessage.getControlType(), ControlService.class);
         controlService.control(socketMessage);
 
-        ctx.close();
+//        ctx.close();
     }
 
     @Override
