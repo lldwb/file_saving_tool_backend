@@ -23,19 +23,13 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateMessage<T> extends Message<T> {
-//    public static <T> UpdateMessage getUpdateMessage(T data) {
-//        UpdateMessage<T> updateMessage = new UpdateMessage<>();
-//        for (Field field : data.getClass().getDeclaredFields()) {
-//            if (field.isAnnotationPresent(Id.class)) {
-//                DynaBean bean = DynaBean.create(data);
-//                updateMessage.setId(Convert.convert(field.getType(), bean.get(field.getName())).toString());
-//            }
-//        }
-//        updateMessage.setClazz(data.getClass().getName());
-//        return updateMessage;
-//    }
-//
-//    private String id;
+    public static <T> UpdateMessage getUpdateMessage(T data) {
+        UpdateMessage<T> updateMessage = new UpdateMessage<>();
+        updateMessage.setClazz(data.getClass().getName());
+        updateMessage.setData(data);
+        return updateMessage;
+    }
+
     private String clazz;
     private T data;
 }

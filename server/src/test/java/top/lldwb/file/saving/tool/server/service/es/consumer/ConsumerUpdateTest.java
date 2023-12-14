@@ -73,7 +73,9 @@ class ConsumerUpdateTest {
 
 //        consumerUpdate.esUpdate(updateMessage);
 
-        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, updateMessage);
+//        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, updateMessage);
+
+        rabbitTemplate.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(userDoc));
         while (true){
 
         }
