@@ -42,18 +42,33 @@ public class MinIOController extends BaseController {
         return success();
     }
 
+    /**
+     * 删除文件
+     * @param fileInfoId 文件id
+     * @return
+     */
     @DeleteMapping("/deleteFile")
     public ResultVO deleteFile(Integer fileInfoId) {
         service.deleteFile(fileInfoId);
         return success();
     }
 
+    /**
+     * 恢复文件
+     * @param operationLogId 操作id
+     * @return
+     */
     @PutMapping("/recoverFile")
     public ResultVO recoverFile(Integer operationLogId){
         service.recoverFile(operationLogId);
         return success();
     }
 
+    /**
+     * 获取下载
+     * @param path
+     * @return
+     */
     @GetMapping("/downloadFile/{path}")
     public ResultVO<ResponseEntity<InputStreamResource>> downloadFile(@PathVariable("path") String path) {
         return success(service.downloadFile(path));

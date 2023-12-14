@@ -38,9 +38,9 @@ public class FileInfo {
      */
     private Long fileInfoSize;
     /**
-     * 文件夹id
+     * 文件夹id，默认0
      */
-    private Integer directoryInfoId;
+    private Integer directoryInfoId = 0;
     /**
      * 用户id
      */

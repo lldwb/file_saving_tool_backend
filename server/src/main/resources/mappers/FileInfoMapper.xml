@@ -77,8 +77,8 @@
 
     <insert id="addFileInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo" useGeneratedKeys="true"
             keyProperty="fileInfoId">
-        insert into file_info(file_info_name,file_info_pat,file_info_md5,file_info_size,user_id)
-        values (#{fileInfoName},#{fileInfoPath},#{fileInfoMd5},#{fileInfoSize},#{userId})
+        insert into file_info(file_info_name,file_info_path,file_info_size,directory_info_id,user_id)
+        values (#{fileInfoName},#{fileInfoPath},#{fileInfoSize},#{directoryInfoId},#{userId})
     </insert>
     
     <update id="updateFileInfo"  parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo">

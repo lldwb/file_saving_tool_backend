@@ -178,7 +178,26 @@ public class MinIOServiceImpl implements MinIOService {
 
     @Override
     public void addFile(FileInfo fileInfo) {
-
+        // 操作对象
+        OperationLog operationLog;
+        if (fileInfo.getFileInfoId() != null) {
+            // 判断是否是文件覆盖
+            FileInfo fileInfoSql = fileInfoDao.getFileInfoByFileInfoId(fileInfo.getFileInfoId());
+            fileInfo.setFileInfoId(fileInfoSql.getFileInfoId());
+            fileInfoDao.updateFileInfo(fileInfo);
+            // 操作类型为修改
+            operationLog = getOperationLog(fileInfo, 2);
+        } else {
+            fileInfoDao.addFileInfo(fileInfo);
+            // 操作类型为添加
+            operationLog = getOperationLog(fileInfo, 1);
+        }
+        operationLogDao.addOperationLog(operationLog);
+        // 异步双写
+        // 发送操作信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
+        // 发送文件信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
     }
 
     @Override
@@ -200,7 +219,7 @@ public class MinIOServiceImpl implements MinIOService {
         fileInfoDao.updateFileInfo(fileInfo);
 
         // 发送消息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME,UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
 
     }
 
