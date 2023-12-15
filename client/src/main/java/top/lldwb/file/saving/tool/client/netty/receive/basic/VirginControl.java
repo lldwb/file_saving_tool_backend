@@ -48,6 +48,7 @@ public class VirginControl implements ControlService {
         else {
             // 设置为添加客户端操作
             socketMessage.setControlType("addClient");
+            client.setUserId(0);
         }
 
         client.setClientSecretKey(sha256Hex);

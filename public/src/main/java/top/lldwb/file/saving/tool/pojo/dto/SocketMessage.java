@@ -19,16 +19,16 @@ public class SocketMessage<T> extends Message<T> {
      */
     private String controlType;
 
-    /**
-     * 文件类型(搁置中，未来使用)
-     */
-    private String fileType;
+//    /**
+//     * 文件类型(搁置中，未来使用)
+//     */
+//    private String fileType;
     /**
      * 数据类型
      */
     private Class<T> clazz;
     /**
-     * 连接秘钥
+     * 连接秘钥(可以为空)
      */
     private String secretKey;
 }
