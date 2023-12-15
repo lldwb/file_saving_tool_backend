@@ -24,6 +24,6 @@ public class AddClientControl implements ControlService {
     @Override
     public void control(SocketMessage message) {
         Client client = Convert.convert(Client.class, message.getData());
-        log.info("接收的UUID：" + client.getClientUUID());
+        log.info("接收的UUID：" + client.getClientSecretKey());
     }
 }

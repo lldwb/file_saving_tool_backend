@@ -27,5 +27,5 @@ public class SocketMessage<T> extends Message<T> {
      * 数据类型
      */
     private Class<T> clazz;
-    private String UUID;
+//    private String UUID;
 }

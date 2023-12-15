@@ -24,7 +24,7 @@ public class Client {
     /**
      * 秘钥
      */
-    private String clientUUID;
+    private String clientSecretKey;
     /**
      * 状态
      */

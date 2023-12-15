@@ -6,6 +6,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.Map;
 /**
  * 服务端处理器
  */
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -29,10 +30,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private final ApplicationContext connection;
 
     // 客户端容器
-    private Map<String,ChannelHandlerContext> ctxs = new HashMap<>();
+    private Map<String, ChannelHandlerContext> ctxs = new HashMap<>();
 
-    public ChannelHandlerContext getChannelHandlerContext(String UUID){
-        return ctxs.get(UUID);
+    public ChannelHandlerContext getChannelHandlerContext(String clientSecretKey) {
+        return ctxs.get(clientSecretKey);
     }
 
     /**
@@ -52,10 +53,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-//        String UUID = IdUtil.simpleUUID();
-        String UUID = "123";
         // 添加客户端到容器中
-        ctxs.put(UUID,ctx);
+        ctxs.put(ctx.channel().id().asShortText(), ctx);
+//        ctx.channel().id().asShortText();
+//        ctx.channel().id().asLongText();
+
+        log.info("客户端连接成功" + ctx.channel().id().asShortText());
 
         // 第一次连接发送UUID给客户端
 //        SocketMessage message = new SocketMessage();
@@ -80,10 +83,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws ClassNotFoundException {
         SocketMessage socketMessage = (SocketMessage) msg;
 
-        Class<?> clazz = Class.forName(socketMessage.getFileType());
         System.out.println(socketMessage.getControlType());
 
-        ControlService controlService = connection.getBean(socketMessage.getControlType(),ControlService.class);
+        ControlService controlService = connection.getBean(socketMessage.getControlType(), ControlService.class);
 //        controlService.control(socketMessage.getData());
 
         ctx.close();
@@ -96,8 +98,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
+        log.info("map长度" + ctxs.size());
         // 移除
-//        ctxs.remove();
+        ctxs.remove(ctx.channel().id().asShortText());
+        log.info("map长度" + ctxs.size());
         System.out.println("关闭连接事件");
     }
 

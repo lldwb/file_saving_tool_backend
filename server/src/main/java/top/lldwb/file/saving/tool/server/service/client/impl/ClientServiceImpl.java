@@ -39,7 +39,6 @@ public class ClientServiceImpl implements ClientService {
         socketMessage.setControlType("addClient");
         socketMessage.setFileType(Client.class.getName());
         socketMessage.setClazz(Class.class);
-        socketMessage.setUUID(client.getClientUUID());
         nettySend.send(socketMessage);
 
         // 修改数据库，同步es

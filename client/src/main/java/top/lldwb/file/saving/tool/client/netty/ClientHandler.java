@@ -28,6 +28,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         log.info("连接服务器成功");
+        ctx.close();
     }
 
     /**
@@ -43,7 +44,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         ControlService controlService = connection.getBean(socketMessage.getControlType(), ControlService.class);
         controlService.control(socketMessage);
 
-//        ctx.close();
+        ctx.close();
     }
 
     @Override
