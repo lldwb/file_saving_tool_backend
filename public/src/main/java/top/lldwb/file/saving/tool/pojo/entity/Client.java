@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
+
 /**
  * 客户端实体类
  *
@@ -16,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Client {
+public class Client implements Serializable {
     /**
      * ID
      */
@@ -32,6 +35,14 @@ public class Client {
     /**
      * 用户对象
      */
-    private User user;
+    private Integer userId;
+    /**
+     * 创建时间
+     */
+    private Timestamp createTime;
+    /**
+     * 更新时间
+     */
+    private Timestamp updateTime;
 
 }

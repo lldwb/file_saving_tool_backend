@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace指定接口的完整类名 -->
+<mapper namespace="top.lldwb.file.saving.tool.server.dao.ClientDao">
+    <resultMap id="client" type="top.lldwb.file.saving.tool.pojo.entity.Client">
+        <id column="client_id" property="clientId"/>
+        <result column="client_secret_key" property="clientSecretKey"/>
+        <result column="client_state" property="clientState"/>
+        <result column="user_id" property="userId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="addClient" parameterType="top.lldwb.file.saving.tool.pojo.entity.Client" useGeneratedKeys="true"
+            keyProperty="clientId">
+        insert into client(client_secret_key, user_id)
+        values (#{clientSecretKey}, #{userId})
+    </insert>
+
+    <update id="updateClient" parameterType="top.lldwb.file.saving.tool.pojo.entity.Client">
+        update client
+        <set>
+            <if test="clientSecretKey != null and clientSecretKey != ''">
+                client_secret_key = #{clientSecretKey},
+            </if>
+            <if test="clientState != null and clientState != ''">
+                client_state = #{clientState},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+        </set>
+        where client_id = #{clientId}
+    </update>
+
+    <select id="getClientById" resultMap="client">
+        select client_secret_key,
+               client_state,
+               user_id,
+               create_time,
+               update_time
+        from client
+        where client_id = #{clientId}
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.send.impl;
+package top.lldwb.file.saving.tool.server.service.send;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -6,7 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
 import top.lldwb.file.saving.tool.pojo.dto.Message;
-import top.lldwb.file.saving.tool.server.service.send.SendService;
+import top.lldwb.file.saving.tool.service.send.SendService;
 
 /**
  * 发送消息到邮箱

@@ -2,37 +2,6 @@
 SpringBoot、Mybatis、MySQL
 Redis、Elasticsearch、RabbitMQ
 Vue
-# 连接配置
-## mysql
-driver-class-name: com.mysql.cj.jdbc.Driver
-url: jdbc:mysql://www:3306/file_saving_tool
-username: file_saving_tool
-password: Be8mhcSZZ8J3nAi3
-## redis
-host: www
-password: "@lldwb_redis"
-port: 7890
-## minio
-host: http://www:9000
-username: lldwb
-password: "98b058becd731"
-## rabbitmq
-host: iprus
-port: 5672
-username: admin
-password: "ca171bc0"
-exchange: test.exchange
-deliveryMode: direct
-key: canal-routing-key
-## elasticsearch
-uris: http://iprus:9200
-username: elastic
-password: ZKNfWXtbOAGyF3yv_caT
-## mail
-host: www
-port: 25
-username: file_saving_tool@lldwb.top
-password: hxH^0oZ8U8b70EYs
 
 # 项目描述
 该文件保存工具的开发不仅仅满足了人们对文件保存的相关需求，还提供了文件搜索、文件分享、文件下载等功能。
@@ -77,6 +46,7 @@ minIO路径从UUID标记修改为SHA-256，保证减少存储空间的使用
 
 ## 操作客户端 x
 ### 添加客户端 x
+### 绑定客户端 x
 ### 删除客户端 x
 
 ## 客户端实现功能 x
@@ -89,3 +59,35 @@ minIO路径从UUID标记修改为SHA-256，保证减少存储空间的使用
 ### 登录属地功能
 ### 风险检测功能
 ### 异常邮箱反馈功能
+
+# 连接配置(基于VPN异地组网)
+## mysql
+driver-class-name: com.mysql.cj.jdbc.Driver
+url: jdbc:mysql://www:3306/file_saving_tool
+username: file_saving_tool
+password: Be8mhcSZZ8J3nAi3
+## redis
+host: www
+password: "@lldwb_redis"
+port: 7890
+## minio
+host: http://www:9000
+username: lldwb
+password: "98b058becd731"
+## rabbitmq
+host: iprus
+port: 5672
+username: admin
+password: "ca171bc0"
+exchange: test.exchange
+deliveryMode: direct
+key: canal-routing-key
+## elasticsearch
+uris: http://iprus:9200
+username: elastic
+password: ZKNfWXtbOAGyF3yv_caT
+## mail
+host: www
+port: 25
+username: file_saving_tool@lldwb.top
+password: hxH^0oZ8U8b70EYs

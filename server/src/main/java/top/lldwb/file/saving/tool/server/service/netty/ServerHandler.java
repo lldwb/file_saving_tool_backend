@@ -1,14 +1,12 @@
 package top.lldwb.file.saving.tool.server.service.netty;
 
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.control.ControlService;
@@ -30,10 +28,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private final ApplicationContext connection;
 
     // 客户端容器
-    private Map<String, ChannelHandlerContext> ctxs = new HashMap<>();
+    private Map<String, ChannelHandlerContext> clientMap = new HashMap<>();
+    // 绑定容器
+    private Map<String,Boolean> binding = new HashMap<>();
 
     public ChannelHandlerContext getChannelHandlerContext(String clientSecretKey) {
-        return ctxs.get(clientSecretKey);
+        return clientMap.get(clientSecretKey);
     }
 
     /**
@@ -53,23 +53,23 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        // 添加客户端到容器中
-        ctxs.put(ctx.channel().id().asShortText(), ctx);
-//        ctx.channel().id().asShortText();
-//        ctx.channel().id().asLongText();
+        // 会话id进行SHA-256加密生成秘钥
+        String sha256Hex = DigestUtil.sha256Hex(ctx.channel().id().asShortText());
+        // 添加客户端到容器中(秘钥,会话)
+        clientMap.put(sha256Hex, ctx);
 
-        log.info("客户端连接成功" + ctx.channel().id().asShortText());
+        log.info("客户端连接成功，秘钥为：" + sha256Hex);
 
-        // 第一次连接发送UUID给客户端
-//        SocketMessage message = new SocketMessage();
-//        message.setData(UUID);
-//        message.setFileType(String.class.getName());
-//        // First 第一次连接
-//        message.setControlType("first");
-//        // 向客户端发送消息
-//        ChannelFuture f = ctx.writeAndFlush(message);
+        // 第一次连接发送秘钥给客户端(绑定)
+        SocketMessage message = new SocketMessage();
+        message.setData(sha256Hex);
+        message.setFileType(String.class.getName());
+        // First 第一次连接
+        message.setControlType("virgin");
+        // 向客户端发送消息
+        ChannelFuture f = ctx.writeAndFlush(message);
 
-        // 添加关闭监听器
+////         添加关闭监听器
 //        f.addListener(ChannelFutureListener.CLOSE);
     }
 
@@ -98,11 +98,12 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        log.info("map长度" + ctxs.size());
+        Integer count = clientMap.size();
         // 移除
-        ctxs.remove(ctx.channel().id().asShortText());
-        log.info("map长度" + ctxs.size());
-        System.out.println("关闭连接事件");
+        clientMap.remove(DigestUtil.sha256Hex(ctx.channel().id().asShortText()));
+        // 打印日志
+        log.info("客户端会话容器长度变化 {} -> {}", count, clientMap.size());
+//        System.out.println("关闭连接事件");
     }
 
     /**
@@ -112,7 +113,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
-        System.out.println("未注册事件");
+//        System.out.println("未注册事件");
     }
 
     /**

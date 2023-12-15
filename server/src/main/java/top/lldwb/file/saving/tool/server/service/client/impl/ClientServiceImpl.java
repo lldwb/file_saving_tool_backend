@@ -11,8 +11,7 @@ import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.PathMappingDao;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
-import top.lldwb.file.saving.tool.server.service.netty.ServerNettyService;
-import top.lldwb.file.saving.tool.server.service.send.SendService;
+import top.lldwb.file.saving.tool.service.send.SendService;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class ClientServiceImpl implements ClientService {
     public void addClient(Client client) {
         SocketMessage socketMessage = new SocketMessage();
         socketMessage.setData(client);
-        socketMessage.setControlType("addClient");
+        socketMessage.setControlType("binding");
         socketMessage.setFileType(Client.class.getName());
         socketMessage.setClazz(Class.class);
         nettySend.send(socketMessage);

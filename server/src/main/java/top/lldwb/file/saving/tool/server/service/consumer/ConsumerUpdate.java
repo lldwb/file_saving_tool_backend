@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.es.consumer;
+package top.lldwb.file.saving.tool.server.service.consumer;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;

@@ -1,6 +1,5 @@
 package top.lldwb.file.saving.tool.server.service.es.consumer;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ClassUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,12 +12,11 @@ import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
+import top.lldwb.file.saving.tool.server.service.consumer.ConsumerUpdate;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author lldwb

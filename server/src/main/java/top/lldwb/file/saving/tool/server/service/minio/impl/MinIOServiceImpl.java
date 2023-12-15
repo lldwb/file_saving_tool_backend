@@ -27,13 +27,10 @@ import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
-import top.lldwb.file.saving.tool.server.service.es.consumer.ConsumerUpdate;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

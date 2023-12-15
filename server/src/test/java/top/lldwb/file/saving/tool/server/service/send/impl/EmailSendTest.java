@@ -3,7 +3,7 @@ package top.lldwb.file.saving.tool.server.service.send.impl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.lldwb.file.saving.tool.server.service.send.SendService;
+import top.lldwb.file.saving.tool.service.send.SendService;
 
 /**
  * @author lldwb

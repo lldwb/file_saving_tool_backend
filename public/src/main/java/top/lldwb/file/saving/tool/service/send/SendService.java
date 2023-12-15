@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.send;
+package top.lldwb.file.saving.tool.service.send;
 
 
 import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
