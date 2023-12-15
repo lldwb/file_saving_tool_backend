@@ -19,6 +19,7 @@ import java.io.*;
 @RequiredArgsConstructor
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     public static String sha256Hex;
+    public static Client client;
     /**
      * 负责找到操作的Bean
      */

@@ -13,7 +13,7 @@ import java.io.*;
 import java.util.Map;
 
 /**
- * 绑定操作
+ * 保存客户端对象操作(添加和更新)
  *
  * @author lldwb
  * @email 3247187440@qq.com
@@ -27,12 +27,11 @@ public class SaveControl implements ControlService {
     @Override
     public void control(SocketMessage message) {
         Client client = Convert.convert(Client.class, message.getData());
-        log.info("接收的UUID：" + client.getClientSecretKey());
-        // 客户端绑定成功，发送会服务端进行添加客户端操作
-        ClientHandler.ctx.writeAndFlush(client);
+        setClient(client);
+        ClientHandler.client = client;
     }
 
-    private void setClient(Client client){
+    private void setClient(Client client) {
         // 向本地添加client对象用于标识为绑定
         try {
             // 创建一个输出流
@@ -47,7 +46,7 @@ public class SaveControl implements ControlService {
             objectOutputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
