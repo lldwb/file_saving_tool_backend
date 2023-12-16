@@ -35,12 +35,22 @@
     </update>
 
     <select id="getClientById" resultMap="client">
-        select client_secret_key,
+        select client_id,client_secret_key,
                client_state,
                user_id,
                create_time,
                update_time
         from client
         where client_id = #{clientId}
+    </select>
+    <select id="getClientBySecretKe" resultMap="client">
+        select client_id,
+               client_secret_key,
+               client_state,
+               user_id,
+               create_time,
+               update_time
+        from client
+        where client_secret_key = #{clientSecretKey}
     </select>
 </mapper>

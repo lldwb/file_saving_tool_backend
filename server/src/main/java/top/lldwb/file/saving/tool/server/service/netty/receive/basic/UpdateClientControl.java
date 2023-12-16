@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.server.dao.ClientDao;
+import top.lldwb.file.saving.tool.server.service.client.ClientService;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 import top.lldwb.file.saving.tool.service.send.SendService;
 
@@ -22,20 +23,24 @@ import top.lldwb.file.saving.tool.service.send.SendService;
 @Service("updateClient")
 @RequiredArgsConstructor
 public class UpdateClientControl implements ControlService {
-    private final ClientDao clientDao;
+    private final ClientService service;
     private final SendService nettySend;
 
     @Override
     public void control(SocketMessage message) {
         Client client = Convert.convert(Client.class, message.getData());
-        client.setUserId(null);
-        client.setClientState(null);
-        clientDao.updateClient(client);
+        if (client.getClientId() != null) {
+            client.setUserId(null);
+            client.setClientState(null);
+            service.updateClient(client);
+        } else {
+            service.addClient(client);
+        }
+
         // 创建客户端对象消息
         SocketMessage<Client> socketMessage = new SocketMessage<>();
-        socketMessage.setData(clientDao.getClientById(client.getClientId()));
-        socketMessage.setControlType("save");
-        socketMessage.setClazz(Client.class);
+        socketMessage.setData("save", service.getClientBySecretKe(client.getClientSecretKey()));
+        socketMessage.setSecretKey(client.getClientSecretKey());
         nettySend.send(socketMessage);
     }
 }

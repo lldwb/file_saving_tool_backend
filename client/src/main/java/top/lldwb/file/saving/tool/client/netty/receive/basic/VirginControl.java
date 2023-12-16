@@ -1,6 +1,7 @@
 package top.lldwb.file.saving.tool.client.netty.receive.basic;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,16 +42,14 @@ public class VirginControl implements ControlService {
         // 如果有客户端对象
         if (file.isFile() && getClient() != null) {
             client = getClient();
-            // 设置为更新客户端操作
-            socketMessage.setControlType("updateClient");
         }
         // 如果没有客户端对象
         else {
-            // 设置为添加客户端操作
-            socketMessage.setControlType("addClient");
             client.setUserId(0);
         }
 
+        // 设置为更新客户端操作
+        socketMessage.setControlType("updateClient");
         client.setClientSecretKey(sha256Hex);
         socketMessage.setData(client);
         nettySend.send(socketMessage);

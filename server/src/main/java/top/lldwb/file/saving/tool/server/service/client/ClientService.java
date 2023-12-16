@@ -19,10 +19,18 @@ public interface ClientService {
     void addClient(Client client);
 
     /**
-     * 删除客户端
+     * 更新客户端
      * @param client
      */
-    void deleteClient(Client client);
+    void updateClient(Client client);
+
+    /**
+     * 根据客户端id查询客户端
+     * @param clientId
+     * @return
+     */
+    Client getClientById(Integer clientId);
+    Client getClientBySecretKe(String clientSecretKey);
 
     /**
      * 设置自动下载(服务端监听)

@@ -1,9 +1,6 @@
 package top.lldwb.file.saving.tool.pojo.dto;
 
-import cn.hutool.core.bean.BeanUtil;
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * @author lldwb
@@ -31,4 +28,18 @@ public class SocketMessage<T> extends Message<T> {
      * 连接秘钥(可以为空)
      */
     private String secretKey;
+    public void setData(String controlType,T data){
+        this.setControlType(controlType);
+        this.setData(data);
+        this.setClazz((Class<T>) data.getClass());
+    }
+
+    @Override
+    public String toString() {
+        return "SocketMessage{" +
+                "controlType='" + controlType + '\'' +
+                ", clazz=" + clazz +
+                ", secretKey='" + secretKey + '\'' +
+                '}';
+    }
 }

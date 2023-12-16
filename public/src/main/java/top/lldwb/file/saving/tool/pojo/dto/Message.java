@@ -16,5 +16,5 @@ public class Message<T> {
     /**
      * 数据
      */
-    private T Data;
+    private T data;
 }

@@ -26,7 +26,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private final ApplicationContext connection;
 
     public static ChannelHandlerContext ctx;
-    public static final String PATH = "client";
+    public static final String PATH = "C:\\Users\\Public\\Documents\\lldwb\\Client\\Client.lldwb";
 
     /**
      * 连接成功后事件

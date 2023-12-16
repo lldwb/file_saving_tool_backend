@@ -1,16 +1,15 @@
 package top.lldwb.file.saving.tool.client.netty.receive.basic;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.client.config.ClientConfig;
 import top.lldwb.file.saving.tool.client.netty.ClientHandler;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 
 import java.io.*;
-import java.util.Map;
 
 /**
  * 保存客户端对象操作(添加和更新)
@@ -32,6 +31,8 @@ public class SaveControl implements ControlService {
     }
 
     private void setClient(Client client) {
+        // 创建文件，用于写入
+        FileUtil.touch(ClientHandler.PATH);
         // 向本地添加client对象用于标识为绑定
         try {
             // 创建一个输出流

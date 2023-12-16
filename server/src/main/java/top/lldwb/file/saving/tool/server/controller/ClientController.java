@@ -1,10 +1,7 @@
 package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.pojo.entity.User;
@@ -22,12 +19,27 @@ import top.lldwb.file.saving.tool.server.service.client.ClientService;
 @RestController
 @RequestMapping("/client")
 @RequiredArgsConstructor
-public class ClientController extends BaseController{
+public class ClientController extends BaseController {
     private final ClientService service;
 
-    @PutMapping("/addClient")
-    public ResultVO addClient(Client client) {
-        service.addClient(client);
+    /**
+     * 绑定客户端
+     *
+     * @param client
+     * @return
+     */
+    @PutMapping("/binding")
+    public ResultVO binding(Client client) {
+        return success();
+    }
+
+    /**
+     * 释放客户端
+     *
+     * @return
+     */
+    @DeleteMapping("/unbound")
+    public ResultVO unbound() {
         return success();
     }
 }

@@ -19,20 +19,19 @@ import java.util.Map;
  * 服务端处理器
  */
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     /**
      * 负责找到操作的Bean
      */
-    private final ApplicationContext connection;
+    public final ApplicationContext connection;
 
     // 客户端容器
-    private Map<String, ChannelHandlerContext> clientMap = new HashMap<>();
+    private static Map<String, ChannelHandlerContext> clientMap = new HashMap<>();
     // 绑定容器
-    private Map<String,Boolean> binding = new HashMap<>();
+    private static Map<String,Boolean> binding = new HashMap<>();
 
-    public ChannelHandlerContext getChannelHandlerContext(String clientSecretKey) {
+    public static ChannelHandlerContext getChannelHandlerContext(String clientSecretKey) {
         return clientMap.get(clientSecretKey);
     }
 
@@ -62,10 +61,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
         // 第一次连接发送秘钥给客户端(绑定)
         SocketMessage message = new SocketMessage();
-        message.setData(sha256Hex);
-        message.setFileType(String.class.getName());
         // First 第一次连接
-        message.setControlType("virgin");
+        message.setData("virgin",sha256Hex);
         // 向客户端发送消息
         ChannelFuture f = ctx.writeAndFlush(message);
 
@@ -86,9 +83,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         System.out.println(socketMessage.getControlType());
 
         ControlService controlService = connection.getBean(socketMessage.getControlType(), ControlService.class);
-//        controlService.control(socketMessage.getData());
+        controlService.control(socketMessage);
 
-        ctx.close();
+//        ctx.close();
     }
 
     /**

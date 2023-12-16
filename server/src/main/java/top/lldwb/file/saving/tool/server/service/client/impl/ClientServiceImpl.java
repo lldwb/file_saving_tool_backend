@@ -7,6 +7,7 @@ import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
+import top.lldwb.file.saving.tool.server.dao.ClientDao;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.PathMappingDao;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
@@ -26,6 +27,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
+    private final ClientDao clientDao;
     private final SendService nettySend;
     private final PathMappingDao pathMappingDao;
     private final EsService esService;
@@ -33,25 +35,24 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void addClient(Client client) {
-        SocketMessage socketMessage = new SocketMessage();
-        socketMessage.setData(client);
-        socketMessage.setControlType("binding");
-        socketMessage.setFileType(Client.class.getName());
-        socketMessage.setClazz(Class.class);
-        nettySend.send(socketMessage);
+        clientDao.addClient(client);
 
         // 修改数据库，同步es
     }
 
     @Override
-    public void deleteClient(Client client) {
-        SocketMessage socketMessage = new SocketMessage();
-        socketMessage.setData(client);
-        socketMessage.setControlType("deleteClient");
-        socketMessage.setFileType(Client.class.getName());
-        nettySend.send(socketMessage);
+    public void updateClient(Client client) {
+        clientDao.updateClient(client);
+    }
 
-        // 修改数据库，同步es
+    @Override
+    public Client getClientById(Integer clientId) {
+        return clientDao.getClientById(clientId);
+    }
+
+    @Override
+    public Client getClientBySecretKe(String clientSecretKey) {
+        return clientDao.getClientBySecretKe(clientSecretKey);
     }
 
     @Override
@@ -63,9 +64,7 @@ public class ClientServiceImpl implements ClientService {
         map.put("fileInfos", fileInfos);
 
         SocketMessage socketMessage = new SocketMessage();
-        socketMessage.setData(map);
-        socketMessage.setControlType("download");
-        socketMessage.setFileType(PathMapping.class.getName());
+        socketMessage.setData("download",map);
         nettySend.send(socketMessage);
 
         // 修改数据库，同步es
@@ -74,9 +73,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void uploading(PathMapping pathMapping) {
         SocketMessage socketMessage = new SocketMessage();
-        socketMessage.setData(pathMapping);
-        socketMessage.setControlType("uploading");
-        socketMessage.setFileType(PathMapping.class.getName());
+        socketMessage.setData("uploading",pathMapping);
         nettySend.send(socketMessage);
 
         // 修改数据库，同步es

@@ -10,8 +10,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
 import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
 
@@ -27,10 +29,11 @@ import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
 @Setter
 @RequiredArgsConstructor
 public class ServerNettyService {
-    private final ServerHandler serverHandler;
-    private final ObjectEncoder objectEncoder;
-    private final ObjectDecoder objectDecoder;
     private Integer port;
+    /**
+     * 负责找到操作的Bean
+     */
+    private final ApplicationContext connection;
 
     public void run() {
         // 创建两个EventLoopGroup，一个用于接受客户端连接，另一个用于处理网络操作
@@ -45,7 +48,7 @@ public class ServerNettyService {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             // 为每一个客户端连接创建一个ServerHandler实例
-                            ch.pipeline().addLast(objectEncoder, objectDecoder, serverHandler);
+                            ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(SocketMessage.class), new ServerHandler(connection));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)

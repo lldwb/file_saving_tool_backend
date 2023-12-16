@@ -13,4 +13,5 @@ public interface ClientDao {
     void addClient(Client client);
     void updateClient(Client client);
     Client getClientById(Integer clientId);
+    Client getClientBySecretKe(String clientSecretKey);
 }
