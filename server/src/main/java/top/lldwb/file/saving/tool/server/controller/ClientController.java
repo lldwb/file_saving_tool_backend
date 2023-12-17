@@ -23,23 +23,18 @@ public class ClientController extends BaseController {
     private final ClientService service;
 
     /**
-     * 绑定客户端
+     * 修改客户端(绑定和解绑本质上都是修改客户端的用户id)
      *
      * @param client
      * @return
      */
-    @PutMapping("/binding")
-    public ResultVO binding(Client client) {
-        return success();
-    }
-
-    /**
-     * 释放客户端
-     *
-     * @return
-     */
-    @DeleteMapping("/unbound")
-    public ResultVO unbound() {
+    @PostMapping("/updateClient")
+    public ResultVO updateClient(Client client) {
+        if (client.getClientId() != null) {
+            service.updateClient(client);
+        } else {
+            service.updateClientBySecretKe(client);
+        }
         return success();
     }
 }

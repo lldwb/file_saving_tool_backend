@@ -43,6 +43,17 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void updateClient(Client client) {
         clientDao.updateClient(client);
+        // 创建客户端对象消息
+        SocketMessage<Client> socketMessage = new SocketMessage<>();
+        socketMessage.setData("save", getClientBySecretKe(client.getClientSecretKey()));
+        socketMessage.setSecretKey(client.getClientSecretKey());
+        nettySend.send(socketMessage);
+    }
+
+    @Override
+    public void updateClientBySecretKe(Client client) {
+        client.setClientId(clientDao.getClientBySecretKe(client.getClientSecretKey()).getClientId());
+        updateClient(client);
     }
 
     @Override

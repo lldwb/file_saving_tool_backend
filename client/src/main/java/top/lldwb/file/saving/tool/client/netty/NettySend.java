@@ -24,7 +24,7 @@ public class NettySend implements SendService<SocketMessage> {
 
     @Override
     public void send(SocketMessage message) {
-        log.info("发送消息：{}",message);
+        log.info("发送消息：{}",message.toString());
         // 发送消息并且立刻刷新(设置消息并且立刻发送)
         // 添加关闭监听器
         ClientHandler.ctx.writeAndFlush(message);

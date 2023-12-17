@@ -25,6 +25,12 @@ public interface ClientService {
     void updateClient(Client client);
 
     /**
+     * 更新客户端
+     * @param client
+     */
+    void updateClientBySecretKe(Client client);
+
+    /**
      * 根据客户端id查询客户端
      * @param clientId
      * @return

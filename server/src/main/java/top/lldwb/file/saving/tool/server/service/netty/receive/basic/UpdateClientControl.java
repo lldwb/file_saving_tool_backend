@@ -36,11 +36,5 @@ public class UpdateClientControl implements ControlService {
         } else {
             service.addClient(client);
         }
-
-        // 创建客户端对象消息
-        SocketMessage<Client> socketMessage = new SocketMessage<>();
-        socketMessage.setData("save", service.getClientBySecretKe(client.getClientSecretKey()));
-        socketMessage.setSecretKey(client.getClientSecretKey());
-        nettySend.send(socketMessage);
     }
 }

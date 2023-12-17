@@ -45,4 +45,15 @@ public class Client implements Serializable {
      */
     private Timestamp updateTime;
 
+    @Override
+    public String toString() {
+        return "Client{" +
+                "clientId=" + clientId +
+                ", clientSecretKey='" + clientSecretKey + '\'' +
+                ", clientState=" + clientState +
+                ", userId=" + userId +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }
