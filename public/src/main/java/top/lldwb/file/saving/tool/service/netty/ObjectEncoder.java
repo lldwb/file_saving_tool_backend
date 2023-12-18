@@ -2,9 +2,13 @@ package top.lldwb.file.saving.tool.service.netty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Service;
 
 /**
  * 发送对象
@@ -14,6 +18,8 @@ import io.netty.channel.ChannelPromise;
  * @time 9:02
  * @PROJECT_NAME SpringBootTest
  */
+
+@Scope(value = "prototype",proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ObjectEncoder extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {

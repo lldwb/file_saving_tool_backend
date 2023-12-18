@@ -17,14 +17,4 @@ import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
  */
 @Configuration
 public class AppConfig {
-    @Bean
-    public ObjectDecoder objectDecoder(){
-        ObjectDecoder objectDecoder = new ObjectDecoder(SocketMessage.class);
-        return objectDecoder;
-    }
-
-    @Bean
-    public ObjectEncoder objectEncoder(){
-        return new ObjectEncoder();
-    }
 }

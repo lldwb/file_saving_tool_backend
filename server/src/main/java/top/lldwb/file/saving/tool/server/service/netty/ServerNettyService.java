@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
 import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
+import top.lldwb.file.saving.tool.service.netty.SocketMessageDecoder;
 
 /**
  * @author lldwb
@@ -48,7 +49,7 @@ public class ServerNettyService {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             // 为每一个客户端连接创建一个ServerHandler实例
-                            ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(SocketMessage.class), new ServerHandler(connection));
+                            ch.pipeline().addLast(new ObjectEncoder(), new SocketMessageDecoder(), new ServerHandler(connection));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)

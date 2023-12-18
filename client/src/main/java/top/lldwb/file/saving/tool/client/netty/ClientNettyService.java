@@ -10,10 +10,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
 import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
+import top.lldwb.file.saving.tool.service.netty.SocketMessageDecoder;
 
 /**
  * @author lldwb
@@ -26,9 +28,10 @@ import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
 @Setter
 @RequiredArgsConstructor
 public class ClientNettyService {
-    private final ClientHandler clientHandler;
-    private final ObjectEncoder objectEncoder;
-    private final ObjectDecoder objectDecoder;
+    /**
+     * 负责找到操作的Bean
+     */
+    private final ApplicationContext connection;
     private String host;
     private Integer port;
 
@@ -49,7 +52,7 @@ public class ClientNettyService {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) {
-                    ch.pipeline().addLast(objectEncoder, objectDecoder, clientHandler);
+                    ch.pipeline().addLast(new ObjectEncoder(), new SocketMessageDecoder(), new ClientHandler(connection));
                 }
             });
 

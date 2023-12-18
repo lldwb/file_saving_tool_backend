@@ -15,7 +15,6 @@ import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import java.io.*;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     public static String sha256Hex;
@@ -54,6 +53,30 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         controlService.control(socketMessage);
     }
 
+    /**
+     * 关闭连接后事件
+     *
+     * @param ctx
+     */
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) {
+        // 访问服务器
+        while (ctx.isRemoved()){
+            try {
+                wait(500);
+                connection.getBean(ClientNettyService.class).run();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 连接异常处理
+     *
+     * @param ctx
+     * @param cause
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         // 打印异常信息

@@ -2,11 +2,14 @@ package top.lldwb.file.saving.tool.server.service.netty;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.control.ControlService;
@@ -19,6 +22,7 @@ import java.util.Map;
  * 服务端处理器
  */
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     /**
