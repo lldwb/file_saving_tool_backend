@@ -25,7 +25,7 @@ public class SocketMessage<T> extends Message<T> {
      */
     private Class<T> clazz;
     /**
-     * 连接秘钥(可以为空)
+     * 连接秘钥(单向通讯可以为空，双向通讯不可为空)
      */
     private String secretKey;
     public void setData(String controlType,T data){

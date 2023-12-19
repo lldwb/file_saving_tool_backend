@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * 文件夹信息
@@ -46,4 +47,8 @@ public class DirectoryInfo {
      * 更新时间
      */
     private Timestamp updateTime;
+    /**
+     * 文件夹下面的文件
+     */
+    private List<FileInfo> fileInfos;
 }

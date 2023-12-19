@@ -1,6 +1,8 @@
 package top.lldwb.file.saving.tool.client.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.lldwb.file.saving.tool.client.minio.impl.FileMonitorImpl;
 
 /**
  * @author lldwb

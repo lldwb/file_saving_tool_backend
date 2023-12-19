@@ -18,6 +18,12 @@
             <artifactId>public</artifactId>
             <version>{top.lldwb.file.saving.tool.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.7</version>
+        </dependency>
     </dependencies>
 
     <build>

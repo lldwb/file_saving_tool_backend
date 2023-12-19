@@ -22,7 +22,7 @@ public class FileInfo {
      */
     private Integer fileInfoId;
     /**
-     * 名称
+     * 名称(在客户端中为映射的相对路径)
      */
     private String fileInfoName;
     /**
@@ -30,9 +30,9 @@ public class FileInfo {
      */
     private String fileInfoPath;
     /**
-     * 状态(1为存在，-1删除)
+     * 状态(1为存在，-1删除)，默认1
      */
-    private Integer fileInfoState;
+    private Integer fileInfoState = 1;
     /**
      * 文件大小
      */

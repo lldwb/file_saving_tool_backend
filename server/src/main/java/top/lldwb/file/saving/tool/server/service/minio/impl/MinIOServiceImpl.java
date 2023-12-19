@@ -2,7 +2,8 @@ package top.lldwb.file.saving.tool.server.service.minio.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import io.minio.*;
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -17,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.config.MinIOConfig;
 import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
+import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.dao.DirectoryInfoDao;
@@ -24,10 +27,9 @@ import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
-import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
+import top.lldwb.file.saving.tool.service.minIO.MinIOSaveService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +55,7 @@ public class MinIOServiceImpl implements MinIOService {
     private final OperationLogDao operationLogDao;
     private final RabbitTemplate template;
     private final EsService esService;
+    private final MinIOSaveService minIOSaveService;
 
     /**
      * 文件对象转换成文件文档对象
@@ -127,10 +130,7 @@ public class MinIOServiceImpl implements MinIOService {
             String sha256Hex = DigestUtil.sha256Hex(inputStream);
 
             // 检测是否已经存在，如果存在则不上传
-            if (!(sha256Hex.equals(DigestUtil.sha256Hex(minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).build()))))) {
-                // 上传文件到Minio
-                minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).stream(inputStream, multipartFile.getSize(), -1).contentType(multipartFile.getContentType()).build());
-            }
+            minIOSaveService.saveMinIO(multipartFile);
 
             // 文件信息对象
             FileInfo fileInfo = new FileInfo();
@@ -166,9 +166,7 @@ public class MinIOServiceImpl implements MinIOService {
             template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
 
 
-        } catch (ServerException | InsufficientDataException | ErrorResponseException | IOException |
-                 NoSuchAlgorithmException | InvalidKeyException | InvalidResponseException | InternalException |
-                 XmlParserException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
