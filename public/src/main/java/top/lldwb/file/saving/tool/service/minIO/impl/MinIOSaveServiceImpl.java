@@ -1,19 +1,17 @@
 package top.lldwb.file.saving.tool.service.minIO.impl;
 
 import cn.hutool.crypto.digest.DigestUtil;
-import io.minio.IsObjectLegalHoldEnabledArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import io.minio.errors.*;
+import io.minio.StatObjectArgs;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.config.MinIOConfig;
 import top.lldwb.file.saving.tool.service.minIO.MinIOSaveService;
 
 import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * @author lldwb
@@ -22,6 +20,7 @@ import java.security.NoSuchAlgorithmException;
  * @time 15:55
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MinIOSaveServiceImpl implements MinIOSaveService {
@@ -30,7 +29,7 @@ public class MinIOSaveServiceImpl implements MinIOSaveService {
     @Override
     public void saveMinIO(File file) {
         try {
-            saveMinIO(new FileInputStream(file),file.length());
+            saveMinIO(new FileInputStream(file), file.length(),DigestUtil.sha256Hex(file));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -39,40 +38,29 @@ public class MinIOSaveServiceImpl implements MinIOSaveService {
     @Override
     public void saveMinIO(MultipartFile multipartFile) {
         try {
-            saveMinIO(multipartFile.getInputStream(),multipartFile.getSize());
+            saveMinIO(multipartFile.getInputStream(), multipartFile.getSize(),DigestUtil.sha256Hex(multipartFile.getInputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     @Override
-    public void saveMinIO(InputStream inputStream, Long size) {
-        String sha256Hex = DigestUtil.sha256Hex(inputStream);
+    public void saveMinIO(InputStream inputStream, Long size,String sha256Hex) {
+        // 检测是否已经存在，如果存在则不上传
+        log.info("检测是否已经存在，如果存在则不上传");
         try {
-            // 检测是否已经存在，如果存在则不上传
-            minioClient.isObjectLegalHoldEnabled(IsObjectLegalHoldEnabledArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).build());
+            log.info("检测是否已经存在，如果存在则不上传");
+//            minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).length(1L).build());
+            // 判断文件是否存在
+            boolean exists = minioClient.statObject(StatObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).build()) != null;
         } catch (Exception e) {
             try {
-                // 上传文件到Minio
-                minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).stream(inputStream,size,-1).build());
-            } catch (ErrorResponseException ex) {
-                throw new RuntimeException(ex);
-            } catch (InsufficientDataException ex) {
-                throw new RuntimeException(ex);
-            } catch (InternalException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvalidKeyException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvalidResponseException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } catch (NoSuchAlgorithmException ex) {
-                throw new RuntimeException(ex);
-            } catch (ServerException ex) {
-                throw new RuntimeException(ex);
-            } catch (XmlParserException ex) {
-                throw new RuntimeException(ex);
+                log.info("上传{}文件到Minio", sha256Hex);
+                minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).stream(inputStream, size, -1).build());
+            } catch (Exception ex) {
+                log.info("上传出错");
             }
         }
+        log.info("结束");
     }
 }

@@ -1,19 +1,16 @@
 package top.lldwb.file.saving.tool.server.service.netty;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.crypto.digest.DigestUtil;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.service.control.ControlService;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,7 +79,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws ClassNotFoundException {
-        SocketMessage socketMessage = (SocketMessage) msg;
+        SocketMessage socketMessage = Convert.convert(SocketMessage.class,msg);
 
         System.out.println(socketMessage.getControlType());
 

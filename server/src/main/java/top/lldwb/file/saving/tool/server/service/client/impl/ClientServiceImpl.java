@@ -89,4 +89,13 @@ public class ClientServiceImpl implements ClientService {
 
         // 修改数据库，同步es
     }
+
+    @Override
+    public void synchronization(PathMapping pathMapping) {
+        SocketMessage socketMessage = new SocketMessage();
+        socketMessage.setData(pathMapping);
+        socketMessage.setControlType("synchronization");
+        socketMessage.setSecretKey(clientDao.getClientById(pathMapping.getClientId()).getClientSecretKey());
+        nettySend.send(socketMessage);
+    }
 }

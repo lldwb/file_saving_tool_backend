@@ -2,11 +2,8 @@ package top.lldwb.file.saving.tool.service.netty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +21,10 @@ import java.util.List;
 public class ObjectDecoder extends ByteToMessageDecoder {
     public ObjectDecoder(Class<?> clazz) {
         this.clazz = clazz;
+    }
+
+    public ObjectDecoder() {
+        this.clazz = Object.class;
     }
 
     private Class<?> clazz;

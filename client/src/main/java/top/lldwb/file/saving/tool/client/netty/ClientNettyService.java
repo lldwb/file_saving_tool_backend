@@ -11,11 +11,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
 import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
-import top.lldwb.file.saving.tool.service.netty.SocketMessageDecoder;
 
 /**
  * @author lldwb
@@ -52,7 +50,7 @@ public class ClientNettyService {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) {
-                    ch.pipeline().addLast(new ObjectEncoder(), new SocketMessageDecoder(), new ClientHandler(connection));
+                    ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(), new ClientHandler(connection));
                 }
             });
 

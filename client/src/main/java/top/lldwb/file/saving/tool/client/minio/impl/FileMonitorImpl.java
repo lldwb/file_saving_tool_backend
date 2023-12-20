@@ -3,9 +3,9 @@ package top.lldwb.file.saving.tool.client.minio.impl;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
-import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.client.minio.FileMonitor;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
+import top.lldwb.file.saving.tool.service.minIO.MinIOSaveService;
 import top.lldwb.file.saving.tool.service.send.SendService;
 
 import java.io.File;
@@ -30,8 +30,8 @@ public class FileMonitorImpl implements FileMonitor {
      *
      * @param path 文件路径
      */
-    public FileMonitorImpl(SendService nettySend, PathMapping pathMapping) {
-        this(nettySend, pathMapping, 1000);
+    public FileMonitorImpl(MinIOSaveService minIOSaveService,SendService nettySend, PathMapping pathMapping) {
+        this(minIOSaveService,nettySend, pathMapping, 1000);
     }
 
     /**
@@ -40,8 +40,8 @@ public class FileMonitorImpl implements FileMonitor {
      * @param path     文件路径
      * @param interval 监听间隔
      */
-    public FileMonitorImpl(SendService nettySend, PathMapping pathMapping, long interval) {
-        this(pathMapping, interval, new FileListenerHandler(nettySend, pathMapping));
+    public FileMonitorImpl(MinIOSaveService minIOSaveService,SendService nettySend, PathMapping pathMapping, long interval) {
+        this(pathMapping, interval, new FileListenerHandler(minIOSaveService,nettySend, pathMapping));
     }
 
     /**
@@ -59,12 +59,20 @@ public class FileMonitorImpl implements FileMonitor {
     }
 
     @Override
-    public void start() throws Exception {
-        monitor.start();
+    public void start() {
+        try {
+            monitor.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void stop() throws Exception {
-        monitor.stop();
+    public void stop() {
+        try {
+            monitor.stop();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

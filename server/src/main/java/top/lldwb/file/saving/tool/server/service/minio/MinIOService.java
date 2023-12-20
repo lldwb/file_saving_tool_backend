@@ -3,9 +3,10 @@ package top.lldwb.file.saving.tool.server.service.minio;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -82,4 +83,14 @@ public interface MinIOService {
      * @return
      */
     FileInfo getFileInfoByFileInfoId(Integer fileInfoId);
+
+    void saveMinIO(MultipartFile multipartFile);
+
+    /**
+     * 保存到minIO中
+     *
+     * @param inputStream 文件输入流
+     * @param size        文件长度
+     */
+    void saveMinIO(InputStream inputStream, Long size);
 }

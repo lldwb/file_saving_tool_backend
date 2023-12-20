@@ -25,5 +25,5 @@ public interface MinIOSaveService {
      * @param inputStream 文件输入流
      * @param size        文件长度
      */
-    void saveMinIO(InputStream inputStream, Long size);
+    void saveMinIO(InputStream inputStream, Long size,String sha256Hex);
 }

@@ -6,8 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 import top.lldwb.file.saving.tool.PublicApplication;
 import top.lldwb.file.saving.tool.client.netty.ClientNettyService;
-import top.lldwb.file.saving.tool.config.AppConfig;
-import top.lldwb.file.saving.tool.config.MinIOConfig;
 
 @SpringBootApplication
 @Import(PublicApplication.class)

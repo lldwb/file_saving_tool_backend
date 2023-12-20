@@ -4,8 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +31,6 @@ import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
-import top.lldwb.file.saving.tool.service.minIO.MinIOSaveService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +47,7 @@ import java.util.Map;
  * @time 9:28
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MinIOServiceImpl implements MinIOService {
@@ -55,7 +57,6 @@ public class MinIOServiceImpl implements MinIOService {
     private final OperationLogDao operationLogDao;
     private final RabbitTemplate template;
     private final EsService esService;
-    private final MinIOSaveService minIOSaveService;
 
     /**
      * 文件对象转换成文件文档对象
@@ -130,7 +131,7 @@ public class MinIOServiceImpl implements MinIOService {
             String sha256Hex = DigestUtil.sha256Hex(inputStream);
 
             // 检测是否已经存在，如果存在则不上传
-            minIOSaveService.saveMinIO(multipartFile);
+            saveMinIO(multipartFile);
 
             // 文件信息对象
             FileInfo fileInfo = new FileInfo();
@@ -313,5 +314,35 @@ public class MinIOServiceImpl implements MinIOService {
     @Override
     public FileInfo getFileInfoByFileInfoId(Integer fileInfoId) {
         return fileInfoDao.getFileInfoByFileInfoId(fileInfoId);
+    }
+
+    @Override
+    public void saveMinIO(MultipartFile multipartFile) {
+        try {
+            saveMinIO(multipartFile.getInputStream(), multipartFile.getSize());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveMinIO(InputStream inputStream, Long size) {
+        String sha256Hex = DigestUtil.sha256Hex(inputStream);
+        // 检测是否已经存在，如果存在则不上传
+        log.info("检测是否已经存在，如果存在则不上传");
+        try {
+            log.info("检测{}是否已经存在，如果存在则不上传", sha256Hex);
+            minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).length(0L).build());
+            // 判断文件是否存在
+//            boolean exists = minioClient.statObject(StatObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).build()) != null;
+        } catch (Exception e) {
+            try {
+                log.info("上传{}文件到Minio", sha256Hex);
+                minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).stream(inputStream, size, -1).build());
+            } catch (Exception ex) {
+                log.info("上传出错");
+            }
+        }
+        log.info("结束");
     }
 }

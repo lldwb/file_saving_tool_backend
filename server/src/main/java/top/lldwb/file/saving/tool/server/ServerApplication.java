@@ -4,11 +4,8 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import top.lldwb.file.saving.tool.PublicApplication;
-import top.lldwb.file.saving.tool.config.AppConfig;
-import top.lldwb.file.saving.tool.config.MinIOConfig;
 import top.lldwb.file.saving.tool.server.service.netty.ServerNettyService;
 
 @SpringBootApplication

@@ -10,26 +10,17 @@ package top.lldwb.file.saving.tool.client.minio.impl;
 
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import io.minio.GetObjectArgs;
-import io.minio.PutObjectArgs;
-import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
-import top.lldwb.file.saving.tool.client.netty.receive.file.SynchronizationControl;
-import top.lldwb.file.saving.tool.config.MinIOConfig;
-import top.lldwb.file.saving.tool.pojo.dto.PathSocketMessage;
-import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
+import top.lldwb.file.saving.tool.service.minIO.MinIOSaveService;
 import top.lldwb.file.saving.tool.service.send.SendService;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
@@ -80,7 +71,7 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
      * 特征码集合，用于快速判断minio是否有对应文件
      */
     Set<String> sha256List = new HashSet<>();
-
+    private final MinIOSaveService minIOSaveService;
     private final SendService nettySend;
     /**
      * 用于判断操作的是哪个路径
@@ -192,7 +183,7 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
             pathMap.remove(path);
         } // 新建或者修改文件
         else {
-            SynchronizationControl.minIOSaveService.saveMinIO(file);
+            minIOSaveService.saveMinIO(file);
             pathMap.put(path, sha256);
         }
     }
@@ -205,27 +196,31 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
     @Override
     public void onStop(FileAlterationObserver observer) {
         super.onStop(observer);
-        log.info("统一上传");
+        if (map.size() > 0) {
+            log.info("统一上传");
 
-        Map<String, List<FileInfo>> stringListMap = new HashMap<>();
-        // 遍历所有临时文件对象
-        for (FileInfo fileInfo : map.keySet()) {
-            // 如果有文件夹
-            if (stringListMap.containsKey(map.get(fileInfo))) {
-                stringListMap.get(map.get(fileInfo)).add(fileInfo);
-            } else {
-                List<FileInfo> list = new ArrayList<>();
-                list.add(fileInfo);
-                stringListMap.put(map.get(fileInfo), list);
+            Map<String, List<FileInfo>> stringListMap = new HashMap<>();
+            // 遍历所有临时文件对象
+            for (FileInfo fileInfo : map.keySet()) {
+                // 如果有文件夹
+                if (stringListMap.containsKey(map.get(fileInfo))) {
+                    stringListMap.get(map.get(fileInfo)).add(fileInfo);
+                } else {
+                    List<FileInfo> list = new ArrayList<>();
+                    list.add(fileInfo);
+                    stringListMap.put(map.get(fileInfo), list);
+                }
             }
+            // 构建消息
+            Map<PathMapping, Map<String, List<FileInfo>>> pathMappingMapMap = new HashMap<>();
+            pathMappingMapMap.put(pathMapping, stringListMap);
+            SocketMessage socketMessage = new SocketMessage();
+            socketMessage.setData("synchronizationFile", pathMappingMapMap);
+            // 发送消息
+            nettySend.send(socketMessage);
+        } else {
+            log.info("没有修改通过上传");
         }
-        // 构建消息
-        PathSocketMessage pathSocketMessage = new PathSocketMessage();
-        pathSocketMessage.setData(stringListMap);
-        pathSocketMessage.setPathMapping(pathMapping);
-        pathSocketMessage.setControlType("synchronizationFile");
-        // 发送消息
-        nettySend.send(pathSocketMessage);
 
     }
 }

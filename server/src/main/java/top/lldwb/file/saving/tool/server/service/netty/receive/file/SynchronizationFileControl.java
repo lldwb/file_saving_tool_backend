@@ -1,19 +1,13 @@
 package top.lldwb.file.saving.tool.server.service.netty.receive.file;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.file.FileNameUtil;
-import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.pojo.dto.PathSocketMessage;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
-import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 
@@ -43,7 +37,6 @@ public class SynchronizationFileControl implements ControlService {
 
     @Override
     public void control(SocketMessage message) {
-        PathSocketMessage pathSocketMessage = Convert.convert(PathSocketMessage.class, message);
 //        // Map<路径,特征码>，如果删除特征码为null
 //        Map<String, String> pathMapping = pathSocketMessage.getData();
 //        // 连接秘钥用于找到操作的客户端和对应的用户

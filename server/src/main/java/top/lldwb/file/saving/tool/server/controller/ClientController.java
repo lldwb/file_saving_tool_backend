@@ -1,11 +1,11 @@
 package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
-import top.lldwb.file.saving.tool.pojo.entity.User;
-import top.lldwb.file.saving.tool.server.exception.AuthException;
+import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
 
@@ -35,6 +35,12 @@ public class ClientController extends BaseController {
         } else {
             service.updateClientBySecretKe(client);
         }
+        return success();
+    }
+
+    @PostMapping("/synchronization")
+    public ResultVO synchronization(PathMapping pathMapping){
+        service.synchronization(pathMapping);
         return success();
     }
 }

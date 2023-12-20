@@ -18,16 +18,12 @@ import java.io.File;
 public interface FileMonitor {
     /**
      * 开始监听
-     *
-     * @throws Exception
      */
 
-    public void start() throws Exception;
+    public void start();
 
     /**
      * 结束监听
-     *
-     * @throws Exception
      */
-    public void stop() throws Exception;
+    public void stop();
 }

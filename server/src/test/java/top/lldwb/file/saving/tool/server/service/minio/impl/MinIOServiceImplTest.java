@@ -1,20 +1,20 @@
 package top.lldwb.file.saving.tool.server.service.minio.impl;
 
 import cn.hutool.crypto.digest.DigestUtil;
-import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.StatObjectArgs;
 import io.minio.errors.*;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.lldwb.file.saving.tool.config.MinIOConfig;
+import top.lldwb.file.saving.tool.service.minIO.MinIOSaveService;
 
 import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author lldwb
@@ -23,51 +23,43 @@ import static org.junit.jupiter.api.Assertions.*;
  * @time 11:32
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Slf4j
 @SpringBootTest
 class MinIOServiceImplTest {
     @Autowired
     private MinioClient minioClient;
+    @Autowired
+    private MinIOSaveService minIOSaveService;
 
     @Test
     void addFile() throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        File file = new File("C:\\Users\\32471\\Downloads\\自建vps");
-        String sha256Hex = DigestUtil.sha256Hex(file);
+        File file = new File("C:\\Users\\32471\\Downloads\\2434\\12414 - 副本.txt");
         InputStream inputStream = new FileInputStream(file);
+        String sha256Hex = DigestUtil.sha256Hex(file);
         // 检测是否已经存在，如果存在则不上传
-        System.out.println("检测是否已经存在，如果存在则不上传");
+        log.info("检测是否已经存在，如果存在则不上传");
         try {
-            // 检测是否已经存在，如果存在则不上传
-            minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).build());
+            log.info("检测是否已经存在，如果存在则不上传");
+//            minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).length(1L).build());
+            // 判断文件是否存在
+            boolean exists = minioClient.statObject(StatObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).build()) != null;
         } catch (Exception e) {
             try {
-                System.out.println("上传文件到Minio");
-                // 上传文件到Minio
-                minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).stream(inputStream,file.length(),-1).build());
-            } catch (ErrorResponseException ex) {
-                throw new RuntimeException(ex);
-            } catch (InsufficientDataException ex) {
-                throw new RuntimeException(ex);
-            } catch (InternalException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvalidKeyException ex) {
-                throw new RuntimeException(ex);
-            } catch (InvalidResponseException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            } catch (NoSuchAlgorithmException ex) {
-                throw new RuntimeException(ex);
-            } catch (ServerException ex) {
-                throw new RuntimeException(ex);
-            } catch (XmlParserException ex) {
-                throw new RuntimeException(ex);
+                log.info("上传{}文件到Minio", sha256Hex);
+                minioClient.putObject(PutObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(sha256Hex).stream(inputStream, file.length(), -1).build());
+            } catch (Exception ex) {
+                log.info("上传出错");
             }
         }
-        System.out.println("结束");
+        log.info("结束");
     }
 
     @Test
-    void testAddFile() {
+    void testAddFile() throws FileNotFoundException {
+        File file = new File("C:\\Users\\32471\\Downloads\\2434\\12414 - 副本.txt");
+//        minIOSaveService.saveMinIO(new File("E:\\Telegram Desktop\\1 (3).txt"));
+        minIOSaveService.saveMinIO(file);
+//        minIOSaveService.saveMinIO(new FileInputStream(file), file.length(),DigestUtil.sha256Hex(file));
     }
 
     @Test
