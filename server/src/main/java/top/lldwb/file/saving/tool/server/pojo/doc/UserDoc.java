@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import top.lldwb.file.saving.tool.server.config.RedisConfig;
+import top.lldwb.file.saving.tool.config.RedisConfig;
 
 /**
  * 用户文档对象

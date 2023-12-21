@@ -3,3 +3,4 @@ spring:
   profiles:
     include:
       - web
+      - redis

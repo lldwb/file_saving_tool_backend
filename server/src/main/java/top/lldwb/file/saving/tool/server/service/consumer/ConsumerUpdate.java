@@ -1,28 +1,17 @@
 package top.lldwb.file.saving.tool.server.service.consumer;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.document.Document;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
-import top.lldwb.file.saving.tool.server.config.RedisConfig;
-import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
-import top.lldwb.file.saving.tool.server.service.sync.EsSyncService;
 
 import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author lldwb

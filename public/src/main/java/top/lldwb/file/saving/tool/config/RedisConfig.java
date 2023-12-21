@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.config;
+package top.lldwb.file.saving.tool.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

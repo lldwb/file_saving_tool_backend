@@ -10,6 +10,8 @@ package top.lldwb.file.saving.tool.client.minio.impl;
 
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
@@ -214,8 +216,18 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
             // 构建消息
             Map<PathMapping, Map<String, List<FileInfo>>> pathMappingMapMap = new HashMap<>();
             pathMappingMapMap.put(pathMapping, stringListMap);
+//            JSONObject json = JSONUtil.createObj()
+//                    .put("pathMapping", pathMapping)
+//                    .put("stringListMap", stringListMap);
+            String[] strings = new String[2];
+            try {
+                strings[0] = new ObjectMapper().writeValueAsString(pathMapping);
+                strings[1] = new ObjectMapper().writeValueAsString(stringListMap);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
             SocketMessage socketMessage = new SocketMessage();
-            socketMessage.setData("synchronizationFile", pathMappingMapMap);
+            socketMessage.setData("synchronizationFile", strings);
             // 发送消息
             nettySend.send(socketMessage);
         } else {

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.AuthCode;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitEmailAuthCode;
-import top.lldwb.file.saving.tool.server.config.RedisConfig;
+import top.lldwb.file.saving.tool.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.service.authCode.AuthCodeService;
 
 import java.time.Duration;
