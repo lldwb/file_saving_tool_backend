@@ -83,7 +83,7 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
     @Override
     public void onStart(FileAlterationObserver observer) {
         super.onStart(observer);
-        log.info("创建上传容器");
+//        log.info("创建上传容器");
         map = new HashMap<>();
     }
 
@@ -181,13 +181,27 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
         // 文件对象,文件所在的文件夹路径
         map.put(fileInfo, path.replace(FileNameUtil.getName(file), ""));
         // 删除文件
-        if (pathMap.containsKey(path) && state == -1) {
+        if (sha256 == null && state == -1) {
+            // pathMap.containsKey(path)
             pathMap.remove(path);
         } // 新建或者修改文件
         else {
             minIOSaveService.saveMinIO(file);
             pathMap.put(path, sha256);
         }
+
+//        try {
+//            fileInfo.setDirectoryInfoId(0);
+//            String[] strings = new String[2];
+//            strings[0] = new ObjectMapper().writeValueAsString(pathMapping);
+//            strings[1] = new ObjectMapper().writeValueAsString(fileInfo);
+//            SocketMessage socketMessage = new SocketMessage();
+//            socketMessage.setData("synchronizationFile", strings);
+//            // 发送消息
+//            nettySend.send(socketMessage);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     /**
@@ -211,6 +225,7 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
                     List<FileInfo> list = new ArrayList<>();
                     list.add(fileInfo);
                     stringListMap.put(map.get(fileInfo), list);
+                    log.info("文件夹：{}",map.get(fileInfo));
                 }
             }
             // 构建消息
@@ -231,7 +246,7 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
             // 发送消息
             nettySend.send(socketMessage);
         } else {
-            log.info("没有修改通过上传");
+//            log.info("没有修改通过上传");
         }
 
     }

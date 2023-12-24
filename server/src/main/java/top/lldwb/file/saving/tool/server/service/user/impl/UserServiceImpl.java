@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
-import top.lldwb.file.saving.tool.config.RedisConfig;
+import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.dao.UserDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
 import top.lldwb.file.saving.tool.pojo.entity.User;

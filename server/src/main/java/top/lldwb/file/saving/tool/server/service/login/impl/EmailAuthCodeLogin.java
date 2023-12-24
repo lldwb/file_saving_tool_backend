@@ -3,7 +3,7 @@ package top.lldwb.file.saving.tool.server.service.login.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.config.RedisConfig;
+import top.lldwb.file.saving.tool.server.config.RedisConfig;
 import top.lldwb.file.saving.tool.server.dao.UserDao;
 import top.lldwb.file.saving.tool.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.exception.AuthException;

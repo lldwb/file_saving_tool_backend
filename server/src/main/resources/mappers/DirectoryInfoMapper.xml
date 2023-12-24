@@ -9,11 +9,38 @@
         <result property="directoryInfoFatherId" column="directory_info_father_id"/>
         <result property="directoryInfoState" column="directory_info_state"/>
         <result property="userId" column="user_id"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
+    <insert id="addDirectoryInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo"
+            useGeneratedKeys="true"
+            keyProperty="directoryInfoId">
+        insert into directory_info(directory_info_name, directory_info_father_id, directory_info_state, user_id)
+        values (#{directoryInfoName}, #{directoryInfoFatherId}, #{directoryInfoState}, #{userId})
+    </insert>
 
     <select id="getDirectoryInfoById" resultMap="directoryInfo">
-        select directory_info_id,directory_info_name,directory_info_father_id,directory_info_state,user_id,createTime,updateTime from directory_info where directory_info_id = {directoryInfoId}
+        select directory_info_id,
+               directory_info_name,
+               directory_info_father_id,
+               directory_info_state,
+               user_id,
+               create_time,
+               update_time
+        from directory_info
+        where directory_info_id = #{directoryInfoId}
+    </select>
+
+    <select id="getDirectoryInfoByFatherIdAndName" resultMap="directoryInfo">
+        select directory_info_id,
+               directory_info_name,
+               directory_info_father_id,
+               directory_info_state,
+               user_id,
+               create_time,
+               update_time
+        from directory_info
+        where directory_info_father_id = #{directoryInfoFatherId}
+          and directory_info_name = #{directoryInfoName}
     </select>
 </mapper>

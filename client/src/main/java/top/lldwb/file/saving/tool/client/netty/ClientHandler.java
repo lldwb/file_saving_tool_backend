@@ -6,13 +6,9 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.service.control.ControlService;
-import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
-
-import java.io.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -47,6 +43,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         // 接收消息并转成指定的类型
         SocketMessage socketMessage = Convert.convert(SocketMessage.class, msg);
+
+        log.info("操作类型：{}",socketMessage.getControlType());
+        log.info("消息内容：{}",socketMessage.getData());
+
         // 获取消息中指定的操作对象
         ControlService controlService = connection.getBean(socketMessage.getControlType(), ControlService.class);
         // 调用操作对象

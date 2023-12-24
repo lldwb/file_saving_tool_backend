@@ -10,5 +10,7 @@ import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
  * @PROJECT_NAME file_saving_tool_backend
  */
 public interface DirectoryInfoDao {
+    void addDirectoryInfo(DirectoryInfo directoryInfo);
     DirectoryInfo getDirectoryInfoById(Integer directoryInfoId);
+    DirectoryInfo getDirectoryInfoByFatherIdAndName(Integer directoryInfoFatherId,String directoryInfoName);
 }

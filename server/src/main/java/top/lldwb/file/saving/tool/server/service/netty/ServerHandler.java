@@ -81,7 +81,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws ClassNotFoundException {
         SocketMessage socketMessage = Convert.convert(SocketMessage.class,msg);
 
-        System.out.println(socketMessage.getControlType());
+        log.info("操作类型：{}",socketMessage.getControlType());
+        log.info("消息内容：{}",socketMessage.getData());
 
         ControlService controlService = connection.getBean(socketMessage.getControlType(), ControlService.class);
         controlService.control(socketMessage);

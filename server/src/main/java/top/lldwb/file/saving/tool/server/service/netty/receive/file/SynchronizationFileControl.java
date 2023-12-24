@@ -14,10 +14,12 @@ import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
+import top.lldwb.file.saving.tool.server.dao.DirectoryInfoDao;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ import java.util.Map;
 public class SynchronizationFileControl implements ControlService {
     private ClientService clientService;
     private final MinIOService minIOService;
+    private final DirectoryInfoDao directoryInfoDao;
 
     /**
      * 路径,List<文件对象>
@@ -46,28 +49,81 @@ public class SynchronizationFileControl implements ControlService {
 
     @Override
     public void control(SocketMessage message) {
-        String[] strings = Convert.convert(String[].class,message.getData());
+        String[] strings = Convert.convert(String[].class, message.getData());
         ObjectMapper objectMapper = new ObjectMapper();
-//        PathMapping pathMapping  = objectMapper.convertValue(strings[0],PathMapping.class);
-        PathMapping pathMapping  = JSONUtil.toBean(strings[0],PathMapping.class);
-            log.info("pathMapping：{}", pathMapping.toString());
-            // 遍历文件夹
-            Map<String, JSONArray> stringListMap = JSONUtil.toBean(strings[1],HashMap.class);
-            for (String folderPath : stringListMap.keySet()) {
-                // 遍历文件夹下面的所有文件对象
-                for (FileInfo fileInfo : JSONUtil.toList(stringListMap.get(folderPath),FileInfo.class)) {
-                    log.info("文件路径：{}，用户id：{}，长度：{}，特征码：{}", fileInfo.getFileInfoName(), fileInfo.getUserId(), fileInfo.getFileInfoSize(), fileInfo.getFileInfoPath());
-                    minIOService.addFile(fileInfo);
-                }
+//        PathMapping pathMapping = JSONUtil.toBean(strings[0], PathMapping.class);
+//        log.info("pathMapping：{}", pathMapping.toString());
+//        FileInfo fileInfo = JSONUtil.toBean(strings[1], FileInfo.class);
+//        log.info("文件路径：{}，用户id：{}，长度：{}，特征码：{}", fileInfo.getFileInfoName(), fileInfo.getUserId(), fileInfo.getFileInfoSize(), fileInfo.getFileInfoPath());
+//        minIOService.addFile(fileInfo);
+
+        PathMapping pathMapping = JSONUtil.toBean(strings[0], PathMapping.class);
+        // 遍历文件夹
+        Map<String, JSONArray> stringListMap = JSONUtil.toBean(strings[1], HashMap.class);
+        for (String folderPath : stringListMap.keySet()) {
+            Integer directoryInfoFatherId = getDirectoryInfoId(folderPath, pathMapping, pathMapping.getDirectoryInfoId());
+            // 遍历文件夹下面的所有文件对象
+            for (FileInfo fileInfo : JSONUtil.toList(stringListMap.get(folderPath), FileInfo.class)) {
+                log.info("文件路径：{}，用户id：{}，长度：{}，特征码：{}", fileInfo.getFileInfoName(), fileInfo.getUserId(), fileInfo.getFileInfoSize(), fileInfo.getFileInfoPath());
+                fileInfo.setDirectoryInfoId(directoryInfoFatherId);
+                fileInfo.setFileInfoName(FileNameUtil.getName(fileInfo.getFileInfoName()));
+                minIOService.addFile(fileInfo);
             }
+        }
 
     }
 
-    private void setPathMap(Map<String, String> pathMapping) {
-        for (String path : pathMapping.keySet()) {
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setFileInfoName(FileNameUtil.getName(path));
-            FileNameUtil.getName(path);
+    /**
+     * 生成并获取文件夹
+     *
+     * @param path                  路径
+     * @param directoryInfoFatherId 父文件夹id
+     * @return
+     */
+    private Integer getDirectoryInfoId(String path, PathMapping pathMapping, Integer directoryInfoFatherId) {
+        log.info("文件夹路径：{}", path);
+        String separator = File.separator;
+        String[] strings = path.split(separator + separator);
+//        String[] strings = path.split("\\");
+        String[] paths = new String[strings.length - 1];
+        log.info("子文件夹数组：{}", strings);
+        for (int i = 1; i < strings.length; i++) {
+            log.info("子文件夹：{}", strings[i]);
+            paths[i - 1] = strings[i];
+        }
+        return getDirectoryInfoId(paths, pathMapping, directoryInfoFatherId);
+    }
+
+    /**
+     * 生成并获取文件夹
+     *
+     * @param path                  路径
+     * @param directoryInfoFatherId 父文件夹id
+     * @return
+     */
+    private Integer getDirectoryInfoId(String[] path, PathMapping pathMapping, Integer directoryInfoFatherId) {
+        // 判断文件夹是否存在，存在返回文件夹
+        DirectoryInfo directoryInfo = directoryInfoDao.getDirectoryInfoByFatherIdAndName(directoryInfoFatherId, path[0]);
+//        log.info("返回的文件夹：{}",directoryInfo.toString());
+        // 不存在创建文件夹
+        if (directoryInfo == null || directoryInfo.getDirectoryInfoName() == null || directoryInfo.getDirectoryInfoName().isEmpty()) {
+            directoryInfo = new DirectoryInfo();
+            directoryInfo.setDirectoryInfoName(path[0]);
+            directoryInfo.setDirectoryInfoState(1);
+            directoryInfo.setUserId(pathMapping.getUserId());
+            directoryInfo.setDirectoryInfoFatherId(directoryInfoFatherId);
+            directoryInfoDao.addDirectoryInfo(directoryInfo);
+        }
+        // 递归下面的文件夹
+        if (path.length > 2) {
+            String[] paths = new String[path.length - 1];
+            for (int i = 1; i < path.length; i++) {
+                paths[i - 1] = path[i];
+            }
+            return getDirectoryInfoId(paths, pathMapping, directoryInfo.getDirectoryInfoId());
+        } else {
+            // 返回文件夹id
+            return directoryInfo.getDirectoryInfoId();
         }
     }
 
@@ -94,5 +150,13 @@ public class SynchronizationFileControl implements ControlService {
      */
     private DirectoryInfo recursionPath(String path) {
         return null;
+    }
+
+    private void setPathMap(Map<String, String> pathMapping) {
+        for (String path : pathMapping.keySet()) {
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setFileInfoName(FileNameUtil.getName(path));
+            FileNameUtil.getName(path);
+        }
     }
 }
