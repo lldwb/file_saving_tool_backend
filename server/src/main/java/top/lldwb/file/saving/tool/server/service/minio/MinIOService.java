@@ -54,6 +54,13 @@ public interface MinIOService {
     ResponseEntity<InputStreamResource> downloadFile(String path);
 
     /**
+     * 下载文件到本地
+     * @param name 完整文件名称(包括路径)
+     * @param path minio连接
+     */
+    void downloadFile(String name,String path);
+
+    /**
      * 获取文件路径
      * @param fileInfoId
      * @return

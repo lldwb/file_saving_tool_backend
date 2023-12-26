@@ -4,7 +4,6 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
@@ -50,12 +49,6 @@ public class SynchronizationFileControl implements ControlService {
     @Override
     public void control(SocketMessage message) {
         String[] strings = Convert.convert(String[].class, message.getData());
-        ObjectMapper objectMapper = new ObjectMapper();
-//        PathMapping pathMapping = JSONUtil.toBean(strings[0], PathMapping.class);
-//        log.info("pathMapping：{}", pathMapping.toString());
-//        FileInfo fileInfo = JSONUtil.toBean(strings[1], FileInfo.class);
-//        log.info("文件路径：{}，用户id：{}，长度：{}，特征码：{}", fileInfo.getFileInfoName(), fileInfo.getUserId(), fileInfo.getFileInfoSize(), fileInfo.getFileInfoPath());
-//        minIOService.addFile(fileInfo);
 
         PathMapping pathMapping = JSONUtil.toBean(strings[0], PathMapping.class);
         // 遍历文件夹

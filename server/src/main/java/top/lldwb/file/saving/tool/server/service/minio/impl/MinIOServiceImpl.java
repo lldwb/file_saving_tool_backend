@@ -32,8 +32,10 @@ import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -262,6 +264,45 @@ public class MinIOServiceImpl implements MinIOService {
             // 200 成功，201 成功但是还有数据
             ResponseEntity<InputStreamResource> response = new ResponseEntity<>(inputStreamReader, headers, HttpStatus.CREATED);
             return response;
+        } catch (ErrorResponseException e) {
+            throw new RuntimeException(e);
+        } catch (InsufficientDataException e) {
+            throw new RuntimeException(e);
+        } catch (InternalException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidResponseException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (ServerException e) {
+            throw new RuntimeException(e);
+        } catch (XmlParserException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void downloadFile(String name, String path) {
+        try {
+            InputStream inputStream = minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
+            OutputStream outputStream = new FileOutputStream(name);
+
+            // 返回指定的文件长度
+            byte[] bytes = new byte[1];
+            // 读取输入文件的数据到字节数组中
+            if (inputStream.read(bytes) != -1) {
+                // 将字节数组中的数据写入输出文件
+                outputStream.write(bytes);
+            }
+
+            //关闭流对象
+            inputStream.close();
+            outputStream.close();
+
         } catch (ErrorResponseException e) {
             throw new RuntimeException(e);
         } catch (InsufficientDataException e) {

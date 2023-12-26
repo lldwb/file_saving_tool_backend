@@ -42,6 +42,6 @@ public class SynchronizationControl implements ControlService {
         PathMapping pathMapping = Convert.convert(PathMapping.class,message.getData());
         FileMonitor fileMonitor = new FileMonitorImpl(minIOSaveService,nettySend, pathMapping);
         watchMonitorMap.put(pathMapping.getPathMappingLocalPath(),fileMonitor);
-        fileMonitor.start();
+//        fileMonitor.start();
     }
 }
