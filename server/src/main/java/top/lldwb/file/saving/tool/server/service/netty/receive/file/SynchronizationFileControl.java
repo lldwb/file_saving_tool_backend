@@ -115,7 +115,7 @@ public class SynchronizationFileControl implements ControlService {
             directoryInfoDao.addDirectoryInfo(directoryInfo);
         }
         // 递归下面的文件夹
-        if (path.length > 2) {
+        if (path.length > 1) {
             String[] paths = new String[path.length - 1];
             for (int i = 1; i < path.length; i++) {
                 paths[i - 1] = path[i];
