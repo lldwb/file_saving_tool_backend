@@ -30,6 +30,14 @@ public interface FileInfoDao {
     List<FileInfo> getFileInfoByPathANDUserIds(String fileInfoPath, Integer userId);
 
     /**
+     * 根据文件夹id获取文件集合
+     * @param directoryInfoId
+     * @param userId
+     * @return
+     */
+    List<FileInfo> listByDirectoryInfoIdAndUserId(Integer directoryInfoId, Integer userId);
+
+    /**
      * 获取所有用户
      *
      * @return

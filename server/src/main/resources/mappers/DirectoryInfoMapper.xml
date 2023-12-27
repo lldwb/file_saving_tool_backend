@@ -43,4 +43,15 @@
         where directory_info_father_id = #{directoryInfoFatherId}
           and directory_info_name = #{directoryInfoName}
     </select>
+    <select id="listByDirectoryInfoFatherId" resultMap="directoryInfo">
+        select directory_info_id,
+               directory_info_name,
+               directory_info_father_id,
+               directory_info_state,
+               user_id,
+               create_time,
+               update_time
+        from directory_info
+        where directory_info_father_id = #{directoryInfoFatherId}
+    </select>
 </mapper>

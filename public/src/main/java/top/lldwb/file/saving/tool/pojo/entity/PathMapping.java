@@ -31,7 +31,7 @@ public class PathMapping implements Serializable {
     /**
      * 文件夹id(外键)
      */
-    private Integer directoryInfoId;
+    private Integer directoryInfoId = 0;
     /**
      * 类型(1上传2下载3同步，删除为对应的负数)
      */

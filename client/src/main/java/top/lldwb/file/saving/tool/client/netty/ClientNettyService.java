@@ -1,10 +1,7 @@
 package top.lldwb.file.saving.tool.client.netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -50,7 +47,9 @@ public class ClientNettyService {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) {
-                    ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(), new ClientHandler(connection));
+                    ChannelPipeline channel = ch.pipeline();
+
+                    channel.addLast(new ObjectEncoder(), new ObjectDecoder(), new ClientHandler(connection));
                 }
             });
 

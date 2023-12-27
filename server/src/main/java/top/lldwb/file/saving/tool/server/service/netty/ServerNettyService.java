@@ -1,10 +1,7 @@
 package top.lldwb.file.saving.tool.server.service.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -40,17 +37,14 @@ public class ServerNettyService {
         try {
             // 创建ServerBootstrap实例，用于启动和绑定服务器
             ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        public void initChannel(SocketChannel ch) {
-                            // 为每一个客户端连接创建一个ServerHandler实例
-                            ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(), new ServerHandler(connection));
-                        }
-                    })
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch) {
+                    ChannelPipeline channel = ch.pipeline();
+
+                    channel.addLast(new ObjectEncoder(), new ObjectDecoder(), new ServerHandler(connection));
+                }
+            }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 
             // 绑定端口，启动服务器
             ChannelFuture f = b.bind(port).sync();

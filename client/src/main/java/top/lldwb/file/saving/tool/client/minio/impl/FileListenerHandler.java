@@ -189,19 +189,6 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
             minIOSaveService.saveMinIO(file);
             pathMap.put(path, sha256);
         }
-
-//        try {
-//            fileInfo.setDirectoryInfoId(0);
-//            String[] strings = new String[2];
-//            strings[0] = new ObjectMapper().writeValueAsString(pathMapping);
-//            strings[1] = new ObjectMapper().writeValueAsString(fileInfo);
-//            SocketMessage socketMessage = new SocketMessage();
-//            socketMessage.setData("synchronizationFile", strings);
-//            // 发送消息
-//            nettySend.send(socketMessage);
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     /**
@@ -229,8 +216,8 @@ class FileListenerHandler extends FileAlterationListenerAdaptor {
                 }
             }
             // 构建消息
-            Map<PathMapping, Map<String, List<FileInfo>>> pathMappingMapMap = new HashMap<>();
-            pathMappingMapMap.put(pathMapping, stringListMap);
+//            Map<PathMapping, Map<String, List<FileInfo>>> pathMappingMapMap = new HashMap<>();
+//            pathMappingMapMap.put(pathMapping, stringListMap);
 //            JSONObject json = JSONUtil.createObj()
 //                    .put("pathMapping", pathMapping)
 //                    .put("stringListMap", stringListMap);

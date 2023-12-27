@@ -61,7 +61,7 @@
         where file_info_path like #{fileInfoPath}
           and user_id = #{userId}
     </select>
-    
+
     <select id="getFileInfos" resultMap="fileInfo">
         select file_info_id,
                file_info_name,
@@ -74,14 +74,29 @@
                update_time
         from file_info
     </select>
+    <select id="listByDirectoryInfoIdAndUserId" resultMap="fileInfo">
+        select file_info_id,
+        file_info_name,
+        file_info_path,
+        file_info_state,
+        file_info_size,
+        directory_info_id,
+        user_id,
+        create_time,
+        update_time
+        from file_info
+        <where>
+            user_id = #{userId} and directory_info_id = #{directoryInfoId}
+        </where>
+    </select>
 
     <insert id="addFileInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo" useGeneratedKeys="true"
             keyProperty="fileInfoId">
-        insert into file_info(file_info_name,file_info_path,file_info_size,directory_info_id,user_id)
-        values (#{fileInfoName},#{fileInfoPath},#{fileInfoSize},#{directoryInfoId},#{userId})
+        insert into file_info(file_info_name, file_info_path, file_info_size, directory_info_id, user_id)
+        values (#{fileInfoName}, #{fileInfoPath}, #{fileInfoSize}, #{directoryInfoId}, #{userId})
     </insert>
-    
-    <update id="updateFileInfo"  parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo">
+
+    <update id="updateFileInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.FileInfo">
         update file_info
         <set>
             <if test="fileInfoName != null and fileInfoName != ''">

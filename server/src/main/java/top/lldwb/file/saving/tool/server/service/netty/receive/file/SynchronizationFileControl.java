@@ -77,14 +77,20 @@ public class SynchronizationFileControl implements ControlService {
         log.info("文件夹路径：{}", path);
         String separator = File.separator;
         String[] strings = path.split(separator + separator);
-//        String[] strings = path.split("\\");
-        String[] paths = new String[strings.length - 1];
-        log.info("子文件夹数组：{}", strings);
-        for (int i = 1; i < strings.length; i++) {
-            log.info("子文件夹：{}", strings[i]);
-            paths[i - 1] = strings[i];
+        // 判断是否是根目录下的文件
+        // 不是
+        if (strings.length - 1 > 0) {
+            String[] paths = new String[strings.length - 1];
+            log.info("子文件夹数组：{}", strings);
+            for (int i = 1; i < strings.length; i++) {
+                log.info("子文件夹：{}", strings[i]);
+                paths[i - 1] = strings[i];
+            }
+            return getDirectoryInfoId(paths, pathMapping, directoryInfoFatherId);
+        }// 是根目录
+        else {
+            return pathMapping.getDirectoryInfoId();
         }
-        return getDirectoryInfoId(paths, pathMapping, directoryInfoFatherId);
     }
 
     /**
@@ -117,39 +123,6 @@ public class SynchronizationFileControl implements ControlService {
         } else {
             // 返回文件夹id
             return directoryInfo.getDirectoryInfoId();
-        }
-    }
-
-    /**
-     * 读取对应路径文件的文件特征码
-     *
-     * @param path 路径
-     * @return 文件特征码
-     */
-    private String getPath(String path) {
-        // 截取本地路径并根据`/`进行拆分
-        String[] paths = path.replace(path, "").split("/");
-        for (int i = 0; i < paths.length; i++) {
-            recursionPath(paths[i]);
-        }
-        return "";
-    }
-
-    /**
-     * 递归路径
-     *
-     * @param path
-     * @return
-     */
-    private DirectoryInfo recursionPath(String path) {
-        return null;
-    }
-
-    private void setPathMap(Map<String, String> pathMapping) {
-        for (String path : pathMapping.keySet()) {
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setFileInfoName(FileNameUtil.getName(path));
-            FileNameUtil.getName(path);
         }
     }
 }

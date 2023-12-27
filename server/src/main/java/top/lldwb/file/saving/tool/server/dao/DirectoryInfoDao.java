@@ -2,6 +2,8 @@ package top.lldwb.file.saving.tool.server.dao;
 
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 
+import java.util.List;
+
 /**
  * @author lldwb
  * @email 3247187440@qq.com
@@ -13,4 +15,11 @@ public interface DirectoryInfoDao {
     void addDirectoryInfo(DirectoryInfo directoryInfo);
     DirectoryInfo getDirectoryInfoById(Integer directoryInfoId);
     DirectoryInfo getDirectoryInfoByFatherIdAndName(Integer directoryInfoFatherId,String directoryInfoName);
+
+    /**
+     * 返回文件夹下面所有的子文件夹
+     * @param directoryInfoFatherId
+     * @return
+     */
+    List<DirectoryInfo> listByDirectoryInfoFatherId(Integer directoryInfoFatherId);
 }

@@ -38,6 +38,11 @@ public class ClientController extends BaseController {
         return success();
     }
 
+    /**
+     * 设置同步
+     * @param pathMapping
+     * @return
+     */
     @PostMapping("/synchronization")
     public ResultVO synchronization(PathMapping pathMapping){
         service.synchronization(pathMapping);

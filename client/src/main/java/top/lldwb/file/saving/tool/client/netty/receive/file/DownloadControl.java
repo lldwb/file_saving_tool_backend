@@ -5,6 +5,7 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.client.minio.MinIOService;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
@@ -12,6 +13,7 @@ import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +29,7 @@ import java.util.Map;
  * @time 10:33
  * @PROJECT_NAME file_saving_tool_backend
  */
+@Slf4j
 @Service("download")
 @RequiredArgsConstructor
 public class DownloadControl implements ControlService {
@@ -39,11 +42,14 @@ public class DownloadControl implements ControlService {
         // 遍历文件夹
         Map<String, JSONArray> stringListMap = JSONUtil.toBean(strings[1], HashMap.class);
         for (String folderPath : stringListMap.keySet()) {
-            folderPath = pathMapping.getPathMappingLocalPath() + "\\" + folderPath;
+            String directoryInfoPath = pathMapping.getPathMappingLocalPath() + "\\" + folderPath;
+            new File(directoryInfoPath).mkdirs();
+            log.info("接收的文件夹地址：{}",directoryInfoPath);
             // 遍历文件夹下面的所有文件对象
             for (FileInfo fileInfo : JSONUtil.toList(stringListMap.get(folderPath), FileInfo.class)) {
                 try {
-                    minIOService.downloadFile(folderPath + "\\" + fileInfo.getFileInfoName(), fileInfo.getFileInfoPath());
+                    log.info("接收的文件对象名称：{}",fileInfo.getFileInfoName());
+                    minIOService.downloadFile(directoryInfoPath + "\\" + fileInfo.getFileInfoName(), fileInfo.getFileInfoPath());
                 } catch (ServerException e) {
                     throw new RuntimeException(e);
                 } catch (InsufficientDataException e) {
@@ -65,8 +71,6 @@ public class DownloadControl implements ControlService {
                 }
             }
         }
-        // 启动
-        SynchronizationControl.watchMonitorMap.get(pathMapping.getPathMappingLocalPath()).start();
     }
 
     public void control(Map<String, Object> data) {
