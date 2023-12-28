@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.client.minio.MinIOService;
 import top.lldwb.file.saving.tool.config.MinIOConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -25,7 +26,11 @@ public class MinIOServiceImpl implements MinIOService {
     private final MinioClient minioClient;
     @Override
     public void downloadFile(String localPath, String remotePath) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-
+        // 删除原有文件
+        File file = new File(localPath);
+        if (file.isFile()){
+            file.delete();
+        }
         minioClient.downloadObject(DownloadObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(remotePath).filename(localPath).build());
     }
 }
