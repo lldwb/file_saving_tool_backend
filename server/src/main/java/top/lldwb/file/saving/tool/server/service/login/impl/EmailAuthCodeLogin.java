@@ -33,6 +33,7 @@ public class EmailAuthCodeLogin implements LoginService {
             throw new AuthException("邮箱或者验证码错误", 10002);
         }
         User userLogin = userDao.getUserByMail(user.getUserEmail());
+        // 判断是否注册，如果没有则自动注册
         if (userLogin == null) {
             user.setUserName(user.getUserEmail());
             userService.addUser(user);
