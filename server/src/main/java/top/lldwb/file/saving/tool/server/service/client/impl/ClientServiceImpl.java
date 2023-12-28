@@ -17,6 +17,7 @@ import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.PathMappingDao;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
+import top.lldwb.file.saving.tool.server.service.minio.impl.FileListenerHandler;
 import top.lldwb.file.saving.tool.service.send.SendService;
 
 import java.util.ArrayList;
@@ -109,7 +110,68 @@ public class ClientServiceImpl implements ClientService {
         // 获取首次下载需要的文件并发送
         socketMessage.setData("firstDownload", firstDownload(pathMapping));
         nettySend.send(socketMessage);
+
+        FileListenerHandler fileListenerHandler = new FileListenerHandler(pathMapping, this, directoryInfoDao);
+        fileListenerHandler.start();
     }
+
+    @Override
+    public void ClientDownload(PathMapping pathMapping, FileInfo fileInfo) {
+        SocketMessage socketMessage = new SocketMessage();
+        // 获取首次下载需要的文件并发送
+        socketMessage.setData("firstDownload", fileInfoDownload(pathMapping, fileInfo));
+        nettySend.send(socketMessage);
+
+    }
+
+    /**
+     * 获取下载需要的文件
+     *
+     * @param fileInfo
+     */
+    private String[] fileInfoDownload(PathMapping pathMapping, FileInfo fileInfo) {
+        //获取文件信息父ID
+        Integer directoryInfoFatherId = fileInfo.getDirectoryInfoId();
+        //定义路径
+        String path = "";
+        //循环获取父ID
+        do {
+            //根据父ID获取文件信息
+            DirectoryInfo directoryInfo = directoryInfoDao.getDirectoryInfoFatherByDirectoryInfoFatherId(directoryInfoFatherId);
+            //获取父ID
+            directoryInfoFatherId = directoryInfo.getDirectoryInfoFatherId();
+            //判断父ID是否等于路径映射的父ID
+            if (directoryInfoFatherId == pathMapping.getDirectoryInfoId()) {
+                //如果相等，则跳出循环
+                break;
+            } else {
+                //如果不相等，则拼接路径
+                path = directoryInfo.getDirectoryInfoName() + "\\" + path;
+            }
+        } while (true);
+
+        //定义map
+        Map<String, List<FileInfo>> map = new HashMap<>();
+        //定义文件信息列表
+        List<FileInfo> fileInfos = new ArrayList<>();
+        //将文件信息添加到列表
+        fileInfos.add(fileInfo);
+        //将路径和文件信息列表添加到map中
+        map.put(path, fileInfos);
+        // 创建一个String数组，用于存储返回值
+        String[] strings = new String[2];
+        try {
+            // 将PathMapping对象转换为字符串
+            strings[0] = new ObjectMapper().writeValueAsString(pathMapping);
+            // 将文件夹信息Map对象转换为字符串，需要Map<文件夹路径,List<文件>>
+            strings[1] = new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        // 返回String数组
+        return strings;
+    }
+
 
     /**
      * 获取首次下载需要的文件
@@ -117,20 +179,21 @@ public class ClientServiceImpl implements ClientService {
      * @param pathMapping
      */
     private String[] firstDownload(PathMapping pathMapping) {
-        /**
-         * 文件夹,List<文件>
-         */
-        Map<String, List<FileInfo>> stringListMap = new HashMap<>();
-
+        // 创建一个Map对象，用于存储文件夹信息
         Map<String, Integer> directoryInfoMap = new HashMap<>();
-        getDirectoryInfoMap(directoryInfoMap, "", pathMapping.getDirectoryInfoId());
+        // 获取文件夹信息
+        getDirectoryInfoMap(directoryInfoMap, "", pathMapping.getDirectoryInfoId(), pathMapping.getUserId());
+        // 创建一个String数组，用于存储返回值
         String[] strings = new String[2];
         try {
+            // 将PathMapping对象转换为字符串
             strings[0] = new ObjectMapper().writeValueAsString(pathMapping);
+            // 将文件夹信息Map对象转换为字符串
             strings[1] = new ObjectMapper().writeValueAsString(getFileInfoMap(directoryInfoMap, pathMapping));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        // 返回String数组
         return strings;
     }
 
@@ -141,12 +204,17 @@ public class ClientServiceImpl implements ClientService {
      * @param path                  父文件夹路径
      * @param directoryInfoFatherId 父文件夹id
      */
-    private void getDirectoryInfoMap(Map<String, Integer> directoryInfoMap, String path, Integer directoryInfoFatherId) {
-        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherId(directoryInfoFatherId);
+    private void getDirectoryInfoMap(Map<String, Integer> directoryInfoMap, String path, Integer directoryInfoFatherId, Integer userId) {
+        //根据父id获取目录信息
+        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoFatherId, userId);
+        //遍历目录信息
         for (DirectoryInfo directoryInfo : directoryInfos) {
+            //拼接路径
             String paths = path + "\\" + directoryInfo.getDirectoryInfoName();
+            //将路径和id放入map中
             directoryInfoMap.put(paths, directoryInfo.getDirectoryInfoId());
-            getDirectoryInfoMap(directoryInfoMap, paths, directoryInfo.getDirectoryInfoId());
+            //递归调用
+            getDirectoryInfoMap(directoryInfoMap, paths, directoryInfo.getDirectoryInfoId(), userId);
         }
     }
 
@@ -154,15 +222,17 @@ public class ClientServiceImpl implements ClientService {
      * 根据文件夹集合获取文件集合
      *
      * @param directoryInfoMap 用于获取用户id
-     * @param pathMapping
+     * @param pathMapping      <文件夹路径,List<文件>>
      * @return
      */
     private Map<String, List<FileInfo>> getFileInfoMap(Map<String, Integer> directoryInfoMap, PathMapping pathMapping) {
         log.info("文件夹Map：{}", directoryInfoMap.toString());
         Map<String, List<FileInfo>> fileInfoMap = new HashMap<>();
+        // 遍历directoryInfoMap，获取每一个文件夹的文件信息
         for (String path : directoryInfoMap.keySet()) {
             fileInfoMap.put(path, getFileInfo(fileInfoDao.listByDirectoryInfoIdAndUserId(directoryInfoMap.get(path), pathMapping.getUserId())));
         }
+        // 如果pathMapping.getDirectoryInfoId()为0，则获取用户id为pathMapping.getUserId()的文件信息
         if (pathMapping.getDirectoryInfoId() == 0) {
             fileInfoMap.put("", getFileInfo(fileInfoDao.listByDirectoryInfoIdAndUserId(0, pathMapping.getUserId())));
         }

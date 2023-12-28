@@ -13,13 +13,40 @@ import java.util.List;
  */
 public interface DirectoryInfoDao {
     void addDirectoryInfo(DirectoryInfo directoryInfo);
+
     DirectoryInfo getDirectoryInfoById(Integer directoryInfoId);
-    DirectoryInfo getDirectoryInfoByFatherIdAndName(Integer directoryInfoFatherId,String directoryInfoName);
+
+    /**
+     * 根据父文件夹id和文件夹名称查询文件夹信息
+     *
+     * @param directoryInfoFatherId
+     * @param directoryInfoName
+     * @return
+     */
+    DirectoryInfo getDirectoryInfoByFatherIdAndName(Integer directoryInfoFatherId, String directoryInfoName);
+
+    /**
+     * 根据父文件夹id查询父文件夹信息
+     *
+     * @param directoryInfoFatherId
+     * @return
+     */
+    DirectoryInfo getDirectoryInfoFatherByDirectoryInfoFatherId(Integer directoryInfoFatherId);
 
     /**
      * 返回文件夹下面所有的子文件夹
+     *
      * @param directoryInfoFatherId
      * @return
      */
     List<DirectoryInfo> listByDirectoryInfoFatherId(Integer directoryInfoFatherId);
+
+    /**
+     * 返回文件夹下面所有的子文件夹
+     *
+     * @param directoryInfoFatherId
+     * @param userId
+     * @return
+     */
+    List<DirectoryInfo> listByDirectoryInfoFatherIdAndUserId(Integer directoryInfoFatherId, Integer userId);
 }

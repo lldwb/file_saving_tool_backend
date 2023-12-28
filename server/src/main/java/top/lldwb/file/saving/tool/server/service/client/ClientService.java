@@ -1,6 +1,7 @@
 package top.lldwb.file.saving.tool.server.service.client;
 
 import top.lldwb.file.saving.tool.pojo.entity.Client;
+import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 
 /**
@@ -64,4 +65,9 @@ public interface ClientService {
      * @param pathMapping
      */
     void synchronization(PathMapping pathMapping);
+
+    /**
+     * 客户端下载
+     */
+    void ClientDownload(PathMapping pathMapping,FileInfo fileInfo);
 }
