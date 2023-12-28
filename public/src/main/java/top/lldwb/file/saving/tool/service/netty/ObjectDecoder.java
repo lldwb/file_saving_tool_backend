@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 接收对象
+ * 接收对象解码器(放弃)
  *
  * @author lldwb
  * @email 3247187440@qq.com

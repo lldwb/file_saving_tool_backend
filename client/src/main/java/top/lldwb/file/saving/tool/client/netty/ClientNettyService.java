@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.service.netty.ObjectDecoder;
-import top.lldwb.file.saving.tool.service.netty.ObjectEncoder;
+import top.lldwb.file.saving.tool.service.netty.SocketMessageDecoder;
+import top.lldwb.file.saving.tool.service.netty.SocketMessageEncoder;
 
 /**
  * @author lldwb
@@ -49,7 +49,7 @@ public class ClientNettyService {
                 public void initChannel(SocketChannel ch) {
                     ChannelPipeline channel = ch.pipeline();
 
-                    channel.addLast(new ObjectEncoder(), new ObjectDecoder(), new ClientHandler(connection));
+                    channel.addLast(new SocketMessageEncoder(),new SocketMessageDecoder(), new ClientHandler(connection));
                 }
             });
 

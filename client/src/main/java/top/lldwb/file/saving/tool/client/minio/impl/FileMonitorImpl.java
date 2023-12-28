@@ -31,8 +31,8 @@ public class FileMonitorImpl implements FileMonitor {
      * @param path 文件路径
      */
     public FileMonitorImpl(MinIOSaveService minIOSaveService,SendService nettySend, PathMapping pathMapping) {
-//        this(minIOSaveService,nettySend, pathMapping, 1000);
-        this(minIOSaveService,nettySend, pathMapping, 100);
+        this(minIOSaveService,nettySend, pathMapping, 1000);
+//        this(minIOSaveService,nettySend, pathMapping, 100);
     }
 
     /**
