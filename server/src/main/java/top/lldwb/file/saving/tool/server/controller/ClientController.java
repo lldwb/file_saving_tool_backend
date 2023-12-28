@@ -1,6 +1,7 @@
 package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,20 @@ public class ClientController extends BaseController {
         } else {
             service.updateClientBySecretKe(client);
         }
+        return success();
+    }
+
+    /**
+     * 移除客户端
+     * @param clientId
+     * @return
+     */
+    @DeleteMapping("/deleteClient")
+    public ResultVO deleteClient(Integer clientId){
+        Client client = new Client();
+        client.setClientId(clientId);
+        client.setUserId(0);
+        service.updateClient(client);
         return success();
     }
 
