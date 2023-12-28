@@ -168,7 +168,7 @@ public class MinIOServiceImpl implements MinIOService {
             // 发送文件信息到消息队列
             template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
 
-
+            synchronization(fileInfo);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -219,6 +219,7 @@ public class MinIOServiceImpl implements MinIOService {
         // 发送消息到消息队列
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
 
+        synchronization(fileInfo);
     }
 
     @Override
@@ -241,6 +242,7 @@ public class MinIOServiceImpl implements MinIOService {
         // 发送消息到消息队列
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
 
+        synchronization(fileInfo);
         return fileInfo;
     }
 
@@ -385,5 +387,16 @@ public class MinIOServiceImpl implements MinIOService {
             }
         }
         log.info("结束");
+    }
+
+    /**
+     * 同步，调用文件监听处理器
+     * @param fileInfo
+     */
+    private void synchronization(FileInfo fileInfo){
+        Map<Integer, FileListenerHandler> fileListenerHandlerMap = FileListenerHandler.getFileListenerHandlerMap();
+        for (Integer pathMappingId:fileListenerHandlerMap.keySet()){
+            fileListenerHandlerMap.get(pathMappingId).control(fileInfo);
+        }
     }
 }

@@ -27,7 +27,12 @@ public class FileListenerHandler {
      * 用于存储文件监听处理器的容器
      * pathMappingId,文件监听处理器对象
      */
-    public static Map<Integer, FileListenerHandler> fileListenerHandlerMap = new HashMap<>();
+    private static Map<Integer, FileListenerHandler> fileListenerHandlerMap = new HashMap<>();
+
+    public static Map<Integer, FileListenerHandler> getFileListenerHandlerMap() {
+        return fileListenerHandlerMap;
+    }
+
     private PathMapping pathMapping;
     private ClientService clientService;
     private DirectoryInfoDao directoryInfoDao;
