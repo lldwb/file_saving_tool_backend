@@ -8,7 +8,6 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
-import top.lldwb.file.saving.tool.server.service.es.EsService;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,9 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 @Service
 @RequiredArgsConstructor
 public class ConsumerUpdate {
-    private final EsService esService;
     private final ElasticsearchOperations template;
-//    private final EsSyncService esSyncService;
 
     @RabbitListener(queues = RabbitUpdate.QUEUE_NAME)
     public void esUpdate(UpdateMessage updateMessage) throws IntrospectionException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {

@@ -100,4 +100,9 @@ public interface MinIOService {
      * @param size        文件长度
      */
     void saveMinIO(InputStream inputStream, Long size);
+
+    /**
+     * 刷新es数据
+     */
+    void refresh();
 }

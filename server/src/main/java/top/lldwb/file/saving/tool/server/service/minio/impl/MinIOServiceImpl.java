@@ -391,12 +391,22 @@ public class MinIOServiceImpl implements MinIOService {
 
     /**
      * 同步，调用文件监听处理器
+     *
      * @param fileInfo
      */
-    private void synchronization(FileInfo fileInfo){
+    private void synchronization(FileInfo fileInfo) {
         Map<Integer, FileListenerHandler> fileListenerHandlerMap = FileListenerHandler.getFileListenerHandlerMap();
-        for (Integer pathMappingId:fileListenerHandlerMap.keySet()){
+        for (Integer pathMappingId : fileListenerHandlerMap.keySet()) {
             fileListenerHandlerMap.get(pathMappingId).control(fileInfo);
         }
+    }
+
+    @Override
+    public void refresh() {
+        List<FileInfo> fileInfos = fileInfoDao.getFileInfos();
+        esService.deleteIndex(FileInfoDao.class);
+        fileInfos.forEach(fileInfo ->
+                // 发送文件信息到消息队列
+                template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo))));
     }
 }

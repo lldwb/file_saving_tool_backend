@@ -96,4 +96,14 @@ public class MinIOController extends BaseController {
     public ResultVO<FileInfo> getFileInfoByFileInfoId(Integer fileInfoId) {
         return success(service.getFileInfoByFileInfoId(fileInfoId));
     }
+
+    /**
+     * 刷新es数据
+     * @return
+     */
+    @PutMapping("/refresh")
+    public ResultVO refresh(){
+        service.refresh();
+        return success();
+    }
 }
