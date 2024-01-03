@@ -1,14 +1,13 @@
 package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
+
+import java.util.List;
 
 /**
  * @author lldwb
@@ -41,11 +40,12 @@ public class ClientController extends BaseController {
 
     /**
      * 移除客户端
+     *
      * @param clientId
      * @return
      */
     @DeleteMapping("/deleteClient")
-    public ResultVO deleteClient(Integer clientId){
+    public ResultVO deleteClient(Integer clientId) {
         Client client = new Client();
         client.setClientId(clientId);
         client.setUserId(0);
@@ -55,12 +55,24 @@ public class ClientController extends BaseController {
 
     /**
      * 设置同步
+     *
      * @param pathMapping
      * @return
      */
     @PostMapping("/synchronization")
-    public ResultVO synchronization(PathMapping pathMapping){
+    public ResultVO synchronization(PathMapping pathMapping) {
         service.synchronization(pathMapping);
         return success();
+    }
+
+    /**
+     * 获取用户所属的客户端
+     *
+     * @param userId
+     * @return
+     */
+    @GetMapping("/listClient")
+    public ResultVO<List<Client>> listClient(Integer userId) {
+        return success(service.listClient(userId));
     }
 }

@@ -4,6 +4,8 @@ import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 
+import java.util.List;
+
 /**
  * 客户端业务接口
  *
@@ -70,4 +72,11 @@ public interface ClientService {
      * 客户端下载
      */
     void ClientDownload(PathMapping pathMapping,FileInfo fileInfo);
+
+    /**
+     * 获取用户所属的客户端
+     * @param userId
+     * @return
+     */
+    List<Client> listClient(Integer userId);
 }

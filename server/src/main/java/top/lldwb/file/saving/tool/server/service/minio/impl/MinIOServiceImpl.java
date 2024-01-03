@@ -30,12 +30,10 @@ import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
+import top.lldwb.file.saving.tool.server.service.minio.FileListenerHandler;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -73,6 +71,22 @@ public class MinIOServiceImpl implements MinIOService {
     }
 
     /**
+     * 文件夹对象转换成文件文档对象
+     *
+     * @param directoryInfo
+     * @return
+     */
+    private FileInfoDoc getFileInfoDoc(DirectoryInfo directoryInfo) {
+        FileInfoDoc fileInfoDoc = new FileInfoDoc();
+        fileInfoDoc.setFileInfoId(directoryInfo.getDirectoryInfoId());
+        fileInfoDoc.setFileInfoName(directoryInfo.getDirectoryInfoName());
+        fileInfoDoc.setUserId(directoryInfo.getUserId());
+        fileInfoDoc.setDirectoryInfoId(directoryInfo.getDirectoryInfoFatherId());
+        fileInfoDoc.setFileInfoState(0);
+        return fileInfoDoc;
+    }
+
+    /**
      * 操作日志对象转换成操作日志文档对象
      *
      * @param operationLog
@@ -85,7 +99,7 @@ public class MinIOServiceImpl implements MinIOService {
     }
 
     /**
-     * FileInfo转化成OperationLog
+     * FileInfo文件对象转化成OperationLog操作对象
      *
      * @param fileInfo 文件对象
      * @param type     操作类型
@@ -100,6 +114,23 @@ public class MinIOServiceImpl implements MinIOService {
         operationLog.setUserId(fileInfo.getUserId());
         operationLog.setFileInfoId(fileInfo.getFileInfoId());
         operationLog.setDirectoryInfoId(fileInfo.getDirectoryInfoId());
+        return operationLog;
+    }
+
+    /**
+     * DirectoryInfo文件夹对象转化成OperationLog操作对象
+     *
+     * @param directoryInfo 文件夹对象
+     * @param type          操作类型
+     * @return
+     */
+    private OperationLog getOperationLog(DirectoryInfo directoryInfo, Integer type) {
+        OperationLog operationLog = new OperationLog();
+        operationLog.setOperationLogName(directoryInfo.getDirectoryInfoName());
+        operationLog.setOperationLogType(type);
+        operationLog.setUserId(directoryInfo.getUserId());
+        operationLog.setFileInfoId(directoryInfo.getDirectoryInfoId());
+        operationLog.setDirectoryInfoId(directoryInfo.getDirectoryInfoFatherId());
         return operationLog;
     }
 
@@ -196,6 +227,31 @@ public class MinIOServiceImpl implements MinIOService {
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
         // 发送文件信息到消息队列
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
+    }
+
+    @Override
+    public void addDirectoryInfo(DirectoryInfo directoryInfo) {
+        directoryInfoDao.addDirectoryInfo(directoryInfo);
+        // 异步双写
+        // 发送操作信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(getOperationLog(directoryInfo, 1))));
+        // 发送文件信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(directoryInfo)));
+    }
+
+    @Override
+    public void updateDirectoryInfo(DirectoryInfo directoryInfo) {
+//directoryInfoDao
+        // 异步双写
+        // 发送操作信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(getOperationLog(directoryInfo, 1))));
+        // 发送文件信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(directoryInfo)));
+    }
+
+    @Override
+    public void deleteDirectoryInfo(Integer directoryInfoId) {
+
     }
 
     @Override
@@ -352,6 +408,28 @@ public class MinIOServiceImpl implements MinIOService {
     public List<FileInfoDoc> getFiles(FileInfo fileInfo, Integer pageNum, Integer pageSize) {
         Map<String, Object> map = BeanUtil.beanToMap(fileInfo);
         return esService.listNamesByNames(FileInfoDoc.class, pageNum, pageSize, map);
+    }
+
+    @Override
+    public List<DirectoryInfo> listDirectoryInfo(Integer directoryInfoId, Integer userId) {
+        return directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoId, userId);
+    }
+
+    @Override
+    public List<DirectoryInfo> listDirectoryInfoByPath(String path, Integer userId) {
+        log.info("文件夹路径：{}", path);
+        String separator = File.separator;
+        // 分割路径
+        String[] strings = path.split(separator + separator);
+        Integer directoryInfoId = 0;
+        // 遍历路径
+        for (String directoryInfoName : strings) {
+            // 获取路径中的文件夹
+            DirectoryInfo directoryInfo = directoryInfoDao.getDirectoryInfoByFatherIdAndName(directoryInfoId, directoryInfoName);
+            // 父文件夹id赋值
+            directoryInfoId = directoryInfo.getDirectoryInfoId();
+        }
+        return directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoId, userId);
     }
 
     @Override

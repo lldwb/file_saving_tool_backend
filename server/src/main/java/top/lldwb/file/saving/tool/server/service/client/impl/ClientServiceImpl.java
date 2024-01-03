@@ -17,7 +17,7 @@ import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.PathMappingDao;
 import top.lldwb.file.saving.tool.server.service.client.ClientService;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
-import top.lldwb.file.saving.tool.server.service.minio.impl.FileListenerHandler;
+import top.lldwb.file.saving.tool.server.service.minio.FileListenerHandler;
 import top.lldwb.file.saving.tool.service.send.SendService;
 
 import java.util.ArrayList;
@@ -46,8 +46,6 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void addClient(Client client) {
         clientDao.addClient(client);
-
-        // 修改数据库，同步es
     }
 
     @Override
@@ -88,7 +86,7 @@ public class ClientServiceImpl implements ClientService {
         socketMessage.setData("download", map);
         nettySend.send(socketMessage);
 
-        // 修改数据库，同步es
+        // 修改数据库
     }
 
     @Override
@@ -97,7 +95,7 @@ public class ClientServiceImpl implements ClientService {
         socketMessage.setData("uploading", pathMapping);
         nettySend.send(socketMessage);
 
-        // 修改数据库，同步es
+        // 修改数据库
     }
 
     @Override
@@ -122,6 +120,11 @@ public class ClientServiceImpl implements ClientService {
         socketMessage.setData("firstDownload", fileInfoDownload(pathMapping, fileInfo));
         nettySend.send(socketMessage);
 
+    }
+
+    @Override
+    public List<Client> listClient(Integer userId) {
+        return clientDao.listClient(userId);
     }
 
     /**

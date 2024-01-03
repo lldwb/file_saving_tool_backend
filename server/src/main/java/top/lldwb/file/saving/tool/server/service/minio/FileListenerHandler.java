@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.minio.impl;
+package top.lldwb.file.saving.tool.server.service.minio;
 
 import lombok.extern.slf4j.Slf4j;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;

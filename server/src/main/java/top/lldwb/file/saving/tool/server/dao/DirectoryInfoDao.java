@@ -14,6 +14,13 @@ import java.util.List;
 public interface DirectoryInfoDao {
     void addDirectoryInfo(DirectoryInfo directoryInfo);
 
+    /**
+     * 更新文件夹
+     *
+     * @param directoryInfo
+     */
+    void updateDirectoryInfo(DirectoryInfo directoryInfo);
+
     DirectoryInfo getDirectoryInfoById(Integer directoryInfoId);
 
     /**

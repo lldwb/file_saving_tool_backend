@@ -3,6 +3,7 @@ package top.lldwb.file.saving.tool.server.service.minio;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
+import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 
@@ -24,7 +25,8 @@ public interface MinIOService {
      *
      * @param multipartFile
      */
-    void addFile(MultipartFile multipartFile,Integer directoryInfoId, Integer userId);
+    void addFile(MultipartFile multipartFile, Integer directoryInfoId, Integer userId);
+
     /**
      * 添加文件(用于内部)
      *
@@ -33,13 +35,34 @@ public interface MinIOService {
     void addFile(FileInfo fileInfo);
 
     /**
-     * 删除文件
+     * 添加文件夹
      *
+     * @param directoryInfo
+     */
+    void addDirectoryInfo(DirectoryInfo directoryInfo);
+
+    /**
+     * 修改文件夹
+     *
+     * @param directoryInfo
+     */
+    void updateDirectoryInfo(DirectoryInfo directoryInfo);
+
+    /**
+     * 删除文件夹
+     *
+     * @param directoryInfoId
+     */
+    void deleteDirectoryInfo(Integer directoryInfoId);
+
+    /**
+     * 删除文件
      */
     void deleteFile(Integer fileInfoId);
 
     /**
      * 恢复文件
+     *
      * @param operationLogId 操作id
      * @return
      */
@@ -55,13 +78,15 @@ public interface MinIOService {
 
     /**
      * 下载文件到本地
+     *
      * @param name 完整文件名称(包括路径)
      * @param path minio连接
      */
-    void downloadFile(String name,String path);
+    void downloadFile(String name, String path);
 
     /**
      * 获取文件路径
+     *
      * @param fileInfoId
      * @return
      */
@@ -69,6 +94,7 @@ public interface MinIOService {
 
     /**
      * 获取文件夹路径
+     *
      * @param directoryInfoId
      * @return
      */
@@ -76,12 +102,31 @@ public interface MinIOService {
 
     /**
      * 获取文件列表
+     *
      * @param fileInfo (推荐)使用文件夹id返回所在文件夹所有文件
      * @param pageNum
      * @param pageSize
      * @return
      */
     List<FileInfoDoc> getFiles(FileInfo fileInfo, Integer pageNum, Integer pageSize);
+
+    /**
+     * 返回文件夹所在的文件和文件夹列表
+     *
+     * @param directoryInfoId
+     * @param userId
+     * @return
+     */
+    List<DirectoryInfo> listDirectoryInfo(Integer directoryInfoId, Integer userId);
+
+    /**
+     * 根据路径返回文件夹所在的文件和文件夹列表
+     *
+     * @param path
+     * @param userId
+     * @return
+     */
+    List<DirectoryInfo> listDirectoryInfoByPath(String path,  Integer userId);
 
     /**
      * 根据ID获取文件

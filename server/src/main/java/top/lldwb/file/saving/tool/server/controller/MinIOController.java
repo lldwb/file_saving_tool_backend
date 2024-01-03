@@ -6,9 +6,10 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
+import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.User;
+import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 
@@ -36,14 +37,15 @@ public class MinIOController extends BaseController {
      * @return
      */
     @PutMapping("/addFile")
-    public ResultVO addFile(MultipartFile multipartFile,Integer directoryInfoId, HttpSession session) {
+    public ResultVO addFile(MultipartFile multipartFile, Integer directoryInfoId, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        service.addFile(multipartFile,directoryInfoId, user.getUserId());
+        service.addFile(multipartFile, directoryInfoId, user.getUserId());
         return success();
     }
 
     /**
      * 删除文件
+     *
      * @param fileInfoId 文件id
      * @return
      */
@@ -55,17 +57,19 @@ public class MinIOController extends BaseController {
 
     /**
      * 恢复文件
+     *
      * @param operationLogId 操作id
      * @return
      */
     @PutMapping("/recoverFile")
-    public ResultVO recoverFile(Integer operationLogId){
+    public ResultVO recoverFile(Integer operationLogId) {
         service.recoverFile(operationLogId);
         return success();
     }
 
     /**
      * 获取下载
+     *
      * @param path
      * @return
      */
@@ -75,7 +79,8 @@ public class MinIOController extends BaseController {
     }
 
     /**
-     * 获取文件列表
+     * 返回搜索到的文件列表
+     *
      * @param fileInfo
      * @param pageNum
      * @param pageSize
@@ -87,8 +92,34 @@ public class MinIOController extends BaseController {
         return success(service.getFiles(fileInfo, pageNum, pageSize));
     }
 
+
+    /**
+     * 返回文件夹所在的文件和文件夹列表
+     *
+     * @param directoryInfoId
+     * @param userId
+     * @return
+     */
+    @GetMapping("/listDirectoryInfo")
+    public ResultVO<List<DirectoryInfo>> listDirectoryInfo(Integer directoryInfoId, Integer userId) {
+        return success(service.listDirectoryInfo(directoryInfoId, userId));
+    }
+
+    /**
+     * 根据路径返回文件夹所在的文件和文件夹列表
+     *
+     * @param path
+     * @param userId
+     * @return
+     */
+    @GetMapping("/listDirectoryInfoByPath")
+    public ResultVO<List<DirectoryInfo>> listDirectoryInfoByPath(String path, Integer userId) {
+        return success(service.listDirectoryInfoByPath(path, userId));
+    }
+
     /**
      * 返回文件路径
+     *
      * @param fileInfoId
      * @return
      */
@@ -99,10 +130,11 @@ public class MinIOController extends BaseController {
 
     /**
      * 刷新es数据
+     *
      * @return
      */
     @PutMapping("/refresh")
-    public ResultVO refresh(){
+    public ResultVO refresh() {
         service.refresh();
         return success();
     }

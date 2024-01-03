@@ -2,6 +2,8 @@ package top.lldwb.file.saving.tool.server.dao;
 
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 
+import java.util.List;
+
 /**
  * @author lldwb
  * @email 3247187440@qq.com
@@ -11,7 +13,18 @@ import top.lldwb.file.saving.tool.pojo.entity.Client;
  */
 public interface ClientDao {
     void addClient(Client client);
+
     void updateClient(Client client);
+
     Client getClientById(Integer clientId);
+
     Client getClientBySecretKe(String clientSecretKey);
+
+    /**
+     * 获取用户所属的客户端
+     *
+     * @param userId
+     * @return
+     */
+    List<Client> listClient(Integer userId);
 }

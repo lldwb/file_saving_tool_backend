@@ -53,4 +53,13 @@
         from client
         where client_secret_key = #{clientSecretKey}
     </select>
+    <select id="listClient"  resultMap="client">
+        select client_id,
+               client_secret_key,
+               client_state,
+               user_id,
+               create_time,
+               update_time
+        from client
+    </select>
 </mapper>

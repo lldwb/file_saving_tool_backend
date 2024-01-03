@@ -11,6 +11,18 @@
         <result property="userId" column="user_id"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
+        <!-- 多对多映射 property代表字段 ofType代表类型-->
+        <collection property="fileInfos" ofType="top.lldwb.file.saving.tool.pojo.entity.FileInfo">
+            <id column="f.file_info_id" property="fileInfoId"/>
+            <result column="file_info_name" property="fileInfoName"/>
+            <result column="file_info_path" property="fileInfoPath"/>
+            <result column="file_info_state" property="fileInfoState"/>
+            <result column="file_info_size" property="fileInfoSize"/>
+            <result column="f_directory_info_id" property="directoryInfoId"/>
+            <result column="f_user_id" property="userId"/>
+            <result column="f_create_time" property="createTime"/>
+            <result column="f_update_time" property="updateTime"/>
+        </collection>
     </resultMap>
     <insert id="addDirectoryInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo"
             useGeneratedKeys="true"
@@ -18,6 +30,21 @@
         insert into directory_info(directory_info_name, directory_info_father_id, directory_info_state, user_id)
         values (#{directoryInfoName}, #{directoryInfoFatherId}, #{directoryInfoState}, #{userId})
     </insert>
+    <update id="updateDirectoryInfo" parameterType="top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo">
+        update directory_info
+        <set>
+            <if test="directoryInfoName != null and directoryInfoName != ''">
+                directory_info_name = #{directoryInfoName},
+            </if>
+            <if test="directoryInfoFatherId != null and directoryInfoFatherId != ''">
+                directory_info_father_id = #{directoryInfoFatherId},
+            </if>
+            <if test="directoryInfoState != null and directoryInfoState != ''">
+                directory_info_state = #{directoryInfoState},
+            </if>
+        </set>
+        where directory_info_id = #{directoryInfoId}
+    </update>
 
     <select id="getDirectoryInfoById" resultMap="directoryInfo">
         select directory_info_id,
@@ -66,14 +93,25 @@
         where directory_info_id = #{directoryInfoFatherId}
     </select>
     <select id="listByDirectoryInfoFatherIdAndUserId" resultMap="directoryInfo">
-        select directory_info_id,
-               directory_info_name,
-               directory_info_father_id,
-               directory_info_state,
-               user_id,
-               create_time,
-               update_time
-        from directory_info
-        where directory_info_id = #{directoryInfoFatherId} and user_id = #{userId}
+        select d.directory_info_id,
+               d.directory_info_name,
+               d.directory_info_father_id,
+               d.directory_info_state,
+               d.user_id,
+               d.create_time,
+               d.update_time,
+               f.file_info_id,
+               f.file_info_name,
+               f.file_info_path,
+               f.file_info_state,
+               f.file_info_size,
+               f.directory_info_id as f_directory_info_id,
+               f.user_id           as f_user_id,
+               f.create_time       as f_create_time,
+               f.update_time       as f_update_time
+        from directory_info d
+                 left join file_info f on d.directory_info_id = f.directory_info_id
+        where (d.directory_info_father_id = #{directoryInfoFatherId} or f.directory_info_id = #{directoryInfoFatherId})
+          and d.user_id = #{userId}
     </select>
 </mapper>

@@ -40,7 +40,7 @@ public class FileInfoDoc {
     @Field(type = FieldType.Text, analyzer = "ik_max_word")
     private String fileInfoPath;
     /**
-     * 状态(1为存在，-1删除)
+     * 状态(1为存在，-1删除，0文件夹[只存在es中])
      */
     private Integer fileInfoState;
     /**
@@ -49,7 +49,7 @@ public class FileInfoDoc {
     @Field(type = FieldType.Long)
     private Long fileInfoSize;
     /**
-     * 文件夹id
+     * 文件夹id(父文件夹id)
      */
     @Field(type = FieldType.Integer)
     private Integer directoryInfoId;
