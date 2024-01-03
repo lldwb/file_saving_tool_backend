@@ -420,14 +420,16 @@ public class MinIOServiceImpl implements MinIOService {
         log.info("文件夹路径：{}", path);
         String separator = File.separator;
         // 分割路径
-        String[] strings = path.split(separator + separator);
         Integer directoryInfoId = 0;
         // 遍历路径
-        for (String directoryInfoName : strings) {
-            // 获取路径中的文件夹
-            DirectoryInfo directoryInfo = directoryInfoDao.getDirectoryInfoByFatherIdAndName(directoryInfoId, directoryInfoName);
-            // 父文件夹id赋值
-            directoryInfoId = directoryInfo.getDirectoryInfoId();
+        if(path!=null&&!"".equals(path)){
+            String[] strings = path.split(separator + separator);
+            for (String directoryInfoName : strings) {
+                // 获取路径中的文件夹
+                DirectoryInfo directoryInfo = directoryInfoDao.getDirectoryInfoByFatherIdAndName(directoryInfoId, directoryInfoName);
+                // 父文件夹id赋值
+                directoryInfoId = directoryInfo.getDirectoryInfoId();
+            }
         }
         return directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoId, userId);
     }
