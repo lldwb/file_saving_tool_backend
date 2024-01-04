@@ -144,7 +144,7 @@ public interface MinIOService {
      * @param inputStream 文件输入流
      * @param size        文件长度
      */
-    void saveMinIO(InputStream inputStream, Long size);
+    void saveMinIO(InputStream inputStream,String sha256Hex, Long size);
 
     /**
      * 刷新es数据

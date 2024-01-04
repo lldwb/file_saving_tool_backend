@@ -159,9 +159,9 @@ public class MinIOServiceImpl implements MinIOService {
     public void addFile(MultipartFile multipartFile, Integer directoryInfoId, Integer userId) {
         try {
             // 获取文件输入流
-            InputStream inputStream = multipartFile.getInputStream();
+//            InputStream inputStream = multipartFile.getInputStream();
 
-            String sha256Hex = DigestUtil.sha256Hex(inputStream);
+            String sha256Hex = DigestUtil.sha256Hex(multipartFile.getBytes());
 
             // 检测是否已经存在，如果存在则不上传
             saveMinIO(multipartFile);
@@ -422,7 +422,7 @@ public class MinIOServiceImpl implements MinIOService {
         // 分割路径
         Integer directoryInfoId = 0;
         // 遍历路径
-        if(path!=null&&!"".equals(path)){
+        if (path != null && !"".equals(path)) {
             String[] strings = path.split(separator + separator);
             for (String directoryInfoName : strings) {
                 // 获取路径中的文件夹
@@ -442,15 +442,15 @@ public class MinIOServiceImpl implements MinIOService {
     @Override
     public void saveMinIO(MultipartFile multipartFile) {
         try {
-            saveMinIO(multipartFile.getInputStream(), multipartFile.getSize());
+            String sha256Hex = DigestUtil.sha256Hex(multipartFile.getBytes());
+            saveMinIO(multipartFile.getInputStream(), sha256Hex, multipartFile.getSize());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void saveMinIO(InputStream inputStream, Long size) {
-        String sha256Hex = DigestUtil.sha256Hex(inputStream);
+    public void saveMinIO(InputStream inputStream, String sha256Hex, Long size) {
         // 检测是否已经存在，如果存在则不上传
         log.info("检测是否已经存在，如果存在则不上传");
         try {

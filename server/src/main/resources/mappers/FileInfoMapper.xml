@@ -42,7 +42,7 @@
                create_time,
                update_time
         from file_info
-        where file_info_path = #{fileInfoPath}
+        where file_info_name = #{fileInfoName}
           and user_id = #{userId}
     </select>
 

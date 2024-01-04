@@ -39,6 +39,8 @@ public class MinIOController extends BaseController {
     @PutMapping("/addFile")
     public ResultVO addFile(MultipartFile multipartFile, Integer directoryInfoId, HttpSession session) {
         User user = (User) session.getAttribute("user");
+        user = new User();
+        user.setUserId(1);
         service.addFile(multipartFile, directoryInfoId, user.getUserId());
         return success();
     }
