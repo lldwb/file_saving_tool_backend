@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.client.impl;
+package top.lldwb.file.saving.tool.server.service.entity.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,7 +15,7 @@ import top.lldwb.file.saving.tool.server.dao.ClientDao;
 import top.lldwb.file.saving.tool.server.dao.DirectoryInfoDao;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.PathMappingDao;
-import top.lldwb.file.saving.tool.server.service.client.ClientService;
+import top.lldwb.file.saving.tool.server.service.entity.ClientService;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.FileListenerHandler;
 import top.lldwb.file.saving.tool.service.send.SendService;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
-import top.lldwb.file.saving.tool.server.service.directoryInfo.DirectoryInfoService;
+import top.lldwb.file.saving.tool.server.service.entity.DirectoryInfoService;
 
 import java.util.List;
 

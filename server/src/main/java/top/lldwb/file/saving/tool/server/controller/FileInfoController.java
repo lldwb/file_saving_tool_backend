@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
-import top.lldwb.file.saving.tool.server.service.file.FileInfoService;
+import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
 
 /**
  * @author lldwb

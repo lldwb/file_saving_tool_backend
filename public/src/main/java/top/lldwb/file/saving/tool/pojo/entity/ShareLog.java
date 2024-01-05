@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 /**
  * 分享日志实体类
  * @author lldwb
@@ -21,7 +23,7 @@ public class ShareLog {
      */
     private Integer shareLogId;
     /**
-     * 权限
+     * 分享权限(0不分享、1只读)
      */
     private String shareLogAuthority;
     /**
@@ -34,7 +36,23 @@ public class ShareLog {
      */
     private Integer directoryInfoId;
     /**
-     * 用户对象
+     * 用户id(外键)
      */
-    private User user;
+    private Integer userId;
+    /**
+     * 创建时间
+     */
+    private Timestamp createTime;
+    /**
+     * 更新时间
+     */
+    private Timestamp updateTime;
+    /**
+     * 文件对象(多表查询)
+     */
+    private FileInfo fileInfo;
+    /**
+     * 文件夹对象(多表查询)
+     */
+    private DirectoryInfo directoryInfo;
 }

@@ -2,6 +2,8 @@ package top.lldwb.file.saving.tool.server.dao;
 
 import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 
+import java.util.List;
+
 /**
  * @author lldwb
  * @email 3247187440@qq.com
@@ -17,6 +19,8 @@ public interface OperationLogDao {
      * @return
      */
     OperationLog getOperationLogByOperationLogId(Integer operationLogId);
+
+    List<OperationLog> listOperationLogByUserId(Integer userId);
 
     /**
      * 添加

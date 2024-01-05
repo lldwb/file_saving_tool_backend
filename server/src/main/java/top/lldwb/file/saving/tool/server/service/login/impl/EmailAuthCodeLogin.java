@@ -8,7 +8,7 @@ import top.lldwb.file.saving.tool.server.dao.UserDao;
 import top.lldwb.file.saving.tool.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.exception.AuthException;
 import top.lldwb.file.saving.tool.server.service.login.LoginService;
-import top.lldwb.file.saving.tool.server.service.user.UserService;
+import top.lldwb.file.saving.tool.server.service.entity.UserService;
 
 /**
  * 邮箱验证码登录

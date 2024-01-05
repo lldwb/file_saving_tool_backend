@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.file;
+package top.lldwb.file.saving.tool.server.service.entity;
 
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 

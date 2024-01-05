@@ -5,7 +5,7 @@ import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.dao.DirectoryInfoDao;
-import top.lldwb.file.saving.tool.server.service.client.ClientService;
+import top.lldwb.file.saving.tool.server.service.entity.ClientService;
 
 import java.util.HashMap;
 import java.util.List;

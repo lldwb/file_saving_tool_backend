@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
-import top.lldwb.file.saving.tool.server.service.client.ClientService;
+import top.lldwb.file.saving.tool.server.service.entity.ClientService;
 
 import java.util.List;
 

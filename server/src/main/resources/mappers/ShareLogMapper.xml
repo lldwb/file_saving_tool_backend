@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace指定接口的完整类名 -->
+<mapper namespace="top.lldwb.file.saving.tool.server.dao.ShareLogDao">
+    <resultMap id="shareLog" type="top.lldwb.file.saving.tool.pojo.entity.ShareLog">
+        <id property="shareLogId" column="share_log_id"/>
+        <result property="shareLogAuthority" column="share_log_authority"/>
+        <result property="fileInfoId" column="file_info_id"/>
+        <result property="directoryInfoId" column="directory_info_id"/>
+        <result property="userId" column="user_id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="fileInfo">
+            <id column="f_file_info_id" property="fileInfoId"/>
+            <result column="f_file_info_name" property="fileInfoName"/>
+            <result column="f_file_info_path" property="fileInfoPath"/>
+            <result column="f_file_info_state" property="fileInfoState"/>
+            <result column="f_file_info_size" property="fileInfoSize"/>
+            <result column="f_directory_info_id" property="directoryInfoId"/>
+            <result column="f_user_id" property="userId"/>
+            <result column="f_create_time" property="createTime"/>
+            <result column="f_update_time" property="updateTime"/>
+        </association>
+        <association property="directoryInfo">
+            <id property="directoryInfoId" column="d_directory_info_id"/>
+            <result property="directoryInfoName" column="d_directory_info_name"/>
+            <result property="directoryInfoFatherId" column="d_directory_info_father_id"/>
+            <result property="directoryInfoState" column="d_directory_info_state"/>
+            <result property="userId" column="d_user_id"/>
+            <result property="createTime" column="d_create_time"/>
+            <result property="updateTime" column="d_update_time"/>
+        </association>
+    </resultMap>
+    <insert id="add" parameterType="top.lldwb.file.saving.tool.pojo.entity.ShareLog" useGeneratedKeys="true"
+            keyProperty="userId">
+        insert into share_log(file_info_id, directory_info_id, user_id)
+        values (#{fileInfoId}, #{directoryInfoId}, #{userId})
+    </insert>
+
+    <select id="getShareLogById" resultMap="shareLog">
+        select share_log_id, share_log_authority, file_info_id, directory_info_id, user_id, create_time, update_time
+        from share_log
+        where share_log_id = #{shareLogId}
+    </select>
+    <select id="getShareLogByFileInfoId" resultMap="shareLog">
+        select share_log_id, share_log_authority, file_info_id, directory_info_id, user_id, create_time, update_time
+        from share_log
+        where file_info_id = #{fileInfoId}
+    </select>
+    <select id="getShareLogByDirectoryInfoId" resultMap="shareLog">
+        select share_log_id, share_log_authority, file_info_id, directory_info_id, user_id, create_time, update_time
+        from share_log
+        where directory_info_id = #{directoryInfoId}
+    </select>
+    <select id="listShareLogsByUserId" resultMap="shareLog">
+        select sl.share_log_id,
+               sl.share_log_authority,
+               sl.file_info_id,
+               sl.directory_info_id,
+               sl.user_id,
+               sl.create_time,
+               sl.update_time,
+               d.directory_info_id        as d_directory_info_id,
+               d.directory_info_name      as d_directory_info_name,
+               d.directory_info_father_id as d_directory_info_father_id,
+               d.directory_info_state     as d_directory_info_state,
+               d.user_id                  as d_user_id,
+               d.create_time              as d_create_time,
+               d.update_time              as d_update_time,
+               f.file_info_id             as f_file_info_id,
+               f.file_info_name           as f_file_info_name,
+               f.file_info_path           as f_file_info_path,
+               f.file_info_state          as f_file_info_state,
+               f.file_info_size           as f_file_info_size,
+               f.directory_info_id        as f_directory_info_id,
+               f.user_id                  as f_user_id,
+               f.create_time              as f_create_time,
+               f.update_time              as f_update_time
+        from share_log sl
+                 left join file_info f on sl.file_info_id = f.file_info_id
+                 left join directory_info d on sl.directory_info_id = d.directory_info_id
+        where sl.user_id = #{userId}
+    </select>
+    <select id="listShareLogsByDirectoryInfoId" resultMap="shareLog">
+        select sl.share_log_id,
+               sl.share_log_authority,
+               sl.file_info_id,
+               sl.directory_info_id,
+               sl.user_id,
+               sl.create_time,
+               sl.update_time,
+               d.directory_info_id        as d_directory_info_id,
+               d.directory_info_name      as d_directory_info_name,
+               d.directory_info_father_id as d_directory_info_father_id,
+               d.directory_info_state     as d_directory_info_state,
+               d.user_id                  as d_user_id,
+               d.create_time              as d_create_time,
+               d.update_time              as d_update_time,
+               f.file_info_id             as f_file_info_id,
+               f.file_info_name           as f_file_info_name,
+               f.file_info_path           as f_file_info_path,
+               f.file_info_state          as f_file_info_state,
+               f.file_info_size           as f_file_info_size,
+               f.directory_info_id        as f_directory_info_id,
+               f.user_id                  as f_user_id,
+               f.create_time              as f_create_time,
+               f.update_time              as f_update_time
+        from share_log sl
+                 left join file_info f on sl.file_info_id = f.file_info_id
+                 left join directory_info d on sl.directory_info_id = d.directory_info_id
+        where sl.directory_info_id = #{directoryInfoId}
+    </select>
+
+</mapper>

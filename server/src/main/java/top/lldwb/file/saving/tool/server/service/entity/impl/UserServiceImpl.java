@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.user.impl;
+package top.lldwb.file.saving.tool.server.service.entity.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,7 +13,7 @@ import top.lldwb.file.saving.tool.server.dao.UserDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.UserDoc;
 import top.lldwb.file.saving.tool.pojo.entity.User;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
-import top.lldwb.file.saving.tool.server.service.user.UserService;
+import top.lldwb.file.saving.tool.server.service.entity.UserService;
 
 import java.util.ArrayList;
 import java.util.List;

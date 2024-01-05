@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.service.client.impl;
+package top.lldwb.file.saving.tool.server.service.entity.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,6 @@ import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author lldwb

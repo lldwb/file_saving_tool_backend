@@ -1,10 +1,10 @@
-package top.lldwb.file.saving.tool.server.service.file.impl;
+package top.lldwb.file.saving.tool.server.service.entity.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
-import top.lldwb.file.saving.tool.server.service.file.FileInfoService;
+import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@ import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
 import top.lldwb.file.saving.tool.server.dao.DirectoryInfoDao;
-import top.lldwb.file.saving.tool.server.service.client.ClientService;
+import top.lldwb.file.saving.tool.server.service.entity.ClientService;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
 import top.lldwb.file.saving.tool.service.control.ControlService;
 

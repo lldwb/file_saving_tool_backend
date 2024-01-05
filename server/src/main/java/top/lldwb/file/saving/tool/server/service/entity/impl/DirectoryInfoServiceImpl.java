@@ -1,10 +1,10 @@
-package top.lldwb.file.saving.tool.server.service.directoryInfo.impl;
+package top.lldwb.file.saving.tool.server.service.entity.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.server.dao.DirectoryInfoDao;
-import top.lldwb.file.saving.tool.server.service.directoryInfo.DirectoryInfoService;
+import top.lldwb.file.saving.tool.server.service.entity.DirectoryInfoService;
 
 import java.util.List;
 

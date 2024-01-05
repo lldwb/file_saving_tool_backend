@@ -30,6 +30,20 @@
         from operation_log
         where operation_log_id = #{operationLogId}
     </select>
+    <select id="listOperationLogByUserId"  resultMap="operationLog">
+        select operation_log_id
+             , operation_log_name
+             , operation_log_path
+             , operation_log_type
+             , operation_log_size
+             , file_info_id
+             , directory_info_id
+             , user_id
+             , create_time
+             , update_time
+        from operation_log
+        where user_id = #{userId}
+    </select>
 
     <insert id="addOperationLog" parameterType="top.lldwb.file.saving.tool.pojo.entity.OperationLog"
             useGeneratedKeys="true" keyProperty="operationLogId">
