@@ -2,8 +2,6 @@ package top.lldwb.file.saving.tool.server.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
@@ -67,17 +65,6 @@ public class MinIOController extends BaseController {
     public ResultVO recoverFile(Integer operationLogId) {
         service.recoverFile(operationLogId);
         return success();
-    }
-
-    /**
-     * 获取下载
-     *
-     * @param path
-     * @return
-     */
-    @GetMapping("/downloadFile/{path}")
-    public ResultVO<ResponseEntity<InputStreamResource>> downloadFile(@PathVariable("path") String path) {
-        return success(service.downloadFile(path));
     }
 
     /**

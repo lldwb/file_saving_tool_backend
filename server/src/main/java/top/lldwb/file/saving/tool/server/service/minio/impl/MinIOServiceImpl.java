@@ -344,6 +344,48 @@ public class MinIOServiceImpl implements MinIOService {
     }
 
     @Override
+    public ResponseEntity<InputStreamResource> downloadFileInfoId(Integer fileInfoId) {
+        try {
+            FileInfo fileInfo = fileInfoDao.getFileInfoByFileInfoId(fileInfoId);
+            InputStream inputStream = minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(fileInfo.getFileInfoPath()).build());
+
+            // 对文件名进行编码，防止在响应头中出现乱码
+            String fileName = URLEncoder.encode(fileInfo.getFileInfoName(), "UTF-8");
+            // 设置响应头，告诉浏览器响应的是流数据
+            HttpHeaders headers = new HttpHeaders();
+            // 设置头信息，将响应内容处理的方式设置为附件下载
+            headers.setContentDispositionFormData("attachment", fileName);
+            // 设置响应类型为流类型
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+            // 创建 InputStreamReader 对象封装输入流，用于读取服务器文件
+            InputStreamResource inputStreamReader = new InputStreamResource(inputStream);
+            // 创建 ResponseEntity 对象，封装(InputStreamReader，响应头 HttpHeaders，状态码 201)
+            // 200 成功，201 成功但是还有数据
+            ResponseEntity<InputStreamResource> response = new ResponseEntity<>(inputStreamReader, headers, HttpStatus.CREATED);
+            return response;
+        } catch (ErrorResponseException e) {
+            throw new RuntimeException(e);
+        } catch (InsufficientDataException e) {
+            throw new RuntimeException(e);
+        } catch (InternalException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidResponseException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (ServerException e) {
+            throw new RuntimeException(e);
+        } catch (XmlParserException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void downloadFile(String name, String path) {
         try {
             InputStream inputStream = minioClient.getObject(GetObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
