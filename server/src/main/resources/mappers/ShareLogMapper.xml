@@ -37,6 +37,10 @@
         insert into share_log(file_info_id, directory_info_id, user_id)
         values (#{fileInfoId}, #{directoryInfoId}, #{userId})
     </insert>
+    <update id="update" parameterType="top.lldwb.file.saving.tool.pojo.entity.ShareLog">
+        update share_log set share_log_authority = #{shareLogAuthority}
+        where share_log_id = #{shareLogId}
+    </update>
 
     <select id="getShareLogById" resultMap="shareLog">
         select share_log_id, share_log_authority, file_info_id, directory_info_id, user_id, create_time, update_time

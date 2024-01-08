@@ -26,6 +26,11 @@ public class ShareLogServiceImpl implements ShareLogService {
     }
 
     @Override
+    public void update(ShareLog shareLog) {
+        dao.update(shareLog);
+    }
+
+    @Override
     public ShareLog getShareLogById(Integer shareLogId) {
         return dao.getShareLogById(shareLogId);
     }

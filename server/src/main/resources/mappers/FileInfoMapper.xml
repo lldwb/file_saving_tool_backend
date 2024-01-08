@@ -109,7 +109,7 @@
                 file_info_state = #{fileInfoState},
             </if>
             <if test="fileInfoSize != null and fileInfoSize != ''">
-                file_info_size = #{fileInfoSize}
+                file_info_size = #{fileInfoSize},
             </if>
             <if test="directoryInfoId != null and directoryInfoId != ''">
                 directory_info_id = #{directoryInfoId},

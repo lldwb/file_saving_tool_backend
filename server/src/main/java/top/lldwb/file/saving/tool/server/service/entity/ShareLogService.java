@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface ShareLogService {
     void add(ShareLog shareLog);
+    void update(ShareLog shareLog);
     ShareLog getShareLogById(Integer shareLogId);
     ShareLog getShareLogByFileInfoId(Integer fileInfoId);
     ShareLog getShareLogByDirectoryInfoId(Integer directoryInfoId);
