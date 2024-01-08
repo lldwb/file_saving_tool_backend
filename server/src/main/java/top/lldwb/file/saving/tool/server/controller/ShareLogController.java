@@ -33,6 +33,17 @@ public class ShareLogController extends BaseController {
         return success();
     }
 
+    /**
+     * 修改分享日志的权限
+     * @param shareLog
+     * @return
+     */
+    @PostMapping("/update")
+    public ResultVO update(@RequestBody ShareLog shareLog){
+        service.update(shareLog);
+        return success();
+    }
+
 
     /**
      * 获取分享日志(没有则创建)
