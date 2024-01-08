@@ -12,5 +12,5 @@ import java.util.List;
  * @PROJECT_NAME file_saving_tool_backend
  */
 public interface OperationLogService {
-    List<OperationLog> listOperationLogByUserId(Integer userId);
+    List<OperationLog> listOperationLogByUserId(Integer userId, Integer pageNum, Integer pageSize);
 }

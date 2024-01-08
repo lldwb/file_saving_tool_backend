@@ -38,8 +38,8 @@ public class UserController extends BaseController {
      * @param user 用户对象
      * @return 成功响应
      */
-    @PutMapping("/addUser")
-    public ResultVO addUser(User user) {
+    @PutMapping("/add")
+    public ResultVO add(@RequestBody User user) {
         service.addUser(user);
         return success();
     }
@@ -49,7 +49,8 @@ public class UserController extends BaseController {
      *
      * @param user
      */
-    void updateUser(User user){
+    @PostMapping("/update")
+    void update(@RequestBody User user) {
         service.updateUser(user);
     }
 

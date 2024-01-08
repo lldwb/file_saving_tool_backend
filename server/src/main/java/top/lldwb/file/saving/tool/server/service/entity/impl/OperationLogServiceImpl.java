@@ -21,7 +21,7 @@ public class OperationLogServiceImpl implements OperationLogService {
     private final OperationLogDao dao;
 
     @Override
-    public List<OperationLog> listOperationLogByUserId(Integer userId) {
-        return dao.listOperationLogByUserId(userId);
+    public List<OperationLog> listOperationLogByUserId(Integer userId, Integer pageNum, Integer pageSize) {
+        return dao.listOperationLogByUserId(userId, pageNum, pageSize);
     }
 }

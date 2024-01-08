@@ -1,10 +1,7 @@
 package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.ShareLog;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.entity.ShareLogService;
@@ -30,7 +27,7 @@ public class ShareLogController extends BaseController {
      * @return 添加成功返回成功信息
      */
     @PutMapping("/add")
-    public ResultVO add(ShareLog shareLog) {
+    public ResultVO add(@RequestBody ShareLog shareLog) {
         service.add(shareLog);
         return success();
     }

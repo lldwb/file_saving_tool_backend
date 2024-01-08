@@ -26,7 +26,7 @@ public class OperationLogController extends BaseController {
      * @return
      */
     @GetMapping("/listOperationLogByUserId")
-    public ResultVO listOperationLogByUserId(Integer userId) {
-        return success(service.listOperationLogByUserId(userId));
+    public ResultVO listOperationLogByUserId(Integer userId, Integer pageNum, Integer pageSize) {
+        return success(service.listOperationLogByUserId(userId, pageNum, pageSize));
     }
 }

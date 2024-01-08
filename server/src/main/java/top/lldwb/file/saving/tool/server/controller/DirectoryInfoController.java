@@ -27,7 +27,7 @@ public class DirectoryInfoController extends BaseController {
      * @param directoryInfo
      */
     @PutMapping("/add")
-    public ResultVO add(DirectoryInfo directoryInfo) {
+    public ResultVO add(@RequestBody DirectoryInfo directoryInfo) {
         service.add(directoryInfo);
         return success();
     }
@@ -38,7 +38,7 @@ public class DirectoryInfoController extends BaseController {
      * @param directoryInfo
      */
     @PostMapping("/update")
-    public ResultVO update(DirectoryInfo directoryInfo) {
+    public ResultVO update(@RequestBody DirectoryInfo directoryInfo) {
         service.update(directoryInfo);
         return success();
     }

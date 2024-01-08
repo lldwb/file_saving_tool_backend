@@ -20,7 +20,7 @@ public interface OperationLogDao {
      */
     OperationLog getOperationLogByOperationLogId(Integer operationLogId);
 
-    List<OperationLog> listOperationLogByUserId(Integer userId);
+    List<OperationLog> listOperationLogByUserId(Integer userId, Integer pageNum, Integer pageSize);
 
     /**
      * 添加

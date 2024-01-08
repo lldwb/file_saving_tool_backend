@@ -29,7 +29,7 @@ public class ClientController extends BaseController {
      * @return
      */
     @PostMapping("/updateClient")
-    public ResultVO updateClient(Client client) {
+    public ResultVO updateClient(@RequestBody Client client) {
         if (client.getClientId() != null) {
             service.updateClient(client);
         } else {
@@ -60,7 +60,7 @@ public class ClientController extends BaseController {
      * @return
      */
     @PostMapping("/synchronization")
-    public ResultVO synchronization(PathMapping pathMapping) {
+    public ResultVO synchronization(@RequestBody PathMapping pathMapping) {
         service.synchronization(pathMapping);
         return success();
     }
