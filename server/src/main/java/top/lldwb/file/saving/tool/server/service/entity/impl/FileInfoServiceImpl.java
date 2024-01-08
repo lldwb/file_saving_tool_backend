@@ -27,6 +27,15 @@ public class FileInfoServiceImpl implements FileInfoService {
 
     @Override
     public List<FileInfo> list(Integer directoryInfoId, Integer userId) {
-        return dao.listByDirectoryInfoIdAndUserId(directoryInfoId,userId);
+        return dao.listByDirectoryInfoIdAndUserId(directoryInfoId, userId);
+    }
+
+    @Override
+    public FileInfo copyFile(Integer fileInfoId) {
+        FileInfo fileInfo = dao.getFileInfoByFileInfoId(fileInfoId);
+        fileInfo.setFileInfoName("副本" + fileInfo.getFileInfoName());
+        fileInfo.setFileInfoId(null);
+        dao.addFileInfo(fileInfo);
+        return fileInfo;
     }
 }

@@ -2,6 +2,7 @@ package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
@@ -22,6 +23,7 @@ public class FileInfoController extends BaseController {
 
     /**
      * 根据id获取
+     *
      * @param fileInfoId
      * @return
      */
@@ -39,7 +41,18 @@ public class FileInfoController extends BaseController {
      * @return
      */
     @GetMapping("/list")
-        public ResultVO list(Integer directoryInfoId, Integer userId) {
+    public ResultVO list(Integer directoryInfoId, Integer userId) {
         return success(service.list(directoryInfoId, userId));
+    }
+
+    /**
+     * 复制文件
+     *
+     * @param fileInfoId
+     * @return
+     */
+    @PutMapping("/copyFile")
+    public ResultVO copyFile(Integer fileInfoId) {
+        return success(service.copyFile(fileInfoId));
     }
 }
