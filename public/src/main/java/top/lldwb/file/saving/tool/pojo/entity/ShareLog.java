@@ -25,7 +25,7 @@ public class ShareLog {
     /**
      * 分享权限(0不分享、1只读)
      */
-    private String shareLogAuthority;
+    private Integer shareLogAuthority = 1;
     /**
      * 文件id(外键)
      * 如果为0则操作文件夹

@@ -52,6 +52,7 @@
         select share_log_id, share_log_authority, file_info_id, directory_info_id, user_id, create_time, update_time
         from share_log
         where directory_info_id = #{directoryInfoId}
+          and file_info_id = 0
     </select>
     <select id="listShareLogsByUserId" resultMap="shareLog">
         select sl.share_log_id,

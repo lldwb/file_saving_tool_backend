@@ -19,10 +19,11 @@ import java.util.List;
 @RequestMapping("/shareLog")
 @RequiredArgsConstructor
 public class ShareLogController extends BaseController {
-   private final ShareLogService service;
+    private final ShareLogService service;
 
     /**
      * 添加分享日志
+     *
      * @param shareLog 分享日志
      * @return 添加成功返回成功信息
      */
@@ -32,8 +33,33 @@ public class ShareLogController extends BaseController {
         return success();
     }
 
+
+    /**
+     * 获取分享日志(没有则创建)
+     *
+     * @param shareLog 分享日志
+     * @return 添加成功返回成功信息
+     */
+    @PostMapping("/save")
+    public ResultVO save(@RequestBody ShareLog shareLog) {
+        ShareLog shareLogs;
+        if (shareLog.getFileInfoId() == null || shareLog.getFileInfoId() == 0) {
+            shareLogs = service.getShareLogByDirectoryInfoId(shareLog.getDirectoryInfoId());
+            shareLog.setFileInfoId(0);
+        } else {
+            shareLogs = service.getShareLogByFileInfoId(shareLog.getFileInfoId());
+        }
+        if (shareLogs == null) {
+            service.add(shareLog);
+        } else {
+            shareLog = shareLogs;
+        }
+        return success(shareLog);
+    }
+
     /**
      * 根据分享日志ID获取分享日志
+     *
      * @param shareLogId 分享日志ID
      * @return 获取成功返回分享日志信息
      */
@@ -44,6 +70,7 @@ public class ShareLogController extends BaseController {
 
     /**
      * 根据文件信息ID获取分享日志
+     *
      * @param fileInfoId 文件信息ID
      * @return 获取成功返回分享日志信息
      */
@@ -54,6 +81,7 @@ public class ShareLogController extends BaseController {
 
     /**
      * 根据目录信息ID获取分享日志
+     *
      * @param directoryInfoId 目录信息ID
      * @return 获取成功返回分享日志信息
      */
@@ -64,6 +92,7 @@ public class ShareLogController extends BaseController {
 
     /**
      * 根据用户ID获取分享日志列表
+     *
      * @param userId 用户ID
      * @return 获取成功返回分享日志列表
      */
@@ -74,6 +103,7 @@ public class ShareLogController extends BaseController {
 
     /**
      * 根据目录信息ID获取分享日志列表
+     *
      * @param directoryInfoId 目录信息ID
      * @return 获取成功返回分享日志列表
      */
