@@ -13,7 +13,7 @@
         <result property="updateTime" column="update_time"/>
         <!-- 多对多映射 property代表字段 ofType代表类型-->
         <collection property="fileInfos" ofType="top.lldwb.file.saving.tool.pojo.entity.FileInfo">
-            <id column="f.file_info_id" property="fileInfoId"/>
+            <id column="file_info_id" property="fileInfoId"/>
             <result column="file_info_name" property="fileInfoName"/>
             <result column="file_info_path" property="fileInfoPath"/>
             <result column="file_info_state" property="fileInfoState"/>
