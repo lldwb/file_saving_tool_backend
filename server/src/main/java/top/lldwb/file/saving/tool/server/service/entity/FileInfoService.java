@@ -1,6 +1,5 @@
 package top.lldwb.file.saving.tool.server.service.entity;
 
-import org.springframework.web.bind.annotation.PutMapping;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 
 import java.util.List;
@@ -30,6 +29,11 @@ public interface FileInfoService {
      * @param fileInfoId
      * @return
      */
-    @PutMapping("/copyFile")
     FileInfo copyFile(Integer fileInfoId);
+
+    /**
+     * 修改文件
+     * @param fileInfo
+     */
+    void update(FileInfo fileInfo);
 }

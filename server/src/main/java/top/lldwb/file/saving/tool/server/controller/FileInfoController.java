@@ -1,10 +1,8 @@
 package top.lldwb.file.saving.tool.server.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
 
@@ -54,5 +52,16 @@ public class FileInfoController extends BaseController {
     @PutMapping("/copyFile")
     public ResultVO copyFile(Integer fileInfoId) {
         return success(service.copyFile(fileInfoId));
+    }
+
+    /**
+     * 修改文件
+     * @param fileInfo
+     * @return
+     */
+    @PostMapping("/update")
+    public ResultVO update(@RequestBody FileInfo fileInfo){
+        service.update(fileInfo);
+        return success();
     }
 }

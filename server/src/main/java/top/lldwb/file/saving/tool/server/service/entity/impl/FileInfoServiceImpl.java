@@ -38,4 +38,9 @@ public class FileInfoServiceImpl implements FileInfoService {
         dao.addFileInfo(fileInfo);
         return fileInfo;
     }
+
+    @Override
+    public void update(FileInfo fileInfo) {
+        dao.updateFileInfo(fileInfo);
+    }
 }

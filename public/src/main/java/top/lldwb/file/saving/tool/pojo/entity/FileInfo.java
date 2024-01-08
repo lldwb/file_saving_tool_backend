@@ -23,7 +23,7 @@ public class FileInfo implements Serializable {
      */
     private Integer fileInfoId;
     /**
-     * 名称(在客户端中为映射的相对路径)
+     * 名称
      */
     private String fileInfoName;
     /**
