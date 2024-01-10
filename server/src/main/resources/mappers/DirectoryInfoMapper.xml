@@ -119,7 +119,7 @@
                 and d.directory_info_state = #{state}
             </if>
             <if test="state == null or state == ''">
---                 and f.file_info_state = 1
+                and f.file_info_state != -1
                 and d.directory_info_state = 1
             </if>
         </where>
