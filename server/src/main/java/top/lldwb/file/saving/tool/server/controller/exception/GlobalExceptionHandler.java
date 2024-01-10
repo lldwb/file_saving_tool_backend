@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
+import top.lldwb.file.saving.tool.server.controller.exception.exception.ErrorCodeException;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 
 /**
@@ -18,6 +19,19 @@ import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends BaseResponse {
+
+    /**
+     * 运行异常的捕获和抛出
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ErrorCodeException.class)
+    public ResultVO runtimeExceptionHandler(ErrorCodeException e) {
+        log.error("ErrorCodeException：{}", e);
+        return success(e.getErrorCode());
+    }
+
     /**
      * 运行异常的捕获和抛出
      *

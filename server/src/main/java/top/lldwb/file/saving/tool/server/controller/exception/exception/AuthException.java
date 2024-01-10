@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.server.exception;
+package top.lldwb.file.saving.tool.server.controller.exception.exception;
 
 /**
  * 自定义异常
