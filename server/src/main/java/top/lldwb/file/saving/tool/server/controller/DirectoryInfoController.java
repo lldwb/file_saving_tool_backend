@@ -3,6 +3,7 @@ package top.lldwb.file.saving.tool.server.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
+import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.entity.DirectoryInfoService;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/directoryInfo")
 @RequiredArgsConstructor
-public class DirectoryInfoController extends BaseController {
+public class DirectoryInfoController extends BaseResponse {
     private final DirectoryInfoService service;
 
     /**

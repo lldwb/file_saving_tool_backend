@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.Client;
 import top.lldwb.file.saving.tool.pojo.entity.PathMapping;
+import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.entity.ClientService;
 
@@ -19,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/client")
 @RequiredArgsConstructor
-public class ClientController extends BaseController {
+public class ClientController extends BaseResponse {
     private final ClientService service;
 
     /**

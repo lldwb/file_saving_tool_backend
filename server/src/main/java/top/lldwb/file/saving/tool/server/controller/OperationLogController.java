@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.entity.OperationLogService;
 
@@ -17,7 +18,7 @@ import top.lldwb.file.saving.tool.server.service.entity.OperationLogService;
 @RestController
 @RequestMapping("/operationLog")
 @RequiredArgsConstructor
-public class OperationLogController extends BaseController {
+public class OperationLogController extends BaseResponse {
     private final OperationLogService service;
 
     /**

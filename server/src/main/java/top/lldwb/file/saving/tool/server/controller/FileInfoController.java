@@ -3,6 +3,7 @@ package top.lldwb.file.saving.tool.server.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
 
@@ -16,7 +17,7 @@ import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
 @RestController
 @RequestMapping("/fileInfo")
 @RequiredArgsConstructor
-public class FileInfoController extends BaseController {
+public class FileInfoController extends BaseResponse {
     private final FileInfoService service;
 
     /**

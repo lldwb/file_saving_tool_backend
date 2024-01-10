@@ -3,7 +3,7 @@ package top.lldwb.file.saving.tool.server.controller.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import top.lldwb.file.saving.tool.server.controller.BaseController;
+import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 
 /**
@@ -17,7 +17,7 @@ import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
  */
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler extends BaseController {
+public class GlobalExceptionHandler extends BaseResponse {
     /**
      * 运行异常的捕获和抛出
      *

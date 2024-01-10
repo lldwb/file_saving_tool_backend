@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import top.lldwb.file.saving.tool.pojo.entity.DirectoryInfo;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
 import top.lldwb.file.saving.tool.pojo.entity.User;
+import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
@@ -25,7 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/minio")
 @RequiredArgsConstructor
-public class MinIOController extends BaseController {
+public class MinIOController extends BaseResponse {
     private final MinIOService service;
 
     /**

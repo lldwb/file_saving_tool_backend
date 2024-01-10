@@ -3,6 +3,7 @@ package top.lldwb.file.saving.tool.server.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import top.lldwb.file.saving.tool.pojo.entity.User;
+import top.lldwb.file.saving.tool.server.controller.common.BaseResponse;
 import top.lldwb.file.saving.tool.server.service.entity.UserService;
 import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 
@@ -18,7 +19,7 @@ import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-public class UserController extends BaseController {
+public class UserController extends BaseResponse {
     private final UserService service;
 
     /**
