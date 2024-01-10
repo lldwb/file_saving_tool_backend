@@ -20,6 +20,9 @@ public enum ErrorCode {
     NULL_ERROR(40001, "请求数据为空", ""),
     NOT_LOGIN(40100, "无登录", ""),
     NO_AUTH(40101, "无权限", ""),
+    NO_MinIO(40200, "无法操作MinIO", ""),
+    NO_FileInfo(40201, "无法操作文件", ""),
+    DirectoryInfo(40202, "无法操作文件夹", ""),
     SYSTEM_ERROR(50000, "系统内部异常", "");
     /**
      * 状态码
