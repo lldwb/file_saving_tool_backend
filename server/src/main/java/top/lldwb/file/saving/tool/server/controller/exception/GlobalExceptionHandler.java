@@ -19,7 +19,7 @@ import top.lldwb.file.saving.tool.server.pojo.vo.ResultVO;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends BaseController {
     /**
-     * 运行异常的抛出
+     * 运行异常的捕获和抛出
      *
      * @param e
      * @return
