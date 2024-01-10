@@ -14,7 +14,9 @@ public class ClientApplication {
     public static void main(String[] args) {
         ApplicationContext connection = SpringApplication.run(ClientApplication.class, args);
         ClientNettyService clientNettyService = connection.getBean(ClientNettyService.class);
-        clientNettyService.setHost("127.0.0.1");
+//        clientNettyService.setHost("127.0.0.1");
+        // 远程服务器
+        clientNettyService.setHost("www");
         clientNettyService.setPort(32433);
         clientNettyService.run();
     }

@@ -120,7 +120,7 @@
             </if>
             <if test="state == null or state == ''">
                 and f.file_info_state = 1
-                and d.directory_info_state = 1  
+                and d.directory_info_state = 1
             </if>
         </where>
     </select>
