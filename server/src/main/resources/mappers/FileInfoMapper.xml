@@ -87,6 +87,12 @@
         from file_info
         <where>
             user_id = #{userId} and directory_info_id = #{directoryInfoId}
+            <if test="fileInfoState != null and fileInfoState != ''">
+                and file_info_state = #{fileInfoState}
+            </if>
+            <if test="fileInfoState == null or fileInfoState == ''">
+                and file_info_state = 1
+            </if>
         </where>
     </select>
 

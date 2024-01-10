@@ -20,6 +20,7 @@ class DirectoryInfoDaoTest {
 
     @Test
     void listByDirectoryInfoFatherIdAndUserId() {
-        dao.listByDirectoryInfoFatherIdAndUserId(25,1,null).forEach(directoryInfo -> directoryInfo.getFileInfos().forEach(fileInfo -> log.info(fileInfo.getFileInfoId().toString())));
+        dao.listByDirectoryInfoFatherIdAndUserId(25,1,null).forEach(directoryInfo -> log.info(directoryInfo.getDirectoryInfoName()));
+//        dao.listByDirectoryInfoFatherIdAndUserId(25,1,null).forEach(directoryInfo -> directoryInfo.getFileInfos().forEach(fileInfo -> log.info(fileInfo.toString())));
     }
 }

@@ -39,8 +39,8 @@ public class FileInfoController extends BaseController {
      * @return
      */
     @GetMapping("/list")
-    public ResultVO list(Integer directoryInfoId, Integer userId) {
-        return success(service.list(directoryInfoId, userId));
+    public ResultVO list(Integer directoryInfoId, Integer userId, Integer fileInfoState) {
+        return success(service.list(directoryInfoId, userId, fileInfoState));
     }
 
     /**
@@ -56,11 +56,12 @@ public class FileInfoController extends BaseController {
 
     /**
      * 修改文件
+     *
      * @param fileInfo
      * @return
      */
     @PostMapping("/update")
-    public ResultVO update(@RequestBody FileInfo fileInfo){
+    public ResultVO update(@RequestBody FileInfo fileInfo) {
         service.update(fileInfo);
         return success();
     }

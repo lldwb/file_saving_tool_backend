@@ -209,7 +209,7 @@ public class ClientServiceImpl implements ClientService {
      */
     private void getDirectoryInfoMap(Map<String, Integer> directoryInfoMap, String path, Integer directoryInfoFatherId, Integer userId) {
         //根据父id获取目录信息
-        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoFatherId, userId,null);
+        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoFatherId, userId, null);
         //遍历目录信息
         for (DirectoryInfo directoryInfo : directoryInfos) {
             //拼接路径
@@ -233,11 +233,11 @@ public class ClientServiceImpl implements ClientService {
         Map<String, List<FileInfo>> fileInfoMap = new HashMap<>();
         // 遍历directoryInfoMap，获取每一个文件夹的文件信息
         for (String path : directoryInfoMap.keySet()) {
-            fileInfoMap.put(path, getFileInfo(fileInfoDao.listByDirectoryInfoIdAndUserId(directoryInfoMap.get(path), pathMapping.getUserId())));
+            fileInfoMap.put(path, getFileInfo(fileInfoDao.listByDirectoryInfoIdAndUserId(directoryInfoMap.get(path), pathMapping.getUserId(), null)));
         }
         // 如果pathMapping.getDirectoryInfoId()为0，则获取用户id为pathMapping.getUserId()的文件信息
         if (pathMapping.getDirectoryInfoId() == 0) {
-            fileInfoMap.put("", getFileInfo(fileInfoDao.listByDirectoryInfoIdAndUserId(0, pathMapping.getUserId())));
+            fileInfoMap.put("", getFileInfo(fileInfoDao.listByDirectoryInfoIdAndUserId(0, pathMapping.getUserId(), null)));
         }
         return fileInfoMap;
     }

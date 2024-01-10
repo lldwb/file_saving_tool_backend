@@ -21,7 +21,7 @@ public interface FileInfoService {
      * @param userId
      * @return
      */
-    List<FileInfo> list(Integer directoryInfoId, Integer userId);
+    List<FileInfo> list(Integer directoryInfoId, Integer userId, Integer fileInfoState);
 
     /**
      * 复制文件
@@ -33,6 +33,7 @@ public interface FileInfoService {
 
     /**
      * 修改文件
+     *
      * @param fileInfo
      */
     void update(FileInfo fileInfo);

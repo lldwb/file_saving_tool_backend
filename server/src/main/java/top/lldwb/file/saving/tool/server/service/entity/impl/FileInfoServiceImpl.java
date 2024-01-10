@@ -26,8 +26,8 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Override
-    public List<FileInfo> list(Integer directoryInfoId, Integer userId) {
-        return dao.listByDirectoryInfoIdAndUserId(directoryInfoId, userId);
+    public List<FileInfo> list(Integer directoryInfoId, Integer userId, Integer fileInfoState) {
+        return dao.listByDirectoryInfoIdAndUserId(directoryInfoId, userId, fileInfoState);
     }
 
     @Override

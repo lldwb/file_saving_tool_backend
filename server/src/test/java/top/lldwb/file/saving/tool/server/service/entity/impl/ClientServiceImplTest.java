@@ -38,7 +38,7 @@ class ClientServiceImplTest {
         pathMapping.setUserId(1);
 
         getDirectoryInfoMap(directoryInfoMap, path, directoryInfoFatherId);
-        log.info(getFileInfoMap(directoryInfoMap,pathMapping).toString());
+        log.info(getFileInfoMap(directoryInfoMap, pathMapping).toString());
 
     }
 
@@ -68,10 +68,10 @@ class ClientServiceImplTest {
     private Map<String, List<FileInfo>> getFileInfoMap(Map<String, Integer> directoryInfoMap, PathMapping pathMapping) {
         Map<String, List<FileInfo>> fileInfoMap = new HashMap<>();
         for (String path : directoryInfoMap.keySet()) {
-            fileInfoMap.put(path, fileInfoDao.listByDirectoryInfoIdAndUserId(directoryInfoMap.get(path), pathMapping.getUserId()));
+            fileInfoMap.put(path, fileInfoDao.listByDirectoryInfoIdAndUserId(directoryInfoMap.get(path), pathMapping.getUserId(), null));
         }
         if (pathMapping.getDirectoryInfoId() == 0) {
-            fileInfoMap.put("", fileInfoDao.listByDirectoryInfoIdAndUserId(0, pathMapping.getUserId()));
+            fileInfoMap.put("", fileInfoDao.listByDirectoryInfoIdAndUserId(0, pathMapping.getUserId(), null));
         }
         return fileInfoMap;
     }

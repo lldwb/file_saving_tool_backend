@@ -35,7 +35,7 @@ public interface FileInfoDao {
      * @param userId
      * @return
      */
-    List<FileInfo> listByDirectoryInfoIdAndUserId(Integer directoryInfoId, Integer userId);
+    List<FileInfo> listByDirectoryInfoIdAndUserId(Integer directoryInfoId, Integer userId,Integer fileInfoState);
 
     /**
      * 获取所有用户

@@ -28,8 +28,35 @@ public abstract class BaseController {
      * @return 视图响应对象
      */
     public <T> ResultVO success(T data) {
+        return success(200, data, "");
+    }
+
+    /**
+     * 失败响应的封装 - 默认
+     *
+     * @param code
+     * @param message
+     * @param <T>
+     * @return
+     */
+    public <T> ResultVO success(Integer code, String message) {
+        return success(code, "", message);
+    }
+
+    /**
+     * 响应的封装 - 默认
+     *
+     * @param code
+     * @param data
+     * @param message
+     * @param <T>
+     * @return
+     */
+    public <T> ResultVO success(Integer code, T data, String message) {
         ResultVO vo = new ResultVO();
+        vo.setCode(code);
         vo.setData(data);
+        vo.setMessage(message);
         return vo;
     }
 }
