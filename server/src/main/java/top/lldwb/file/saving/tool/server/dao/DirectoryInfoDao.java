@@ -55,5 +55,5 @@ public interface DirectoryInfoDao {
      * @param userId
      * @return
      */
-    List<DirectoryInfo> listByDirectoryInfoFatherIdAndUserId(Integer directoryInfoFatherId, Integer userId);
+    List<DirectoryInfo> listByDirectoryInfoFatherIdAndUserId(Integer directoryInfoFatherId, Integer userId,Integer state);
 }

@@ -209,7 +209,7 @@ public class ClientServiceImpl implements ClientService {
      */
     private void getDirectoryInfoMap(Map<String, Integer> directoryInfoMap, String path, Integer directoryInfoFatherId, Integer userId) {
         //根据父id获取目录信息
-        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoFatherId, userId);
+        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoFatherId, userId,null);
         //遍历目录信息
         for (DirectoryInfo directoryInfo : directoryInfos) {
             //拼接路径

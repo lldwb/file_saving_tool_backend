@@ -94,24 +94,34 @@
     </select>
     <select id="listByDirectoryInfoFatherIdAndUserId" resultMap="directoryInfo">
         select d.directory_info_id,
-               d.directory_info_name,
-               d.directory_info_father_id,
-               d.directory_info_state,
-               d.user_id,
-               d.create_time,
-               d.update_time,
-               f.file_info_id as file_info_id,
-               f.file_info_name as file_info_name,
-               f.file_info_path as file_info_path,
-               f.file_info_state as file_info_state,
-               f.file_info_size as file_info_size,
-               f.directory_info_id as f_directory_info_id,
-               f.user_id           as f_user_id,
-               f.create_time       as f_create_time,
-               f.update_time       as f_update_time
+        d.directory_info_name,
+        d.directory_info_father_id,
+        d.directory_info_state,
+        d.user_id,
+        d.create_time,
+        d.update_time,
+        f.file_info_id as file_info_id,
+        f.file_info_name as file_info_name,
+        f.file_info_path as file_info_path,
+        f.file_info_state as file_info_state,
+        f.file_info_size as file_info_size,
+        f.directory_info_id as f_directory_info_id,
+        f.user_id as f_user_id,
+        f.create_time as f_create_time,
+        f.update_time as f_update_time
         from directory_info d
-                 left join file_info f on d.directory_info_id = f.directory_info_id
-        where (d.directory_info_father_id = #{directoryInfoFatherId} or f.directory_info_id = #{directoryInfoFatherId})
-          and d.user_id = #{userId}
+        left join file_info f on d.directory_info_id = f.directory_info_id
+        <where>
+            (d.directory_info_father_id = #{directoryInfoFatherId} or f.directory_info_id = #{directoryInfoFatherId})
+            and d.user_id = #{userId}
+            <if test="state != null and state != ''">
+                and f.file_info_state = #{state}
+                and d.directory_info_state = #{state}
+            </if>
+            <if test="state == null or state == ''">
+                and f.file_info_state = 1
+                and d.directory_info_state = 1  
+            </if>
+        </where>
     </select>
 </mapper>

@@ -48,7 +48,7 @@ public class FileListenerHandler {
      * 文件夹下面所有的子文件夹
      */
     private void listByDirectoryInfoFatherId() {
-        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(pathMapping.getDirectoryInfoId(), pathMapping.getUserId());
+        List<DirectoryInfo> directoryInfos = directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(pathMapping.getDirectoryInfoId(), pathMapping.getUserId(),null);
         for (DirectoryInfo directoryInfo : directoryInfos) {
             directoryInfoIdSet.add(directoryInfo.getDirectoryInfoId());
         }

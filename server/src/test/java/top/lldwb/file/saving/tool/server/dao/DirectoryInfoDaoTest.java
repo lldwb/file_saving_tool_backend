@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @author lldwb
  * @email 3247187440@qq.com
@@ -22,6 +20,6 @@ class DirectoryInfoDaoTest {
 
     @Test
     void listByDirectoryInfoFatherIdAndUserId() {
-        dao.listByDirectoryInfoFatherIdAndUserId(25,1).forEach(directoryInfo -> directoryInfo.getFileInfos().forEach(fileInfo -> log.info(fileInfo.getFileInfoId().toString())));
+        dao.listByDirectoryInfoFatherIdAndUserId(25,1,null).forEach(directoryInfo -> directoryInfo.getFileInfos().forEach(fileInfo -> log.info(fileInfo.getFileInfoId().toString())));
     }
 }

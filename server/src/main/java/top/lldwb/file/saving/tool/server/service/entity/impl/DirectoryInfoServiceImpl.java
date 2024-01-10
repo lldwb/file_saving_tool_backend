@@ -32,6 +32,6 @@ public class DirectoryInfoServiceImpl implements DirectoryInfoService {
 
     @Override
     public List<DirectoryInfo> list(Integer directoryInfoFatherId, Integer userId) {
-        return dao.listByDirectoryInfoFatherIdAndUserId(directoryInfoFatherId, userId);
+        return dao.listByDirectoryInfoFatherIdAndUserId(directoryInfoFatherId, userId,null);
     }
 }

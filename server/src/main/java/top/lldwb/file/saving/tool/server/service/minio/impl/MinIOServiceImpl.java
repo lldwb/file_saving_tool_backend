@@ -454,7 +454,7 @@ public class MinIOServiceImpl implements MinIOService {
 
     @Override
     public List<DirectoryInfo> listDirectoryInfo(Integer directoryInfoId, Integer userId) {
-        return directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoId, userId);
+        return directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoId, userId, null);
     }
 
     @Override
@@ -473,7 +473,7 @@ public class MinIOServiceImpl implements MinIOService {
                 directoryInfoId = directoryInfo.getDirectoryInfoId();
             }
         }
-        return directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoId, userId);
+        return directoryInfoDao.listByDirectoryInfoFatherIdAndUserId(directoryInfoId, userId, null);
     }
 
     @Override

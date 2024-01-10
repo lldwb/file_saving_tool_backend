@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * 文件夹信息
+ *
  * @author lldwb
  * @email 3247187440@qq.com
  * @date 2023/12/12
@@ -32,9 +33,9 @@ public class DirectoryInfo {
      */
     private Integer directoryInfoFatherId;
     /**
-     * 状态
+     * 状态(1为存在，-1删除)，默认1
      */
-    private Integer directoryInfoState;
+    private Integer directoryInfoState = 1;
     /**
      * 用户id
      */
