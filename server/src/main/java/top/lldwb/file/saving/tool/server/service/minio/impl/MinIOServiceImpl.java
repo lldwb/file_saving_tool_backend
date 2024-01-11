@@ -58,7 +58,6 @@ public class MinIOServiceImpl implements MinIOService {
     private final OperationLogDao operationLogDao;
     private final RabbitTemplate template;
     private final EsService esService;
-    private final FileInfoService fileInfoService;
 
     /**
      * 文件对象转换成文件文档对象
@@ -252,12 +251,6 @@ public class MinIOServiceImpl implements MinIOService {
     @Override
     public void deleteDirectoryInfo(Integer directoryInfoId) {
 
-    }
-
-    @Override
-    public void deleteFile(Integer fileInfoId) {
-//            minioClient.removeObject(RemoveObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
-        fileInfoService.deleteFile(fileInfoId);
     }
 
     @Override

@@ -56,11 +56,6 @@ public interface MinIOService {
     void deleteDirectoryInfo(Integer directoryInfoId);
 
     /**
-     * 删除文件
-     */
-    void deleteFile(Integer fileInfoId);
-
-    /**
      * 恢复文件
      *
      * @param operationLogId 操作id

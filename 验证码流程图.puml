@@ -1,0 +1,29 @@
+@startuml
+start
+
+:用户请求登录;
+:申请验证码;
+if (系统验证用户状态是否有效?) then (yes)
+:发送验证码;
+note right: 将验证码相关的DTO存放到Redis
+:用户输入邮箱和验证码;
+:系统验证用户状态是否有效;
+if (用户名和密码正确?) then (yes)
+  :系统校验验证码;
+  if (有效验证码?) then (yes)
+    :登录成功;
+  else (no)
+    :显示错误消息;
+    stop
+  endif
+else (no)
+  :显示错误消息;
+  stop
+endif
+
+stop
+else (no)
+stop
+
+
+@enduml
