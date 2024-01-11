@@ -1,0 +1,102 @@
+@startuml
+!define table(x) class x << (T,orchid) >>
+!define primary_key(x) <u>x</u>
+!define foreign_key(x) #x
+
+table(user) {
+  primary_key(user_id)
+  user_name
+  user_password
+  user_email
+  user_permission
+  user_state
+  create_time
+  update_time
+}
+
+table(client) {
+  primary_key(client_id)
+  client_secret_key
+  client_state
+  foreign_key(user_id)
+  create_time
+  update_time
+}
+
+table(directory_info) {
+  primary_key(directory_info_id)
+  directory_info_name
+  directory_info_father_id
+  directory_info_state
+  foreign_key(user_id)
+  create_time
+  update_time
+}
+
+table(file_info) {
+  primary_key(file_info_id)
+  file_info_name
+  file_info_path
+  file_info_state
+  file_info_size
+  foreign_key(directory_info_id)
+  foreign_key(user_id)
+  create_time
+  update_time
+}
+
+table(login_risk_control) {
+  primary_key(login_risk_control_id)
+  login_risk_control_type
+  login_risk_control_details
+  login_risk_control_result
+  foreign_key(user_id)
+  create_time
+  update_time
+}
+
+table(operation_log) {
+  primary_key(operation_log_id)
+  operation_log_name
+  operation_log_path
+  operation_log_type
+  operation_log_size
+  foreign_key(file_info_id)
+  foreign_key(directory_info_id)
+  foreign_key(user_id)
+  create_time
+  update_time
+}
+
+table(path_mapping) {
+  primary_key(path_mapping_id)
+  path_mapping_local_path
+  foreign_key(directory_info_id)
+  path_mapping_type
+  foreign_key(client_id)
+  foreign_key(user_id)
+  create_time
+  update_time
+}
+
+table(share_log) {
+  primary_key(share_log_id)
+  share_log_authority
+  foreign_key(file_info_id)
+  foreign_key(directory_info_id)
+  foreign_key(user_id)
+  create_time
+  update_time
+}
+
+user -- client
+user -- directory_info
+user -- file_info
+user -- login_risk_control
+user -- operation_log
+user -- path_mapping
+user -- share_log
+directory_info -- file_info
+file_info -- operation_log
+client -- path_mapping
+@enduml
