@@ -5,16 +5,17 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
-import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
 import top.lldwb.file.saving.tool.server.config.RabbitConfig;
 import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
+import top.lldwb.file.saving.tool.server.service.minio.impl.MinIOServiceImpl;
 
 import java.util.List;
 
-import static top.lldwb.file.saving.tool.server.service.minio.impl.MinIOServiceImpl.*;
+import static top.lldwb.file.saving.tool.server.service.minio.impl.MinIOServiceImpl.getFileInfoDoc;
+import static top.lldwb.file.saving.tool.server.service.minio.impl.MinIOServiceImpl.synchronization;
 
 /**
  * @author lldwb
@@ -29,6 +30,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     private final FileInfoDao dao;
     private final RabbitTemplate template;
     private final OperationLogDao operationLogDao;
+    private final MinIOServiceImpl minIOService;
 
     @Override
     public FileInfo getId(Integer fileInfoId) {
@@ -60,10 +62,7 @@ public class FileInfoServiceImpl implements FileInfoService {
         FileInfo fileInfo = dao.getFileInfoByFileInfoId(fileInfoId);
 
         // 操作对象，设置为删除
-        OperationLog operationLog = getOperationLog(fileInfo, 3);
-        operationLogDao.addOperationLog(operationLog);
-        // 发送文件信息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
+        minIOService.addOperationLog(fileInfo, 3);
 
         // 设置删除
         fileInfo.setFileInfoState(-1);

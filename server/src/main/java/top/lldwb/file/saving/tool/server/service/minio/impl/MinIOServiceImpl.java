@@ -107,7 +107,7 @@ public class MinIOServiceImpl implements MinIOService {
      * @param type     操作类型
      * @return
      */
-    public static  OperationLog getOperationLog(FileInfo fileInfo, Integer type) {
+    public void addOperationLog(FileInfo fileInfo, Integer type) {
         OperationLog operationLog = new OperationLog();
         operationLog.setOperationLogName(fileInfo.getFileInfoName());
         operationLog.setOperationLogPath(fileInfo.getFileInfoPath());
@@ -116,7 +116,7 @@ public class MinIOServiceImpl implements MinIOService {
         operationLog.setUserId(fileInfo.getUserId());
         operationLog.setFileInfoId(fileInfo.getFileInfoId());
         operationLog.setDirectoryInfoId(fileInfo.getDirectoryInfoId());
-        return operationLog;
+        addOperationLog(operationLog);
     }
 
     /**
@@ -126,14 +126,20 @@ public class MinIOServiceImpl implements MinIOService {
      * @param type          操作类型
      * @return
      */
-    public static  OperationLog getOperationLog(DirectoryInfo directoryInfo, Integer type) {
+    public void addOperationLog(DirectoryInfo directoryInfo, Integer type) {
         OperationLog operationLog = new OperationLog();
         operationLog.setOperationLogName(directoryInfo.getDirectoryInfoName());
         operationLog.setOperationLogType(type);
         operationLog.setUserId(directoryInfo.getUserId());
         operationLog.setFileInfoId(directoryInfo.getDirectoryInfoId());
         operationLog.setDirectoryInfoId(directoryInfo.getDirectoryInfoFatherId());
-        return operationLog;
+        addOperationLog(operationLog);
+    }
+
+    private void addOperationLog(OperationLog operationLog){
+        operationLogDao.addOperationLog(operationLog);
+        // 发送文件信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
     }
 
     /**
@@ -188,16 +194,13 @@ public class MinIOServiceImpl implements MinIOService {
                 fileInfo.setFileInfoId(fileInfoSql.getFileInfoId());
                 fileInfoDao.updateFileInfo(fileInfo);
                 // 操作类型为修改
-                operationLog = getOperationLog(fileInfo, 2);
+                addOperationLog(fileInfo, 2);
             } else {
                 fileInfoDao.addFileInfo(fileInfo);
                 // 操作类型为添加
-                operationLog = getOperationLog(fileInfo, 1);
+                addOperationLog(fileInfo, 1);
             }
-            operationLogDao.addOperationLog(operationLog);
             // 异步双写
-            // 发送操作信息到消息队列
-            template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
             // 发送文件信息到消息队列
             template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
 
@@ -217,16 +220,13 @@ public class MinIOServiceImpl implements MinIOService {
             fileInfo.setFileInfoId(fileInfoSql.getFileInfoId());
             fileInfoDao.updateFileInfo(fileInfo);
             // 操作类型为修改
-            operationLog = getOperationLog(fileInfo, 2);
+            addOperationLog(fileInfo, 2);
         } else {
             fileInfoDao.addFileInfo(fileInfo);
             // 操作类型为添加
-            operationLog = getOperationLog(fileInfo, 1);
+            addOperationLog(fileInfo, 1);
         }
-        operationLogDao.addOperationLog(operationLog);
         // 异步双写
-        // 发送操作信息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
         // 发送文件信息到消息队列
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
     }
@@ -235,8 +235,7 @@ public class MinIOServiceImpl implements MinIOService {
     public void addDirectoryInfo(DirectoryInfo directoryInfo) {
         directoryInfoDao.addDirectoryInfo(directoryInfo);
         // 异步双写
-        // 发送操作信息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(getOperationLog(directoryInfo, 1))));
+        addOperationLog(directoryInfo, 1);
         // 发送文件信息到消息队列
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(directoryInfo)));
     }
@@ -245,8 +244,7 @@ public class MinIOServiceImpl implements MinIOService {
     public void updateDirectoryInfo(DirectoryInfo directoryInfo) {
 //directoryInfoDao
         // 异步双写
-        // 发送操作信息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(getOperationLog(directoryInfo, 1))));
+         addOperationLog(directoryInfo, 1);
         // 发送文件信息到消息队列
         template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(directoryInfo)));
     }
@@ -269,10 +267,7 @@ public class MinIOServiceImpl implements MinIOService {
         // 根据操作对象获取文件对象
         FileInfo fileInfo = fileInfoDao.getFileInfoByFileInfoId(operationLog.getFileInfoId());
         // 存档恢复操作
-        OperationLog operationLogRecover = getOperationLog(fileInfo, -operationLog.getOperationLogType());
-        operationLogDao.addOperationLog(operationLogRecover);
-        // 发送文件信息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLogRecover)));
+        addOperationLog(fileInfo, -operationLog.getOperationLogType());
 
         // 恢复
         fileInfo = getFileInfo(operationLog, fileInfo);
