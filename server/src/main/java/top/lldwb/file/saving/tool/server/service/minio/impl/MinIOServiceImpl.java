@@ -29,6 +29,7 @@ import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
 import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.pojo.doc.FileInfoDoc;
 import top.lldwb.file.saving.tool.server.pojo.doc.OperationLogDoc;
+import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
 import top.lldwb.file.saving.tool.server.service.es.EsService;
 import top.lldwb.file.saving.tool.server.service.minio.FileListenerHandler;
 import top.lldwb.file.saving.tool.server.service.minio.MinIOService;
@@ -57,6 +58,7 @@ public class MinIOServiceImpl implements MinIOService {
     private final OperationLogDao operationLogDao;
     private final RabbitTemplate template;
     private final EsService esService;
+    private final FileInfoService fileInfoService;
 
     /**
      * 文件对象转换成文件文档对象
@@ -64,7 +66,7 @@ public class MinIOServiceImpl implements MinIOService {
      * @param fileInfo
      * @return
      */
-    private FileInfoDoc getFileInfoDoc(FileInfo fileInfo) {
+    public static  FileInfoDoc getFileInfoDoc(FileInfo fileInfo) {
         FileInfoDoc fileInfoDoc = new FileInfoDoc();
         BeanUtil.copyProperties(fileInfo, fileInfoDoc);
         return fileInfoDoc;
@@ -76,7 +78,7 @@ public class MinIOServiceImpl implements MinIOService {
      * @param directoryInfo
      * @return
      */
-    private FileInfoDoc getFileInfoDoc(DirectoryInfo directoryInfo) {
+    public static FileInfoDoc getFileInfoDoc(DirectoryInfo directoryInfo) {
         FileInfoDoc fileInfoDoc = new FileInfoDoc();
         fileInfoDoc.setFileInfoId(directoryInfo.getDirectoryInfoId());
         fileInfoDoc.setFileInfoName(directoryInfo.getDirectoryInfoName());
@@ -92,7 +94,7 @@ public class MinIOServiceImpl implements MinIOService {
      * @param operationLog
      * @return
      */
-    private OperationLogDoc getOperationLogDoc(OperationLog operationLog) {
+    public static OperationLogDoc getOperationLogDoc(OperationLog operationLog) {
         OperationLogDoc operationLogDoc = new OperationLogDoc();
         BeanUtil.copyProperties(operationLog, operationLogDoc);
         return operationLogDoc;
@@ -105,7 +107,7 @@ public class MinIOServiceImpl implements MinIOService {
      * @param type     操作类型
      * @return
      */
-    private OperationLog getOperationLog(FileInfo fileInfo, Integer type) {
+    public static  OperationLog getOperationLog(FileInfo fileInfo, Integer type) {
         OperationLog operationLog = new OperationLog();
         operationLog.setOperationLogName(fileInfo.getFileInfoName());
         operationLog.setOperationLogPath(fileInfo.getFileInfoPath());
@@ -124,7 +126,7 @@ public class MinIOServiceImpl implements MinIOService {
      * @param type          操作类型
      * @return
      */
-    private OperationLog getOperationLog(DirectoryInfo directoryInfo, Integer type) {
+    public static  OperationLog getOperationLog(DirectoryInfo directoryInfo, Integer type) {
         OperationLog operationLog = new OperationLog();
         operationLog.setOperationLogName(directoryInfo.getDirectoryInfoName());
         operationLog.setOperationLogType(type);
@@ -140,7 +142,7 @@ public class MinIOServiceImpl implements MinIOService {
      * @param operationLog 文件对象
      * @return
      */
-    private FileInfo getFileInfo(OperationLog operationLog, FileInfo fileInfos) {
+    public static  FileInfo getFileInfo(OperationLog operationLog, FileInfo fileInfos) {
         FileInfo fileInfo = new FileInfo();
         BeanUtil.copyProperties(fileInfos, fileInfo);
         fileInfo.setFileInfoName(operationLog.getOperationLogName());
@@ -257,25 +259,7 @@ public class MinIOServiceImpl implements MinIOService {
     @Override
     public void deleteFile(Integer fileInfoId) {
 //            minioClient.removeObject(RemoveObjectArgs.builder().bucket(MinIOConfig.BUCKET).object(path).build());
-
-
-        // 删除文件信息
-        FileInfo fileInfo = fileInfoDao.getFileInfoByFileInfoId(fileInfoId);
-
-        // 操作对象，设置为删除
-        OperationLog operationLog = getOperationLog(fileInfo, 3);
-        operationLogDao.addOperationLog(operationLog);
-        // 发送文件信息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
-
-        // 设置删除
-        fileInfo.setFileInfoState(-1);
-        fileInfoDao.updateFileInfo(fileInfo);
-
-        // 发送消息到消息队列
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
-
-        synchronization(fileInfo);
+        fileInfoService.deleteFile(fileInfoId);
     }
 
     @Override
@@ -516,7 +500,7 @@ public class MinIOServiceImpl implements MinIOService {
      *
      * @param fileInfo
      */
-    private void synchronization(FileInfo fileInfo) {
+    public static void synchronization(FileInfo fileInfo) {
         Map<Integer, FileListenerHandler> fileListenerHandlerMap = FileListenerHandler.getFileListenerHandlerMap();
         for (Integer pathMappingId : fileListenerHandlerMap.keySet()) {
             fileListenerHandlerMap.get(pathMappingId).control(fileInfo);

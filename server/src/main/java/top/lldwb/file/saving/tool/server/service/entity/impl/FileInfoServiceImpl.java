@@ -1,12 +1,20 @@
 package top.lldwb.file.saving.tool.server.service.entity.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import top.lldwb.file.saving.tool.pojo.dto.UpdateMessage;
 import top.lldwb.file.saving.tool.pojo.entity.FileInfo;
+import top.lldwb.file.saving.tool.pojo.entity.OperationLog;
+import top.lldwb.file.saving.tool.server.config.RabbitConfig;
+import top.lldwb.file.saving.tool.server.config.RabbitUpdate;
 import top.lldwb.file.saving.tool.server.dao.FileInfoDao;
+import top.lldwb.file.saving.tool.server.dao.OperationLogDao;
 import top.lldwb.file.saving.tool.server.service.entity.FileInfoService;
 
 import java.util.List;
+
+import static top.lldwb.file.saving.tool.server.service.minio.impl.MinIOServiceImpl.*;
 
 /**
  * @author lldwb
@@ -19,6 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileInfoServiceImpl implements FileInfoService {
     private final FileInfoDao dao;
+    private final RabbitTemplate template;
+    private final OperationLogDao operationLogDao;
 
     @Override
     public FileInfo getId(Integer fileInfoId) {
@@ -42,5 +52,27 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Override
     public void update(FileInfo fileInfo) {
         dao.updateFileInfo(fileInfo);
+    }
+
+    @Override
+    public void deleteFile(Integer fileInfoId) {
+        // 删除文件信息
+        FileInfo fileInfo = dao.getFileInfoByFileInfoId(fileInfoId);
+
+        // 操作对象，设置为删除
+        OperationLog operationLog = getOperationLog(fileInfo, 3);
+        operationLogDao.addOperationLog(operationLog);
+        // 发送文件信息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getOperationLogDoc(operationLog)));
+
+        // 设置删除
+        fileInfo.setFileInfoState(-1);
+        dao.updateFileInfo(fileInfo);
+
+        // 发送消息到消息队列
+        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, RabbitUpdate.QUEUE_NAME, UpdateMessage.getUpdateMessage(getFileInfoDoc(fileInfo)));
+
+        synchronization(fileInfo);
+        this.update(fileInfo);
     }
 }

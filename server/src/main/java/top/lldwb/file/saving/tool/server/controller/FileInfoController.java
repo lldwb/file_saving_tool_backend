@@ -66,4 +66,16 @@ public class FileInfoController extends BaseResponse {
         service.update(fileInfo);
         return success();
     }
+
+    /**
+     * 删除文件
+     *
+     * @param fileInfo
+     * @return
+     */
+    @PostMapping("/delete")
+    public ResultVO delete(@RequestBody FileInfo fileInfo) {
+        service.deleteFile(fileInfo.getFileInfoId());
+        return success();
+    }
 }

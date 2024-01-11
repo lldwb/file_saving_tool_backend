@@ -37,4 +37,10 @@ public interface FileInfoService {
      * @param fileInfo
      */
     void update(FileInfo fileInfo);
+
+    /**
+     * 删除文件
+     * @param fileInfoId
+     */
+    void deleteFile(Integer fileInfoId);
 }
