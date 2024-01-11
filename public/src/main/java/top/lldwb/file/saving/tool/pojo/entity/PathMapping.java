@@ -21,7 +21,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class PathMapping implements Serializable {
     /**
-     * ID
+     * 路径映射id
      */
     private Integer pathMappingId;
     /**

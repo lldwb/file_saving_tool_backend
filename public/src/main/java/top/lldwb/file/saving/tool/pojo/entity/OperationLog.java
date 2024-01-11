@@ -19,11 +19,11 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class OperationLog {
     /**
-     * ID
+     * 操作日志id
      */
     private Integer operationLogId;
     /**
-     * 名称
+     * 操作日志名称
      */
     private String operationLogName;
     /**

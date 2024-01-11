@@ -19,11 +19,11 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class FileInfo implements Serializable {
     /**
-     * ID
+     * 文件id
      */
     private Integer fileInfoId;
     /**
-     * 名称
+     * 文件名称
      */
     private String fileInfoName;
     /**
@@ -39,7 +39,7 @@ public class FileInfo implements Serializable {
      */
     private Long fileInfoSize;
     /**
-     * 文件夹id，默认0
+     * 所在文件夹id(外键)，默认0
      */
     private Integer directoryInfoId = 0;
     /**

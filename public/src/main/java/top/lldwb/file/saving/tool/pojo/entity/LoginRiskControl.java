@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 /**
  * 登录风控实体类
  *
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginRiskControl {
     /**
-     * ID
+     * 登录风控id
      */
     private Integer loginRiskControlId;
     /**
@@ -37,5 +39,13 @@ public class LoginRiskControl {
      * 用户对象
      */
     private User user;
+    /**
+     * 创建时间
+     */
+    private Timestamp createTime;
+    /**
+     * 更新时间
+     */
+    private Timestamp updateTime;
 
 }

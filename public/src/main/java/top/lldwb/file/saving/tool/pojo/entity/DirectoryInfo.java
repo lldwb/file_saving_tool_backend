@@ -37,7 +37,7 @@ public class DirectoryInfo {
      */
     private Integer directoryInfoState = 1;
     /**
-     * 用户id
+     * 用户id(外键)
      */
     private Integer userId;
     /**

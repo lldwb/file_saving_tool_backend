@@ -21,7 +21,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class Client implements Serializable {
     /**
-     * ID
+     * 客户端id
      */
     private Integer clientId;
     /**
@@ -29,11 +29,11 @@ public class Client implements Serializable {
      */
     private String clientSecretKey;
     /**
-     * 状态
+     * 状态 1在线 0离线 -1无主 默认-1
      */
     private Integer clientState;
     /**
-     * 用户对象
+     * 用户idv(外键)
      */
     private Integer userId;
     /**
