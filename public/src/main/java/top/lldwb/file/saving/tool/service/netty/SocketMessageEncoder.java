@@ -7,6 +7,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
 
 /**
+ * SocketMessage编码器
  * @author lldwb
  * @email 3247187440@qq.com
  * @date 2023/12/28
