@@ -18,6 +18,7 @@
         <module>server</module>
         <module>client</module>
         <module>public</module>
+        <module>rpc</module>
     </modules>
     <properties>
         <top.lldwb.file.saving.tool.version>1-test</top.lldwb.file.saving.tool.version>
