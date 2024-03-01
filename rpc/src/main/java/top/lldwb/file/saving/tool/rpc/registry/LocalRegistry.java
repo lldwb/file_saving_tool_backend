@@ -34,6 +34,6 @@ public class LocalRegistry {
     }
 
     public static void remove(String name){
-
+        map.remove(name);
     }
 }

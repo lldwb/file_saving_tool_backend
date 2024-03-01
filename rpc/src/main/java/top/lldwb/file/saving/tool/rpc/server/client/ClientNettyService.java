@@ -1,4 +1,4 @@
-package top.lldwb.file.saving.tool.rpc.client;
+package top.lldwb.file.saving.tool.rpc.server.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
