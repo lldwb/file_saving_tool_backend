@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import top.lldwb.file.saving.tool.pojo.dto.SocketMessage;
-import top.lldwb.file.saving.tool.service.send.SendService;
+import top.lldwb.file.saving.tool.rpc.message.SocketMessage;
+import top.lldwb.file.saving.tool.rpc.server.client.ClientHandler;
 
 /**
  * 给客户端发送消息的实现类

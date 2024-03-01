@@ -7,7 +7,7 @@ import top.lldwb.file.saving.tool.rpc.server.ServerNettyService;
 
 
 /**
- * 远程过程调用启动类
+ * 远程过程调用启动类(RPC启动类)
  */
 @SpringBootApplication
 public class RpcApplication {
